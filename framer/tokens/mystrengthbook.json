@@ -1,0 +1,63 @@
+{
+  "fonts": {
+    "heading": "Inter",
+    "body": "Inter",
+    "mono": "JetBrains Mono",
+    "headingWeight": 600,
+    "tracking": "-0.03em",
+    "url": "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap"
+  },
+  "colors": {
+    "teal": "#0097B2",
+    "green": "#7ED957",
+    "ink": "#1A1E25",
+    "graphite": "#20262E",
+    "slate": "#64748B",
+    "mist": "#F4F6F7",
+    "primary-green": "#37CA37",
+    "link-blue": "#188BF6"
+  },
+  "scales": [
+    "teal",
+    "green"
+  ],
+  "gradient": "linear-gradient(90deg, #0097B2 0%, #7ED957 100%)",
+  "bg": "#FFFFFF",
+  "surface": "#F4F6F7",
+  "text": "#1A1E25",
+  "muted": "#64748B",
+  "border": "rgba(26,30,37,0.12)",
+  "focus": "#0097B2",
+  "radius": {
+    "button": 50,
+    "card": 20,
+    "input": 12,
+    "chip": 50
+  },
+  "shadow": "0 10px 40px rgba(26,30,37,0.08)",
+  "primary": {
+    "bg": "gradient",
+    "ink": "#FFFFFF"
+  },
+  "secondary": {
+    "bg": "#FFFFFF",
+    "ink": "#1A1E25",
+    "border": "#1A1E25"
+  },
+  "highlight": "gradient",
+  "sample": {
+    "headline": "All-In-One Platform To Grow Your {Fitness} Business",
+    "cta": "Start free trial",
+    "secondary": "Login",
+    "input": "Email address",
+    "card": "Hypertrophy Block",
+    "cardMeta": "12 weeks · 4 sessions / week",
+    "chips": [
+      "Active",
+      "Completed",
+      "PR"
+    ],
+    "placeholder": "coach@yourgym.com",
+    "cardCta": "Assign"
+  }
+}

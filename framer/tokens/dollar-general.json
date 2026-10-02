@@ -1,0 +1,63 @@
+{
+  "fonts": {
+    "heading": "Montserrat",
+    "body": "Montserrat",
+    "headingWeight": 600,
+    "tracking": "0em",
+    "url": "https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+  },
+  "colors": {
+    "dg-yellow": "#FFF200",
+    "black": "#000000",
+    "link-blue": "#2A77BD",
+    "gray-600": "#757575",
+    "success": "#336619",
+    "mint": "#E0F5D6",
+    "gray-100": "#EFEFEF",
+    "white": "#FFFFFF"
+  },
+  "scales": [
+    "dg-yellow",
+    "link-blue"
+  ],
+  "gradient": "linear-gradient(90deg, #FFF200 0%, #FFF200 70%, #000000 70%, #000000 100%)",
+  "bg": "#FFFFFF",
+  "surface": "#EFEFEF",
+  "text": "#000000",
+  "muted": "#757575",
+  "border": "rgba(0,0,0,0.14)",
+  "focus": "#2A77BD",
+  "radius": {
+    "button": 4,
+    "card": 12,
+    "input": 4,
+    "chip": 104
+  },
+  "shadow": "0 0 6px rgba(0,0,0,0.08)",
+  "primary": {
+    "bg": "#000000",
+    "ink": "#FFFFFF"
+  },
+  "secondary": {
+    "bg": "#FFFFFF",
+    "ink": "#000000",
+    "border": "#BDBDBD"
+  },
+  "highlight": "marker",
+  "highlightColor": "#FFF200",
+  "sample": {
+    "headline": "Same Day Delivery {is here!}",
+    "cta": "Start Shopping",
+    "secondary": "Dismiss",
+    "input": "Email for deals",
+    "card": "$5 off $25",
+    "cardMeta": "Digital coupon · Clip now",
+    "chips": [
+      "New",
+      "Clipped",
+      "Deal"
+    ],
+    "placeholder": "you@email.com",
+    "cardCta": "Clip"
+  }
+}

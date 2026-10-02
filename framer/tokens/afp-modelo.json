@@ -1,0 +1,66 @@
+{
+  "fonts": {
+    "heading": "Poppins",
+    "body": "Open Sans",
+    "headingWeight": 400,
+    "tracking": "0em",
+    "url": "https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Open+Sans:wght@400;600;700&display=swap"
+  },
+  "colors": {
+    "modelo-green": "#81BD00",
+    "lavender": "#7479D7",
+    "lilac": "#C3BFE5",
+    "orange": "#FF9100",
+    "teal": "#30A7A7",
+    "sky": "#4297DE",
+    "ink": "#1A1A1A",
+    "gray-700": "#4D4D4D"
+  },
+  "scales": [
+    "modelo-green",
+    "lavender"
+  ],
+  "gradient": "linear-gradient(120deg, #C3BFE5 0%, #EFEFFA 100%)",
+  "bg": "#FFFFFF",
+  "surface": "#F2F2F2",
+  "text": "#1A1A1A",
+  "muted": "#4D4D4D",
+  "border": "#C7C8CA",
+  "focus": "#81BD00",
+  "radius": {
+    "button": 6,
+    "card": 16,
+    "input": 2,
+    "chip": 50
+  },
+  "shadow": "0 4px 16px rgba(0,0,0,0.12)",
+  "primary": {
+    "bg": "#81BD00",
+    "ink": "#FFFFFF"
+  },
+  "secondary": {
+    "bg": "#FFFFFF",
+    "ink": "#4E7300",
+    "border": "#81BD00"
+  },
+  "highlight": "color",
+  "highlightColor": "#5E8A00",
+  "sample": {
+    "headline": "Haz crecer tu {ahorro} hoy",
+    "cta": "Cámbiate a Modelo",
+    "secondary": "Simula acá",
+    "input": "Correo electrónico",
+    "card": "Certificado de Afiliación",
+    "cardMeta": "Descárgalo en línea",
+    "chips": [
+      "Vigente",
+      "En trámite",
+      "Nuevo"
+    ],
+    "placeholder": "tu@correo.cl",
+    "helper": "Nunca compartimos tus datos.",
+    "invalid": "Ingresa un correo válido",
+    "valid": "Correo válido ✓",
+    "cardCta": "Descargar"
+  }
+}
