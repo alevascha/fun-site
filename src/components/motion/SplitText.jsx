@@ -4,15 +4,35 @@ import { EASE, REVEAL_VIEWPORT } from '../../lib/motion';
 
 /* Masked per-character reveal. Words stay unbroken; screen readers get the
    plain string via aria-label. */
-/* With `reactive`, letters near the cursor lift, grow and lean away from it
-   (rAF-batched, transforms only, skipped for touch / reduced motion). */
-function useProximity(ref, enabled) {
+/* With `reactive`:
+   - desktop: letters near the cursor lift, grow and lean away from it;
+   - touch: letters ride a sine wave driven by scroll position.
+   rAF-batched, transforms only, off for reduced motion. */
+function useReactiveLetters(ref, enabled) {
   useEffect(() => {
     const root = ref.current;
-    if (!enabled || !root) return;
-    if (!window.matchMedia('(pointer: fine)').matches || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!enabled || !root || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const chars = [...root.querySelectorAll('[data-char]')];
-    let frame = 0, mx = -9999, my = -9999;
+    let frame = 0;
+
+    if (window.matchMedia('(pointer: coarse)').matches) {
+      const wave = () => {
+        frame = 0;
+        const rect = root.getBoundingClientRect();
+        if (rect.bottom < 0 || rect.top > window.innerHeight) return;
+        const phase = window.scrollY * 0.018;
+        const amp = Math.min(1, window.scrollY / 120); // calm at rest, wavier as you scroll
+        chars.forEach((el, i) => {
+          const w = Math.sin(phase + i * 0.55);
+          el.style.transform = `translateY(${(w * 0.09 * amp).toFixed(3)}em) rotate(${(w * 4 * amp).toFixed(2)}deg)`;
+        });
+      };
+      const onScroll = () => { if (!frame) frame = requestAnimationFrame(wave); };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      return () => { window.removeEventListener('scroll', onScroll); cancelAnimationFrame(frame); };
+    }
+
+    let mx = -9999, my = -9999;
     const RADIUS = 180;
     const apply = () => {
       frame = 0;
@@ -34,7 +54,7 @@ function useProximity(ref, enabled) {
 export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.025, className, style, inView = false, charClassName, reactive = false }) {
   const Comp = motion[as];
   const ref = useRef(null);
-  useProximity(ref, reactive);
+  useReactiveLetters(ref, reactive);
   let i = 0;
   const words = text.split(' ');
   const trigger = inView

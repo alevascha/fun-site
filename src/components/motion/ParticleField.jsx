@@ -13,6 +13,8 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
     const canvas = ref.current;
     const ctx = canvas.getContext('2d');
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Touch devices: particles rise like bubbles and burst away from taps.
+    const touch = window.matchMedia('(pointer: coarse)').matches;
     let w = 0, h = 0, dpr = 1, raf = 0, running = false, t = 0;
     let particles = [];
     const mouse = { x: -9999, y: -9999, active: false };
@@ -38,12 +40,16 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
     function step() {
       t += 0.004;
       for (const p of particles) {
+        if (touch) {
+          p.vy -= 0.012 + p.r * 0.006;
+          p.vx += Math.sin(t * 3 + p.phase) * 0.012;
+        }
         // flow field
         const angle = Math.sin(p.x * 0.004 + t) * Math.cos(p.y * 0.004 - t) * Math.PI * 2;
         p.vx += Math.cos(angle) * 0.02;
         p.vy += Math.sin(angle) * 0.02;
         // cursor repulsion
-        if (mouse.active) {
+        if (mouse.active && !touch) {
           const dx = p.x - mouse.x, dy = p.y - mouse.y;
           const d2 = dx * dx + dy * dy;
           if (d2 < 150 * 150 && d2 > 0.01) {
@@ -74,7 +80,7 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
-        if (mouse.active) {
+        if (mouse.active && !touch) {
           const dx = a.x - mouse.x, dy = a.y - mouse.y, d = Math.hypot(dx, dy);
           if (d < 180) {
             ctx.strokeStyle = `rgba(${a.c[0]},${a.c[1]},${a.c[2]},${(1 - d / 180) * 0.6})`;
@@ -101,6 +107,18 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
       mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top;
       mouse.active = mouse.x >= 0 && mouse.y >= 0 && mouse.x <= r.width && mouse.y <= r.height;
     };
+    // Tap → radial burst (touch only).
+    const onTouch = e => {
+      const t = e.touches[0];
+      if (!t) return;
+      const r = canvas.getBoundingClientRect();
+      const bx = t.clientX - r.left, by = t.clientY - r.top;
+      if (bx < 0 || by < 0 || bx > r.width || by > r.height) return;
+      for (const p of particles) {
+        const dx = p.x - bx, dy = p.y - by, d = Math.hypot(dx, dy) || 1;
+        if (d < 220) { const f = (1 - d / 220) * 14; p.vx += (dx / d) * f; p.vy += (dy / d) * f; }
+      }
+    };
     const onVis = () => (document.hidden ? stop() : visible && start());
     let visible = true;
     const io = new IntersectionObserver(([entry]) => {
@@ -112,12 +130,14 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
     ro.observe(canvas);
     io.observe(canvas);
     window.addEventListener('pointermove', onMove, { passive: true });
+    if (touch) window.addEventListener('touchstart', onTouch, { passive: true });
     document.addEventListener('visibilitychange', onVis);
     resize();
     start();
     return () => {
       stop(); ro.disconnect(); io.disconnect();
       window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('touchstart', onTouch);
       document.removeEventListener('visibilitychange', onVis);
     };
   }, [density, max]);

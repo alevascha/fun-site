@@ -5,6 +5,7 @@ import { experiments, HOME_META } from '../experiments';
 import Background from '../components/Background';
 import SiteNav from '../components/SiteNav';
 import usePageMeta from '../hooks/usePageMeta';
+import useIsTouch from '../hooks/useIsTouch';
 import { isNew } from '../lib/seen';
 import { Reveal, Segmented } from '../components/ui';
 import { EASE } from '../lib/motion';
@@ -36,11 +37,21 @@ function ExpCard({ exp, fresh, index }) {
   }
   function handleMouseLeave() { px.set(0.5); py.set(0.5); }
 
-  // Scroll parallax: columns travel at different speeds.
+  const isTouch = useIsTouch();
   const wrapRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start end', 'end start'] });
-  const depth = [40, -10, 70][index % 3];
+
+  // Desktop: columns travel at different speeds (parallax).
+  const depth = isTouch ? 0 : [40, -10, 70][index % 3];
   const parallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [depth, -depth]), { stiffness: 120, damping: 24 });
+
+  // Touch: each card tips up into focus as it reaches the middle of the
+  // screen, glows brightest there, and its emoji spins with the scroll.
+  const focus = { stiffness: 160, damping: 26 };
+  const focusScale = useSpring(useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [0.86, 1, 1, 0.92]), focus);
+  const focusRotateX = useSpring(useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [24, 0, 0, -14]), focus);
+  const focusGlow = useTransform(scrollYProgress, [0.15, 0.5, 0.85], [0.1, 0.65, 0.1]);
+  const emojiSpin = useTransform(scrollYProgress, [0, 1], [-50, 50]);
 
   return (
     <motion.div
@@ -56,20 +67,22 @@ function ExpCard({ exp, fresh, index }) {
         ref={ref}
         to={exp.path}
         className="exp-card"
-        style={{ '--card-accent': exp.accent, rotateX, rotateY, transformPerspective: 900 }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
+        style={isTouch
+          ? { '--card-accent': exp.accent, rotateX: focusRotateX, scale: focusScale, transformPerspective: 900 }
+          : { '--card-accent': exp.accent, rotateX, rotateY, transformPerspective: 900 }}
+        onMouseMove={isTouch ? undefined : handleMouseMove}
+        onMouseLeave={isTouch ? undefined : handleMouseLeave}
         data-cursor="Open"
-        whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={isTouch ? undefined : { y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+        whileTap={{ scale: isTouch ? 0.95 : 0.98 }}
       >
-        <div className="exp-card-glow" />
+        <motion.div className="exp-card-glow" style={isTouch ? { opacity: focusGlow } : undefined} />
         <div className="exp-card-sheen" />
         <div className="exp-card-top">
           <motion.div
             className="exp-card-emoji"
-            style={{ x: emojiX, y: emojiY, translateZ: 40 }}
-            whileHover={{ rotate: [0, -10, 10, -5, 0], scale: 1.12 }}
+            style={isTouch ? { rotate: emojiSpin } : { x: emojiX, y: emojiY, translateZ: 40 }}
+            whileHover={isTouch ? undefined : { rotate: [0, -10, 10, -5, 0], scale: 1.12 }}
             transition={{ duration: 0.5 }}
             aria-hidden="true"
           >

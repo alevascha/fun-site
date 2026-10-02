@@ -1,6 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion, useSpring, useTransform } from 'framer-motion';
 import {
   contrastRatio, formatRatio, hexToHsl, hexToRgb, hslToHex, normalizeHex, suggestClosestPassing, wcagChecks,
 } from '../lib/color';
@@ -32,6 +32,14 @@ function suggestFix(movingHex, fixedHex, target) {
   const fixed = hexToRgb(fixedHex);
   const s = suggestClosestPassing(hsl, fixed, target + 0.01);
   return s ? hslToHex(s.h, s.s, s.l) : null;
+}
+
+/* The ratio springs between values instead of re-mounting on every change. */
+function AnimatedRatio({ value }) {
+  const spring = useSpring(value, { stiffness: 260, damping: 32 });
+  useEffect(() => { spring.set(value); }, [spring, value]);
+  const text = useTransform(spring, v => formatRatio(v));
+  return <motion.span>{text}</motion.span>;
 }
 
 export default function ContrastChecker() {
@@ -110,35 +118,31 @@ export default function ContrastChecker() {
 
         <div className="stack">
           <Reveal className="card" style={{ padding: 0, overflow: 'hidden' }}>
-            <motion.div className="preview-surface" animate={{ backgroundColor: bg, color: fg }} transition={{ duration: 0.35 }} style={{ borderRadius: 0 }}>
+            <div className="preview-surface" style={{ borderRadius: 0, backgroundColor: bg, color: fg }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 16, flexWrap: 'wrap' }}>
                 <div>
                   <div style={{ fontFamily: 'var(--font-label)', fontSize: 14, opacity: 0.85 }}>Contrast ratio</div>
                   <div className="ratio-big" aria-live="polite">
-                    <AnimatePresence mode="popLayout" initial={false}>
-                      <motion.span
-                        key={formatRatio(ratio)}
-                        initial={{ y: 20, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        exit={{ y: -20, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: EASE }}
-                        style={{ display: 'inline-block' }}
-                      >
-                        {formatRatio(ratio)}
-                      </motion.span>
-                    </AnimatePresence>
+                    <AnimatedRatio value={ratio} />
                     <span style={{ fontSize: '0.4em' }}>:1</span>
                   </div>
                 </div>
-                <motion.div
-                  key={v.label}
-                  initial={{ scale: 0.6, rotate: -10, opacity: 0 }}
-                  animate={{ scale: 1, rotate: 0, opacity: 1 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 16 }}
+                <div
                   style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 999, border: `1.5px solid ${fg}`, fontWeight: 600 }}
                 >
-                  <span aria-hidden="true">{v.emoji}</span> {v.label}
-                </motion.div>
+                  <AnimatePresence mode="wait" initial={false}>
+                    <motion.span
+                      key={v.label}
+                      initial={{ y: 8, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -8, opacity: 0 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ display: 'inline-flex', gap: 8 }}
+                    >
+                      <span aria-hidden="true">{v.emoji}</span> {v.label}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
               </div>
               <div style={{ marginTop: 'clamp(24px, 4vw, 40px)', display: 'grid', gap: 14 }}>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 40px)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.03em' }}>
@@ -154,7 +158,7 @@ export default function ContrastChecker() {
                   <small style={{ fontSize: 12 }}>Small caption · 12px</small>
                 </div>
               </div>
-            </motion.div>
+            </div>
           </Reveal>
 
           <Reveal className="card" delay={0.05}>

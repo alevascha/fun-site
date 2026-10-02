@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, MotionConfig } from 'framer-motion';
 import Cursor from './components/motion/Cursor';
@@ -15,17 +15,22 @@ const ComponentStates = lazy(() => import('./pages/ComponentStates'));
 
 export default function App() {
   const location = useLocation();
-  // The initial history entry has key "default"; every navigation after it
-  // gets a fresh key — that's when the curtain plays.
-  const isFirst = location.key === 'default';
+  // Play the curtain only when the *page* changes. Query-string updates
+  // (tools that sync their state to the URL) must not trigger it.
+  const [prevPath, setPrevPath] = useState(location.pathname);
+  const [navCount, setNavCount] = useState(0);
+  if (location.pathname !== prevPath) {
+    setPrevPath(location.pathname);
+    setNavCount(n => n + 1);
+  }
 
   return (
     <MotionConfig reducedMotion="user">
       <Cursor />
-      {!isFirst && (
+      {navCount > 0 && (
         // Gradient curtain that wipes away on every client-side navigation.
         <motion.div
-          key={location.key}
+          key={navCount}
           className="page-curtain"
           aria-hidden="true"
           initial={{ scaleY: 1 }}

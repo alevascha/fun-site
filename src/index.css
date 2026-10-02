@@ -1035,7 +1035,7 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .preview-surface {
   border-radius: var(--radius-lg);
   padding: clamp(24px, 4vw, 48px);
-  transition: background-color 0.35s ease, color 0.35s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .ratio-big {
@@ -1224,3 +1224,20 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .more-link, .check-row { position: relative; }
 
 .site-nav { transition: box-shadow 0.3s ease, background-color 0.3s ease; }
+
+/* Touch: ripples where you tap (see Background.jsx) */
+.touch-ripple {
+  position: fixed;
+  z-index: 9998;
+  width: 16px; height: 16px;
+  margin: -8px 0 0 -8px;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 2px solid rgba(205, 87, 255, 0.8);
+  background: radial-gradient(circle, rgba(255, 206, 31, 0.35), transparent 70%);
+  animation: touch-ripple 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes touch-ripple {
+  from { transform: scale(1); opacity: 1; }
+  to { transform: scale(7); opacity: 0; }
+}
