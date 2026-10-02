@@ -457,8 +457,9 @@
     }
     syncTheme();
 
-    // Hero heading: rise in, react, gradient on the words after "Between".
-    main.querySelectorAll('h1').forEach(h => {
+    // Hero heading (an h1 on desktop, an h2 in Framer's phone layout): rise
+    // in, react, gradient on "Design & Engineering".
+    main.querySelectorAll('h1, [data-framer-name="Hero Section"] h2').forEach(h => {
       if (h.dataset.avfx || !h.offsetParent) return;
       h.dataset.avfx = '1';
       const text = h.textContent;
