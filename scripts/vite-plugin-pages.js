@@ -4,7 +4,7 @@ import { experiments, getPageMeta, HOME_META, SITE } from '../src/experiments.js
 import { injectMeta } from './meta.js';
 
 /* - Injects the home page meta tags into index.html (dev + build).
-   - After the build, writes dist/<route>/index.html for every experiment with
+   - After the build, writes dist/<route>.html for every experiment with
      its own title/description/OG tags, plus 404.html and sitemap.xml. */
 export default function pagesPlugin() {
   let outDir = 'dist';
@@ -25,10 +25,10 @@ export default function pagesPlugin() {
       let html;
       try { html = await fs.readFile(indexPath, 'utf8'); } catch { return; } // dev / non-build
       const active = experiments.filter(e => e.active && e.path);
+      // <route>.html (not <route>/index.html): Netlify serves /route from it
+      // with a 200 instead of redirecting to /route/.
       for (const exp of active) {
-        const dir = path.join(outDir, exp.path.replace(/^\//, ''));
-        await fs.mkdir(dir, { recursive: true });
-        await fs.writeFile(path.join(dir, 'index.html'), injectMeta(html, getPageMeta(exp)));
+        await fs.writeFile(path.join(outDir, `${exp.path.replace(/^\//, '')}.html`), injectMeta(html, getPageMeta(exp)));
       }
       await fs.writeFile(path.join(outDir, '404.html'), html);
       const today = new Date().toISOString().slice(0, 10);

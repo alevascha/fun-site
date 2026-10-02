@@ -20,7 +20,7 @@ A playground of small design-engineering tools by Alejandro Vasquez. React 19 + 
 2. Add a `<Route>` in `src/App.jsx`.
 3. Add an entry to `src/experiments.js` (with `addedAt` so the hub shows a **New** badge to visitors who haven't opened it).
 
-Everything else is derived from `experiments.js`: hub cards, `<title>`/meta/Open Graph tags, a prerendered `dist/<route>/index.html` (so link previews work on LinkedIn/X), `sitemap.xml` and the OG images (`scripts/og.mjs`, rendered at build time with bundled OFL fonts).
+Everything else is derived from `experiments.js`: hub cards, `<title>`/meta/Open Graph tags, a prerendered `dist/<route>.html` (so link previews work on LinkedIn/X), `sitemap.xml` and the OG images (`scripts/og.mjs`, rendered at build time with bundled OFL fonts).
 
 ## Analytics
 
