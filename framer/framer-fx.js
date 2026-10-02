@@ -1,6 +1,7 @@
 /* Ale's motion layer for alevasquez.dev (Framer).
-   Loaded from Framer → Site Settings → Custom Code (end of <body>):
-     <script src="https://fun.alevasquez.dev/framer-fx.js" defer></script>
+   Self-contained: `npm run framer-snippet` bundles this file with Lenis into
+   framer/custom-code.html, which is pasted into Framer → Site Settings →
+   Custom Code (end of <body>). Nothing is loaded from other domains.
 
    Same interaction language as fun.alevasquez.dev, as plain DOM so it can sit
    on top of Framer's React tree without touching it:
@@ -533,12 +534,7 @@
       clearTimeout(pending);
       pending = setTimeout(enhance, 250);
     }).observe(document.getElementById('main') || document.body, { childList: true, subtree: true });
-    if (!reduce && fine) {
-      const s = document.createElement('script');
-      s.src = 'https://unpkg.com/lenis@1.3.26/dist/lenis.min.js';
-      s.onload = smoothScroll;
-      document.head.appendChild(s);
-    }
+    smoothScroll();
   }
   // Wait for Framer's hydration so React never sees our changes as a mismatch.
   const later = () => setTimeout(boot, 700);
