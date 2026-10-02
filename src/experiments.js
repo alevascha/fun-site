@@ -14,7 +14,7 @@ export const SITE = {
   author: 'Alejandro Vasquez',
   // Umami Cloud (free Hobby plan, cookieless). Paste the Website ID from
   // cloud.umami.is → Settings → Websites. Empty = no analytics script.
-  umamiWebsiteId: '',
+  umamiWebsiteId: 'edf8df86-dccd-4aa7-9d8c-04e63ea232ab',
 };
 
 export const experiments = [
