@@ -184,7 +184,8 @@ const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g =
 
 const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, UX Engineer &amp; Design Systems Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></nav></footer>`;
 
-const shell = (lang, otherPath, inner) => `<div class="page"><div class="page-inner">${nav(lang, otherPath)}${inner}${footer(lang)}</div></div>`;
+// .ssr-shell: readable by crawlers, hidden from people while the app boots (see index.html).
+const shell = (lang, otherPath, inner) => `<div class="ssr-shell"><div class="page"><div class="page-inner">${nav(lang, otherPath)}${inner}${footer(lang)}</div></div></div>`;
 const back = lang => `<a class="back-link" href="${page('/', lang)}">← ${L(lang, 'Back to the lab', 'Volver al lab')}</a>`;
 const other = lang => L(lang, 'es', 'en');
 

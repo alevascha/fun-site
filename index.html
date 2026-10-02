@@ -23,8 +23,18 @@
           t = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
         }
         document.documentElement.dataset.theme = t;
+        document.documentElement.classList.add('js');
       })();
     </script>
+    <style>
+      /* The prerendered shell is for crawlers and no-JS visitors. With JS on,
+         keep it invisible while the app boots (React replaces it), but reveal
+         it after 4s in case the app fails to load. */
+      html { background: #272625; }
+      html[data-theme='light'] { background: #f7f4f2; }
+      .js .ssr-shell { visibility: hidden; animation: ssr-reveal 0s 4s forwards; }
+      @keyframes ssr-reveal { to { visibility: visible; } }
+    </style>
     <!-- analytics -->
     <!-- adsense -->
   </head>
