@@ -10,6 +10,7 @@ import { BootDone, RouteLoader } from './components/RouteLoader';
 import { experiments } from './experiments';
 import { ES, PAGE_PATHS } from './seo-es';
 import LangProvider from './components/LangProvider';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const PaletteGenerator = lazy(() => import('./pages/PaletteGenerator'));
 const ContrastChecker = lazy(() => import('./pages/ContrastChecker'));
@@ -81,6 +82,7 @@ export default function App() {
           style={{ transformOrigin: 'top' }}
         />
       )}
+      <ErrorBoundary key={location.pathname} lang={lang}>
       <Suspense fallback={<RouteLoader />}>
         <BootDone />
         <Routes location={location} key={location.pathname}>
@@ -106,6 +108,7 @@ export default function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      </ErrorBoundary>
     </MotionConfig>
     </LangProvider>
   );
