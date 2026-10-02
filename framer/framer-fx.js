@@ -320,7 +320,7 @@
       f = requestAnimationFrame(() => {
         f = 0;
         for (const chars of reactive) {
-          const box = chars[0]?.closest('h1')?.getBoundingClientRect();
+          const box = chars[0]?.parentElement?.parentElement?.parentElement?.getBoundingClientRect();
           if (!box || box.bottom < -200 || box.top > innerHeight + 200) continue;
           for (const el of chars) {
             const r = el.getBoundingClientRect();
@@ -468,6 +468,15 @@
       const chars = splitChars(h, gradFrom);
       if (!reduce) reactive.add(chars);
       requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('avfx-in')));
+    });
+
+    // 404 page: the big number gets the brand gradient and reactive letters.
+    main.querySelectorAll('h1, h2, p').forEach(el => {
+      if (el.dataset.avfx || el.textContent.trim() !== '404' || !el.offsetParent) return;
+      el.dataset.avfx = '1';
+      const chars = splitChars(el, 0);
+      if (!reduce) reactive.add(chars);
+      requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('avfx-in')));
     });
 
     // Section headings: words rise in on scroll.
