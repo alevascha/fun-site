@@ -247,6 +247,8 @@ export const PAGE_PATHS = {
   '/pro': '/es/pro',
   '/guides': '/es/guias',
   '/changelog': '/es/novedades',
+  '/confirm': '/es/confirmar',
+  '/unsubscribe': '/es/baja',
 };
 
 export const HOME_ES = {

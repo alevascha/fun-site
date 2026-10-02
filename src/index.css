@@ -1464,3 +1464,97 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 }
 .route-loader-orbit { transform: scale(0.8); }
 @keyframes route-loader-in { to { opacity: 1; } }
+
+/* =========================================================================
+   Newsletter confirm / unsubscribe page (pages/Subscription.jsx)
+   ========================================================================= */
+.sub-stage {
+  display: grid;
+  justify-items: center;
+  gap: clamp(20px, 3vw, 32px);
+  padding: clamp(24px, 6vw, 72px) 0 clamp(32px, 6vw, 64px);
+}
+.sub-card {
+  width: min(560px, 100%);
+  overflow: hidden;
+  text-align: center;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: clamp(36px, 6vw, 56px) clamp(20px, 5vw, 48px) clamp(28px, 5vw, 44px);
+  box-shadow: var(--shadow-card), 0 40px 80px -40px rgba(205, 87, 255, 0.35);
+}
+.sub-card-bar {
+  position: absolute; inset: 0 0 auto 0; height: 5px;
+  background: var(--accent-grad-linear);
+  background-size: 200% 100%;
+  animation: sub-bar 6s linear infinite alternate;
+}
+@keyframes sub-bar { to { background-position: 100% 0; } }
+
+.sub-emblem {
+  position: relative;
+  width: 112px; height: 112px;
+  display: grid; place-items: center;
+  margin-bottom: 6px;
+}
+.sub-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: conic-gradient(from 0deg, #cd57ff, #ff7ab6, #ffce1f, #8b6cf0, #cd57ff);
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px));
+  opacity: 0.9;
+}
+.sub-loading .sub-ring { animation: sub-spin 1.1s linear infinite; -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 4px), #000 calc(100% - 3px)), conic-gradient(#000 0 70%, transparent 70%); -webkit-mask-composite: source-in; mask-composite: intersect; }
+.sub-confirmed .sub-ring, .sub-already .sub-ring { animation: sub-pop 0.8s var(--ease-out) both, sub-spin 14s linear infinite; }
+.sub-unsubscribed .sub-ring, .sub-invalid .sub-ring, .sub-error .sub-ring { filter: saturate(0.25); opacity: 0.6; }
+@keyframes sub-spin { to { rotate: 360deg; } }
+@keyframes sub-pop { 0% { scale: 0.7; } 60% { scale: 1.08; } 100% { scale: 1; } }
+.sub-core {
+  width: 84px; height: 84px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--field-bg);
+  box-shadow: inset 0 0 0 1px var(--border);
+  color: var(--text);
+}
+.sub-confirmed .sub-core, .sub-already .sub-core {
+  background: var(--accent-grad);
+  color: #111011;
+  box-shadow: 0 16px 40px -12px rgba(205, 87, 255, 0.6);
+}
+.sub-glyph { font-size: 38px; line-height: 1; display: inline-block; }
+.sub-dots { display: inline-flex; gap: 6px; }
+.sub-dots i {
+  width: 8px; height: 8px; border-radius: 50%; background: var(--text);
+  animation: sub-dot 1s var(--ease-out) infinite;
+}
+.sub-dots i:nth-child(2) { animation-delay: 0.15s; }
+.sub-dots i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes sub-dot { 0%, 100% { opacity: 0.25; translate: 0 0; } 40% { opacity: 1; translate: 0 -5px; } }
+.sub-confetti { position: absolute; inset: 50% auto auto 50%; pointer-events: none; }
+.sub-bit { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; }
+
+.sub-eyebrow {
+  margin: 0;
+  font: 600 12px/1 var(--font-label);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.sub-title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 300;
+  font-size: clamp(36px, 6vw, 56px);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+.sub-text { margin: 0; max-width: 42ch; color: var(--muted); font-size: clamp(15px, 1.6vw, 17px); line-height: 1.6; }
+.sub-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 10px; }
+.sub-picks { width: min(760px, 100%); }
+.sub-picks-title { margin: 0 0 12px; text-align: center; color: var(--muted); font: 600 13px/1 var(--font-label); letter-spacing: 0.08em; text-transform: uppercase; }
+.sub-resubscribe { width: min(640px, 100%); }
+@media (prefers-reduced-motion: reduce) {
+  .sub-card-bar, .sub-ring, .sub-dots i { animation: none !important; }
+}

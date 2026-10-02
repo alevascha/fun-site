@@ -5,7 +5,7 @@ import { STATIC_PAGES, STATIC_PAGES_ES } from '../src/pages-content.js';
 import { ES } from '../src/seo-es.js';
 import { GUIDES } from '../src/guides.js';
 import {
-  absolute, active, CHANGELOG_META, changelogBody, guideBody, guideJsonLd, guideMeta, GUIDES_META, guidesBody, guidePath,
+  absolute, active, CHANGELOG_META, SUBSCRIPTION_META, subscriptionBody, changelogBody, guideBody, guideJsonLd, guideMeta, GUIDES_META, guidesBody, guidePath,
   homeBody, homeJsonLd, homeMeta, injectBody, injectMeta, notFoundBody, page, PRO_META, proBody, rss, staticBody, staticMeta,
   toolBody, toolJsonLd, toolName, toolPath,
 } from './meta.js';
@@ -67,6 +67,10 @@ export default function pagesPlugin() {
         await write(page('/changelog', lang), render(CHANGELOG_META(lang), changelogBody(lang)));
         for (const g of GUIDES) {
           await write(guidePath(g, lang), render(guideMeta(g, lang), guideBody(g, lang), guideJsonLd(g, lang)));
+        }
+        // Newsletter landing pages: reachable from emails only, kept out of search.
+        for (const action of ['confirm', 'unsubscribe']) {
+          await write(page(action === 'confirm' ? '/confirm' : '/unsubscribe', lang), render(SUBSCRIPTION_META(action, lang), subscriptionBody(action, lang), '', { noindex: true }));
         }
       }
 

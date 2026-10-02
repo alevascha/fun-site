@@ -18,7 +18,7 @@ const toolPath = (exp, lang) => (lang === 'es' ? `/es/${ES[exp.id].slug}` : exp.
 const toolName = (exp, lang) => (lang === 'es' ? ES[exp.id].name : exp.title);
 const toolBlurb = (exp, lang) => (lang === 'es' ? ES[exp.id].card : exp.description);
 const guidePath = (g, lang) => (lang === 'es' ? `/es/guias/${g.es.slug}` : `/guides/${g.slug}`);
-const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/pro': '/es/pro', '/guides': '/es/guias', '/changelog': '/es/novedades' };
+const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/pro': '/es/pro', '/guides': '/es/guias', '/changelog': '/es/novedades', '/confirm': '/es/confirmar', '/unsubscribe': '/es/baja' };
 const page = (enPath, lang) => (lang === 'es' ? PAGE_ES[enPath] || enPath : enPath);
 
 /* ---------- <head> ---------- */
@@ -241,6 +241,22 @@ export function proBody(lang = 'en') {
 export function changelogBody(lang = 'en') {
   const items = CHANGELOG.map(e => `<article id="${e.id}"><time datetime="${e.date}">${e.date}</time><h2>${esc(e[lang].title)}</h2><p>${esc(e[lang].body)}</p></article>`).join('');
   return shell(lang, page('/changelog', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${L(lang, "What's new", 'Novedades')}</h1></header><main class="seo-static">${items}</main>`);
+}
+
+// Newsletter confirm / unsubscribe landing pages (noindex; the app takes over).
+export const SUBSCRIPTION_META = (action, lang) => ({
+  title: action === 'confirm'
+    ? L(lang, `Confirm your subscription — ${SITE.name}`, `Confirma tu suscripción — ${SITE.name}`)
+    : L(lang, `Unsubscribe — ${SITE.name}`, `Darte de baja — ${SITE.name}`),
+  description: SITE.description,
+  path: page(action === 'confirm' ? '/confirm' : '/unsubscribe', lang),
+  image: '/og/home.png',
+  lang,
+});
+
+export function subscriptionBody(action, lang = 'en') {
+  const title = action === 'confirm' ? L(lang, 'Confirming your subscription…', 'Confirmando tu suscripción…') : L(lang, 'Updating your subscription…', 'Actualizando tu suscripción…');
+  return shell(lang, page('/', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${title}</h1></header>`);
 }
 
 export function notFoundBody() {

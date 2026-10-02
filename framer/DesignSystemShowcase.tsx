@@ -9,6 +9,7 @@ import { addPropertyControls, ControlType } from "framer"
 const EASE = [0.16, 1, 0.3, 1]
 
 type Spec = {
+    brand?: string
     fonts?: { heading?: string; body?: string; mono?: string; headingWeight?: number; tracking?: string; url?: string }
     colors?: Record<string, string>
     scales?: string[]
@@ -234,7 +235,7 @@ export default function DesignSystemShowcase(props) {
             highlight: spec.highlight || "color",
             highlightColor: spec.highlightColor || first,
             scales: (spec.scales || []).map((k) => [k, colors[k] || k]).filter(([, v]) => v),
-            s: { headline: `Design at {scale}`, cta: "Get started", secondary: "Learn more", input: "Email", placeholder: "you@company.com", helper: "We never share it.", invalid: "Enter a valid email", valid: "Looks good ✓", card: brand || "Component", cardMeta: "v2.0", cardCta: "Open", chips: ["Active", "Pending", "New"], ...(spec.sample || {}) },
+            s: { headline: `Design at {scale}`, cta: "Get started", secondary: "Learn more", input: "Email", placeholder: "you@company.com", helper: "We never share it.", invalid: "Enter a valid email", valid: "Looks good ✓", card: spec.brand || brand || "Component", cardMeta: "v2.0", cardCta: "Open", chips: ["Active", "Pending", "New"], ...(spec.sample || {}) },
         }
     }, [spec, brand])
 
@@ -256,7 +257,7 @@ export default function DesignSystemShowcase(props) {
             <div style={{ display: "flex", flexWrap: "wrap", gap: 16, alignItems: "flex-end", justifyContent: "space-between", padding: narrow ? "8px 4px 0" : "4px 4px 0" }}>
                 <div>
                     <div style={{ font: "600 12px/1 Inter, sans-serif", letterSpacing: ".14em", textTransform: "uppercase", color: "rgba(219,219,219,.7)", marginBottom: 10 }}>Design system snapshot · live</div>
-                    <div style={{ fontFamily: '"Crimson Pro", Georgia, serif', fontWeight: 300, fontSize: narrow ? 28 : 38, lineHeight: 1.05, letterSpacing: "-.02em" }}>{brand || "Brand"} tokens & components</div>
+                    <div style={{ fontFamily: '"Crimson Pro", Georgia, serif', fontWeight: 300, fontSize: narrow ? 28 : 38, lineHeight: 1.05, letterSpacing: "-.02em" }}>{(spec.brand || brand) ? `${spec.brand || brand} tokens & components` : "Tokens & components"}</div>
                 </div>
                 <Tabs value={tab} onChange={setTab} options={["Components", "Tokens", "Type"]} />
             </div>
@@ -384,7 +385,7 @@ export default function DesignSystemShowcase(props) {
     )
 }
 
-DesignSystemShowcase.defaultProps = { brand: "Brand", spec: "", primary: "#CD57FF", secondary: "#33363F", accent: "#FFCE1F" }
+DesignSystemShowcase.defaultProps = { brand: "", spec: "", primary: "#CD57FF", secondary: "#33363F", accent: "#FFCE1F" }
 
 addPropertyControls(DesignSystemShowcase, {
     brand: { type: ControlType.String, title: "Brand" },

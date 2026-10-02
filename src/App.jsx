@@ -30,6 +30,7 @@ const ProPage = lazy(() => import('./pages/ProPage'));
 const GuidesIndex = lazy(() => import('./pages/GuidesIndex'));
 const GuidePage = lazy(() => import('./pages/GuidePage'));
 const Changelog = lazy(() => import('./pages/Changelog'));
+const Subscription = lazy(() => import('./pages/Subscription'));
 
 const TOOLS = {
   'palette-generator': PaletteGenerator,
@@ -98,6 +99,8 @@ export default function App() {
               <Route key={`${l}-guides`} path={p('/guides')} element={<GuidesIndex />} />,
               <Route key={`${l}-guide`} path={`${p('/guides')}/:slug`} element={<GuidePage />} />,
               <Route key={`${l}-changelog`} path={p('/changelog')} element={<Changelog />} />,
+              <Route key={`${l}-confirm`} path={p('/confirm')} element={<Subscription action="confirm" />} />,
+              <Route key={`${l}-unsubscribe`} path={p('/unsubscribe')} element={<Subscription action="unsubscribe" />} />,
             ];
           })}
           <Route path="*" element={<NotFound />} />
