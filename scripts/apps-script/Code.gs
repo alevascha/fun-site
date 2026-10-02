@@ -12,15 +12,16 @@
  *  - Rate limits     ≤ 30 signups/minute overall, 1 per email per 10 min
  *  - Email checks    syntax, length, disposable-domain blocklist, and a
  *                    real MX/A DNS lookup so made-up domains are rejected
- *  - Double opt-in   a confirmation email; only clicked links become
+ *  - Double opt-in   a confirmation email from hi@alevasquez.dev; only clicked links become
  *                    "confirmado" — fake or mistyped addresses stay pending
  *  - Formula guard   values starting with = + - @ are stored as text
  */
 
 const SITE_KEY = 'flab_6aec59d0853784ae037c26e0';
 const SITE_URL = 'https://fun.alevasquez.dev';
-// Where subscriber replies go. Switch to hi@alevasquez.dev once that inbox exists.
-const REPLY_TO = 'aledvascha@gmail.com';
+// Sender for confirmation emails. Must be a Gmail "Send mail as" alias of the
+// account that owns this script; if it isn't, mail goes out from the Gmail address.
+const FROM = 'hi@alevasquez.dev';
 const HEADERS = ['Fecha', 'Email', 'Lista', 'Idioma', 'Origen', 'Estado', 'Confirmado el', 'Token'];
 const LISTS = ['newsletter', 'waitlist'];
 const MIN_FILL_MS = 2500;
@@ -135,7 +136,10 @@ function sendConfirmation_(email, list, lang, token) {
     '<p style="font-size:13px;color:#6b6866;line-height:1.6">' +
     (es ? 'Si no fuiste tú, ignora este correo y no recibirás nada más. ' : 'If this wasn’t you, ignore this email and you won’t hear from us again. ') +
     '<a href="' + unsub + '" style="color:#6b6866">' + (es ? 'Darme de baja' : 'Unsubscribe') + '</a></p></div>';
-  MailApp.sendEmail({ to: email, subject: subject, htmlBody: html, name: "Ale's Fun Lab", replyTo: REPLY_TO });
+  const text = (es ? 'Confirma tu suscripción: ' : 'Confirm your subscription: ') + confirm + '\n\n' + (es ? 'Darme de baja: ' : 'Unsubscribe: ') + unsub;
+  const opts = { htmlBody: html, name: "Ale's Fun Lab", replyTo: FROM };
+  if (GmailApp.getAliases().indexOf(FROM) >= 0) opts.from = FROM;
+  GmailApp.sendEmail(email, subject, text, opts);
 }
 
 function page_(title, message, lang) {
@@ -175,4 +179,6 @@ function doGet(e) {
 function setup() {
   sheet_();
   domainAcceptsMail_('gmail.com');
+  // Also grants Gmail permission and confirms the alias is usable.
+  Logger.log(GmailApp.getAliases().indexOf(FROM) >= 0 ? 'Sending as ' + FROM : 'Alias ' + FROM + ' not found: sending from the Gmail address');
 }
