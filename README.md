@@ -28,7 +28,7 @@ Every page exists in English and Spanish. Spanish routes live under `/es` with t
 
 - **Guides** — `src/guides.js` (titles, slugs) + `src/guide-sections.js` (article bodies), both languages. Each guide links to its tool and gets `TechArticle` structured data.
 - **What's new** — `src/changelog.js`, published at `/changelog` and as `/rss.xml` (`/es/rss.xml`).
-- **Newsletter / Lab Pro waitlist** — Brevo forms; paste the form action URLs into `SITE.newsletter` in `src/experiments.js`.
+- **Newsletter / Lab Pro waitlist** — Kit, Buttondown, Formspree, a Google Sheet or Brevo; set `SITE.newsletter` in `src/experiments.js` (see `src/lib/subscribe.js`).
 
 ## Adding an experiment
 

@@ -24,11 +24,12 @@ export const SITE = {
   // the ad unit slot ids from AdSense → Ads → By ad unit. Empty = no ads,
   // no AdSense script, no ads.txt.
   adsenseClient: '',
-  // Brevo forms (Contacts → Forms → your form → Share → copy the form's
-  // action URL, e.g. https://xxxx.sibforms.com/serve/MUIF…). One form per
-  // list: newsletter and the Lab Pro waitlist. Empty = signup hidden in
-  // production (still visible in dev so it can be styled).
-  newsletter: { action: '', waitlistAction: '' },
+  // Email signups. provider: 'kit' | 'buttondown' | 'formspree' | 'sheets' |
+  // 'brevo' — see src/lib/subscribe.js for what goes in `newsletter` and
+  // `waitlist` for each. Empty `newsletter` = signup hidden in production
+  // (still visible in dev so it can be styled). `waitlist` falls back to
+  // `newsletter` when empty.
+  newsletter: { provider: '', newsletter: '', waitlist: '' },
   adSlots: { hub: '', tool: '' },
 };
 

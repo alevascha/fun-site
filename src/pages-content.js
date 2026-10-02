@@ -72,9 +72,8 @@ export const STATIC_PAGES = [
       {
         heading: 'Newsletter and waitlist',
         body: [
-          'If you subscribe to the newsletter or join the Lab Pro waitlist, your email address is stored by our email provider, Brevo (Sendinblue SAS, France), and used only to send you updates about the lab. You will receive a confirmation email first, every email includes an unsubscribe link, and you can ask for your address to be deleted at any time.',
+          'If you subscribe to the newsletter or join the Lab Pro waitlist, your email address is stored by our email provider and used only to send you updates about the lab. You will receive a confirmation email first (when the provider supports it), every email includes an unsubscribe link, and you can ask for your address to be deleted at any time.',
         ],
-        links: [{ label: 'Brevo privacy policy', href: 'https://www.brevo.com/legal/privacypolicy/' }],
       },
       {
         heading: 'Feedback',
@@ -155,8 +154,7 @@ export const STATIC_PAGES_ES = {
       },
       {
         heading: 'Newsletter y lista de espera',
-        body: ['Si te suscribes a la newsletter o te unes a la lista de espera de Lab Pro, tu correo se guarda en nuestro proveedor de email, Brevo (Sendinblue SAS, Francia), y se usa solo para enviarte novedades del lab. Primero recibirás un correo de confirmación, cada correo incluye un enlace para darte de baja y puedes pedir que se borre tu dirección en cualquier momento.'],
-        links: [{ label: 'Política de privacidad de Brevo', href: 'https://www.brevo.com/legal/privacypolicy/' }],
+        body: ['Si te suscribes a la newsletter o te unes a la lista de espera de Lab Pro, tu correo se guarda en nuestro proveedor de email y se usa solo para enviarte novedades del lab. Primero recibirás un correo de confirmación (si el proveedor lo permite), cada correo incluye un enlace para darte de baja y puedes pedir que se borre tu dirección en cualquier momento.'],
       },
       {
         heading: 'Comentarios',

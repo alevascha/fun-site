@@ -6,16 +6,20 @@ import { Reveal } from './ui';
 import { EASE } from '../lib/motion';
 import { track } from '../lib/analytics';
 import { haptic } from '../lib/haptics';
+import { subscribe } from '../lib/subscribe';
 
-/* Email signup posting to a Brevo (Sendinblue) form. Brevo handles storage,
-   double opt-in confirmation emails and unsubscribes; we only send the email
-   address. The response is opaque (no-cors), so success means "sent". */
+/* Email signup. The provider (Kit, Buttondown, Formspree, a Google Sheet or
+   Brevo — see lib/subscribe.js) stores the address and handles confirmation
+   and unsubscribes; we only send the email. Most providers answer opaquely
+   (no-cors), so success means "sent". */
 export default function Newsletter({ source, waitlist = false, compact = false }) {
   const { lang, t, to } = useLang();
   const id = useId();
   const [email, setEmail] = useState('');
   const [state, setState] = useState('idle'); // idle | sending | done | error
-  const action = waitlist ? SITE.newsletter.waitlistAction || SITE.newsletter.action : SITE.newsletter.action;
+  const { provider } = SITE.newsletter;
+  const target = waitlist ? SITE.newsletter.waitlist || SITE.newsletter.newsletter : SITE.newsletter.newsletter;
+  const action = provider && target;
 
   if (!action && !import.meta.env.DEV) return null;
 
@@ -24,13 +28,7 @@ export default function Newsletter({ source, waitlist = false, compact = false }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setState('error'); return; }
     setState('sending');
     try {
-      if (action) {
-        const body = new FormData();
-        body.append('EMAIL', email);
-        body.append('email_address_check', ''); // Brevo honeypot — must stay empty
-        body.append('locale', lang);
-        await fetch(action, { method: 'POST', body, mode: 'no-cors' });
-      }
+      if (action) await subscribe({ provider, target, email, lang, list: waitlist ? 'waitlist' : 'newsletter' });
       setState('done');
       haptic(20);
       track(waitlist ? 'Waitlist signup' : 'Newsletter signup', { source: source || 'unknown', lang });
@@ -78,7 +76,7 @@ export default function Newsletter({ source, waitlist = false, compact = false }
             <p id={`${id}-note`} className="newsletter-note" role={state === 'error' ? 'alert' : undefined}>
               {state === 'error'
                 ? t('Please enter a valid email address.', 'Escribe un correo electrónico válido.')
-                : <>{t('By subscribing you agree to the', 'Al suscribirte aceptas la')} <a href={to('/privacy')}>{t('privacy policy', 'política de privacidad')}</a>.{!action && ' (dev: no Brevo form configured)'}</>}
+                : <>{t('By subscribing you agree to the', 'Al suscribirte aceptas la')} <a href={to('/privacy')}>{t('privacy policy', 'política de privacidad')}</a>.{!action && ' (dev: no newsletter provider configured)'}</>}
             </p>
           </motion.form>
         )}
