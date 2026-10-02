@@ -216,6 +216,7 @@ export default function Home() {
               options={categories.map(c => ({ value: c, label: lang === 'es' ? CATEGORY_ES[c] || c : c }))}
               value={filter}
               onChange={setFilter}
+              scroll
             />
           </Reveal>
 

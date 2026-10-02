@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { normalizeHex } from '../lib/color';
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
@@ -24,10 +24,27 @@ export function Reveal({ as = 'div', delay = 0, className, style, children, ...r
 }
 
 /* Pill-style segmented control; the selected pill slides between options. */
-export function Segmented({ options, value, onChange, full = false, label }) {
+// `scroll`: on narrow screens stay on one line and scroll sideways (with edge
+// fades that only show where there is more to see) instead of wrapping.
+export function Segmented({ options, value, onChange, full = false, scroll = false, label }) {
   const id = useId();
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!scroll || !el) return;
+    const update = () => {
+      const max = el.scrollWidth - el.clientWidth;
+      const fades = [el.scrollLeft > 4 && 'left', el.scrollLeft < max - 4 && 'right'].filter(Boolean);
+      el.dataset.fade = max > 4 ? fades.join(' ') : '';
+    };
+    update();
+    el.addEventListener('scroll', update, { passive: true });
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => { el.removeEventListener('scroll', update); ro.disconnect(); };
+  }, [scroll]);
   return (
-    <div className={'segmented' + (full ? ' segmented-full' : '')} role="group" aria-label={label}>
+    <div ref={ref} className={'segmented' + (full ? ' segmented-full' : '') + (scroll ? ' segmented-scroll' : '')} role="group" aria-label={label} data-lenis-prevent-horizontal={scroll || undefined}>
       {options.map(opt => {
         const selected = opt.value === value;
         return (
@@ -36,7 +53,15 @@ export function Segmented({ options, value, onChange, full = false, label }) {
             type="button"
             className="segmented-btn"
             aria-pressed={selected}
-            onClick={() => { haptic(); onChange(opt.value); }}
+            onClick={e => {
+              haptic();
+              onChange(opt.value);
+              const row = ref.current, btn = e.currentTarget;
+              if (scroll && row) {
+                const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                row.scrollTo({ left: btn.offsetLeft - (row.clientWidth - btn.offsetWidth) / 2, behavior: reduce ? 'auto' : 'smooth' });
+              }
+            }}
             whileTap={{ scale: 0.94 }}
           >
             {selected && <motion.span layoutId={`seg-${id}`} className="segmented-pill" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />}
