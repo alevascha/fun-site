@@ -94,7 +94,8 @@ function backgroundOf(el) {
 const FOCUSABLE = 'a[href], button, input:not([type=hidden]), select, textarea, [tabindex], summary, [contenteditable="true"]';
 const INTERACTIVE = 'a[href], button, input:not([type=hidden]), select, textarea, [role=button], [role=link], [role=checkbox], [role=switch], [role=tab], summary';
 
-export function audit(doc) {
+export function audit(doc, lang = 'en') {
+  const L = (en, es) => (lang === 'es' ? es : en);
   const issues = [];
   const counts = {};
   const add = (rule, severity, wcag, message, el, fix) => {
@@ -109,7 +110,7 @@ export function audit(doc) {
   // Document language
   const isFullDoc = !!doc.documentElement.getAttribute('data-full-doc');
   if (isFullDoc && !doc.documentElement.getAttribute('lang')) {
-    add('html-lang', 'error', '3.1.1', 'The page has no lang attribute, so screen readers may use the wrong pronunciation.', null, 'Add lang="en" (or the right language) to <html>.');
+    add('html-lang', 'error', '3.1.1', L('The page has no lang attribute, so screen readers may use the wrong pronunciation.', 'La página no tiene atributo lang, así que los lectores de pantalla pueden pronunciar mal.'), null, L('Add lang="en" (or the right language) to <html>.', 'Agrega lang="es" (o el idioma correcto) a <html>.'));
   } else passed.add('Page language');
 
   // Images
@@ -117,9 +118,9 @@ export function audit(doc) {
     if (isHidden(img)) return;
     const alt = img.getAttribute('alt');
     if (alt === null && !img.getAttribute('aria-label') && img.getAttribute('role') !== 'presentation') {
-      add('img-alt', 'error', '1.1.1', 'Image has no alt attribute.', img, 'Describe the image in alt="…", or use alt="" if it is purely decorative.');
+      add('img-alt', 'error', '1.1.1', L('Image has no alt attribute.', 'La imagen no tiene atributo alt.'), img, L('Describe the image in alt="…", or use alt="" if it is purely decorative.', 'Describe la imagen en alt="…", o usa alt="" si es solo decorativa.'));
     } else if (alt && /^(image|img|photo|picture|graphic|icon|logo)$|\.(png|jpe?g|gif|svg|webp)$/i.test(alt.trim())) {
-      add('img-alt-quality', 'warning', '1.1.1', `Alt text “${alt}” doesn’t describe anything.`, img, 'Write what the image shows or does, not that it is an image.');
+      add('img-alt-quality', 'warning', '1.1.1', L(`Alt text “${alt}” doesn’t describe anything.`, `El texto alternativo “${alt}” no describe nada.`), img, L('Write what the image shows or does, not that it is an image.', 'Escribe qué muestra o hace la imagen, no que es una imagen.'));
     }
   });
   passed.add('Image alt text');
@@ -129,7 +130,7 @@ export function audit(doc) {
     if (isHidden(field)) return;
     if (!accessibleName(field)) {
       const ph = field.getAttribute('placeholder');
-      add('label', 'error', '1.3.1 · 4.1.2', ph ? `Field relies on its placeholder (“${ph}”) as a label.` : 'Form field has no label.', field, 'Add a visible <label for="…">. Placeholders disappear as soon as people type.');
+      add('label', 'error', '1.3.1 · 4.1.2', ph ? L(`Field relies on its placeholder (“${ph}”) as a label.`, `El campo usa su placeholder (“${ph}”) como etiqueta.`) : L('Form field has no label.', 'El campo del formulario no tiene etiqueta.'), field, L('Add a visible <label for="…">. Placeholders disappear as soon as people type.', 'Agrega un <label for="…"> visible. Los placeholders desaparecen en cuanto la persona escribe.'));
     }
   });
   passed.add('Form labels');
@@ -137,31 +138,31 @@ export function audit(doc) {
   // Buttons & links need names
   body.querySelectorAll('button, [role=button], input[type=submit], input[type=button], input[type=image]').forEach(b => {
     if (isHidden(b)) return;
-    if (!accessibleName(b)) add('button-name', 'error', '4.1.2', 'Button has no accessible name (icon-only?).', b, 'Add visible text, or aria-label="…" for icon buttons.');
+    if (!accessibleName(b)) add('button-name', 'error', '4.1.2', L('Button has no accessible name (icon-only?).', 'El botón no tiene nombre accesible (¿solo icono?).'), b, L('Add visible text, or aria-label="…" for icon buttons.', 'Agrega texto visible, o aria-label="…" en botones de solo icono.'));
   });
   body.querySelectorAll('a').forEach(a => {
     if (isHidden(a)) return;
     const name = accessibleName(a);
     if (!a.hasAttribute('href')) {
-      if (a.getAttribute('role') !== 'button' && (a.getAttribute('onclick') || a.getAttribute('tabindex'))) add('link-href', 'warning', '2.1.1', 'Link without href — it can’t be reached by keyboard reliably.', a, 'Use <button> for actions, or give the link a real href.');
+      if (a.getAttribute('role') !== 'button' && (a.getAttribute('onclick') || a.getAttribute('tabindex'))) add('link-href', 'warning', '2.1.1', L('Link without href — it can’t be reached by keyboard reliably.', 'Enlace sin href: no se puede alcanzar con el teclado de forma confiable.'), a, L('Use <button> for actions, or give the link a real href.', 'Usa <button> para acciones, o da al enlace un href real.'));
       return;
     }
-    if (!name) add('link-name', 'error', '2.4.4 · 4.1.2', 'Link has no accessible name.', a, 'Add link text, or alt text to the image inside it.');
-    else if (/^(click here|here|read more|more|learn more|link|this)$/i.test(name)) add('link-purpose', 'warning', '2.4.4', `Link text “${name}” doesn’t say where it goes.`, a, 'Use descriptive text, e.g. “Read the pricing guide”.');
-    if (a.getAttribute('href') === '#') add('link-href', 'warning', '2.1.1', 'Link points to "#".', a, 'Use a <button> if this triggers an action.');
+    if (!name) add('link-name', 'error', '2.4.4 · 4.1.2', L('Link has no accessible name.', 'El enlace no tiene nombre accesible.'), a, L('Add link text, or alt text to the image inside it.', 'Agrega texto al enlace, o texto alternativo a la imagen que contiene.'));
+    else if (/^(click here|here|read more|more|learn more|link|this)$/i.test(name)) add('link-purpose', 'warning', '2.4.4', L(`Link text “${name}” doesn’t say where it goes.`, `El texto del enlace “${name}” no dice a dónde lleva.`), a, L('Use descriptive text, e.g. “Read the pricing guide”.', 'Usa un texto descriptivo, por ejemplo “Lee la guía de precios”.'));
+    if (a.getAttribute('href') === '#') add('link-href', 'warning', '2.1.1', L('Link points to "#".', 'El enlace apunta a "#".'), a, L('Use a <button> if this triggers an action.', 'Usa un <button> si esto ejecuta una acción.'));
   });
   passed.add('Button and link names');
 
   // Headings
   const headings = [...body.querySelectorAll('h1, h2, h3, h4, h5, h6, [role=heading]')].filter(h => !isHidden(h));
   const h1s = headings.filter(h => h.tagName === 'H1' || h.getAttribute('aria-level') === '1');
-  if (headings.length && !h1s.length) add('heading-h1', 'warning', '1.3.1', 'There is no <h1>.', headings[0], 'Give the page one <h1> that names it.');
-  if (h1s.length > 1) add('heading-h1', 'notice', '1.3.1', `There are ${h1s.length} <h1> elements.`, h1s[1], 'Usually one h1 per page reads best.');
+  if (headings.length && !h1s.length) add('heading-h1', 'warning', '1.3.1', L('There is no <h1>.', 'No hay ningún <h1>.'), headings[0], L('Give the page one <h1> that names it.', 'Dale a la página un <h1> que la nombre.'));
+  if (h1s.length > 1) add('heading-h1', 'notice', '1.3.1', L(`There are ${h1s.length} <h1> elements.`, `Hay ${h1s.length} elementos <h1>.`), h1s[1], L('Usually one h1 per page reads best.', 'Normalmente se lee mejor con un solo h1 por página.'));
   let prev = 0;
   headings.forEach(h => {
     const level = Number(h.getAttribute('aria-level') || h.tagName.slice(1));
-    if (prev && level > prev + 1) add('heading-order', 'warning', '1.3.1', `Heading jumps from h${prev} to h${level}.`, h, `Use h${prev + 1} here, and style it with CSS if it should look smaller.`);
-    if (!textOf(h)) add('heading-empty', 'error', '2.4.6', 'Empty heading.', h, 'Remove it or give it text.');
+    if (prev && level > prev + 1) add('heading-order', 'warning', '1.3.1', L(`Heading jumps from h${prev} to h${level}.`, `El título salta de h${prev} a h${level}.`), h, L(`Use h${prev + 1} here, and style it with CSS if it should look smaller.`, `Usa h${prev + 1} aquí y dale estilo con CSS si debe verse más pequeño.`));
+    if (!textOf(h)) add('heading-empty', 'error', '2.4.6', L('Empty heading.', 'Título vacío.'), h, L('Remove it or give it text.', 'Quítalo o dale texto.'));
     prev = level;
   });
   passed.add('Heading structure');
@@ -169,18 +170,18 @@ export function audit(doc) {
   // Duplicate ids
   const seen = new Map();
   body.querySelectorAll('[id]').forEach(el => {
-    if (seen.has(el.id)) add('duplicate-id', 'warning', '4.1.1', `Duplicate id “${el.id}”.`, el, 'ids must be unique — labels and aria references break otherwise.');
+    if (seen.has(el.id)) add('duplicate-id', 'warning', '4.1.1', L(`Duplicate id “${el.id}”.`, `id duplicado “${el.id}”.`), el, L('ids must be unique — labels and aria references break otherwise.', 'Los id deben ser únicos; si no, las etiquetas y referencias aria se rompen.'));
     else seen.set(el.id, el);
   });
   passed.add('Unique ids');
 
   // tabindex and aria-hidden on focusable
   body.querySelectorAll('[tabindex]').forEach(el => {
-    if (Number(el.getAttribute('tabindex')) > 0) add('tabindex', 'warning', '2.4.3', `tabindex="${el.getAttribute('tabindex')}" changes the natural tab order.`, el, 'Use tabindex="0" (or nothing) and fix the order in the DOM instead.');
+    if (Number(el.getAttribute('tabindex')) > 0) add('tabindex', 'warning', '2.4.3', L(`tabindex="${el.getAttribute('tabindex')}" changes the natural tab order.`, `tabindex="${el.getAttribute('tabindex')}" cambia el orden natural de tabulación.`), el, L('Use tabindex="0" (or nothing) and fix the order in the DOM instead.', 'Usa tabindex="0" (o nada) y corrige el orden en el DOM.'));
   });
   body.querySelectorAll('[aria-hidden="true"]').forEach(el => {
     const f = el.matches(FOCUSABLE) ? el : el.querySelector(FOCUSABLE);
-    if (f && f.getAttribute('tabindex') !== '-1') add('aria-hidden-focus', 'error', '4.1.2', 'A focusable element is hidden from screen readers (aria-hidden).', f, 'Remove aria-hidden, or take the element out of the tab order.');
+    if (f && f.getAttribute('tabindex') !== '-1') add('aria-hidden-focus', 'error', '4.1.2', L('A focusable element is hidden from screen readers (aria-hidden).', 'Un elemento enfocable está oculto para los lectores de pantalla (aria-hidden).'), f, L('Remove aria-hidden, or take the element out of the tab order.', 'Quita aria-hidden, o saca el elemento del orden de tabulación.'));
   });
   passed.add('Focus order');
 
@@ -193,8 +194,8 @@ export function audit(doc) {
     // Inline links inside running text are exempt.
     if (el.tagName === 'A' && win.getComputedStyle(el).display === 'inline' && textOf(el.parentElement).length > textOf(el).length + 3) return;
     const size = `${Math.round(r.width)}×${Math.round(r.height)}px`;
-    if (r.width < 24 || r.height < 24) add('target-size', 'error', '2.5.8', `Tap target is only ${size}.`, el, 'Make it at least 24×24px (44×44 is better) with padding or min-height.');
-    else if (r.width < 44 || r.height < 44) add('target-size-enhanced', 'notice', '2.5.5 (AAA)', `Tap target is ${size} — below the comfortable 44×44px.`, el, 'Consider 44×44px for touch, especially for primary actions.');
+    if (r.width < 24 || r.height < 24) add('target-size', 'error', '2.5.8', L(`Tap target is only ${size}.`, `El objetivo táctil mide solo ${size}.`), el, L('Make it at least 24×24px (44×44 is better) with padding or min-height.', 'Hazlo de al menos 24×24px (mejor 44×44) con padding o min-height.'));
+    else if (r.width < 44 || r.height < 44) add('target-size-enhanced', 'notice', '2.5.5 (AAA)', L(`Tap target is ${size} — below the comfortable 44×44px.`, `El objetivo táctil mide ${size}, por debajo de los cómodos 44×44px.`), el, L('Consider 44×44px for touch, especially for primary actions.', 'Considera 44×44px para pantallas táctiles, sobre todo en acciones principales.'));
   });
   passed.add('Tap target size');
 
@@ -217,7 +218,7 @@ export function audit(doc) {
     const large = px >= 24 || (px >= 18.66 && Number(cs.fontWeight) >= 700);
     const need = large ? 3 : 4.5;
     const disabled = el.closest('[disabled], [aria-disabled="true"]');
-    if (ratio < need && !disabled) add('contrast', 'error', '1.4.3', `Text contrast is ${ratio.toFixed(2)}:1 (needs ${need}:1).`, el, 'Darken the text or lighten the background — try the Contrast Checker in the lab.');
+    if (ratio < need && !disabled) add('contrast', 'error', '1.4.3', L(`Text contrast is ${ratio.toFixed(2)}:1 (needs ${need}:1).`, `El contraste del texto es ${ratio.toFixed(2)}:1 (requiere ${need}:1).`), el, L('Darken the text or lighten the background — try the Contrast Checker in the lab.', 'Oscurece el texto o aclara el fondo; prueba el Verificador de contraste del lab.'));
   }
   passed.add('Text contrast');
 
@@ -264,3 +265,9 @@ export const SAMPLE_HTML = `<!doctype html>
   </div>
 </body>
 </html>`;
+
+export const PASSED_ES = {
+  'Page language': 'Idioma de la página', 'Image alt text': 'Texto alternativo', 'Form labels': 'Etiquetas de formularios',
+  'Button and link names': 'Nombres de botones y enlaces', 'Heading structure': 'Estructura de títulos', 'Unique ids': 'ids únicos',
+  'Focus order': 'Orden de foco', 'Tap target size': 'Tamaño de objetivos táctiles', 'Text contrast': 'Contraste del texto',
+};

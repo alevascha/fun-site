@@ -2,10 +2,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   hexToRgb, hslToRgb, rgbToHex, rgbToHsl, contrastRatio, bestTextColor, findAAFix, suggestClosestPassing,
 } from '../lib/color';
-import { buildToneColumn } from '../lib/palette';
+import { buildToneColumn, localName } from '../lib/palette';
+import { useLang } from '../i18n';
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
 
 function ToneCell({ tone, refs, threshold, level, onToneChange }) {
+  const { lang, t } = useLang();
   const bgRgb = hexToRgb(tone.hex);
   const ink = bestTextColor(bgRgb);
 
@@ -21,7 +23,7 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
         key={tone.hex}
         className="tone-hex"
         defaultValue={tone.hex}
-        aria-label={`Tone ${tone.symbol} hex`}
+        aria-label={t(`Tone ${tone.symbol} hex`, `Hex del tono ${tone.symbol}`)}
         spellCheck={false}
         onBlur={e => commitHex(e.target.value)}
         onKeyDown={e => { if (e.key === 'Enter') e.target.blur(); }}
@@ -33,7 +35,10 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
           if (!fgRgb) return null;
           const ratio = contrastRatio(bgRgb, fgRgb);
           const pass = ratio >= threshold;
-          const label = `${ref.name} text on ${tone.hex}: ${ratio.toFixed(2)}:1 — ${pass ? 'passes' : 'fails'} ${level} ${threshold}:1${pass ? '' : '. Click to fix.'}`;
+          const label = t(
+            `${ref.name} text on ${tone.hex}: ${ratio.toFixed(2)}:1 — ${pass ? 'passes' : 'fails'} ${level} ${threshold}:1${pass ? '' : '. Click to fix.'}`,
+            `Texto ${localName(ref.name, lang).toLowerCase()} sobre ${tone.hex}: ${ratio.toFixed(2)}:1 — ${pass ? 'pasa' : 'falla'} ${level} ${threshold}:1${pass ? '' : '. Haz clic para corregir.'}`,
+          );
           return (
             <motion.button
               key={ref.name}
@@ -63,6 +68,7 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
 }
 
 function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
+  const { lang, t } = useLang();
   const centerTone = sw.tones[3];
 
   const notes = refs.map(ref => {
@@ -74,7 +80,7 @@ function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
     if (!suggestion) {
       return (
         <motion.div key={ref.name} layout initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="suggest-note">
-          No shade of this hue reaches {threshold}:1 against <b>{ref.name}</b> text.
+          {t('No shade of this hue reaches', 'Ningún matiz de este tono alcanza')} {threshold}:1 {t('against', 'contra el texto')} <b>{localName(ref.name, lang)}</b>{t(' text.', '.')}
         </motion.div>
       );
     }
@@ -92,7 +98,7 @@ function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
         onClick={() => onUpdateSwatch({ ...sw, tones: buildToneColumn(suggestion) })}
       >
         <span className="suggest-chip" style={{ background: sHex }} />
-        <span>None pass for <b>{ref.name}</b>. Use {sHex}</span>
+        <span>{t('None pass for', 'Ninguno pasa para')} <b>{localName(ref.name, lang)}</b>. {t('Use', 'Usa')} {sHex}</span>
       </motion.button>
     );
   });
@@ -114,13 +120,14 @@ function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
           />
         ))}
       </div>
-      <div className="swatch-name">{sw.name}</div>
+      <div className="swatch-name">{localName(sw.name, lang)}</div>
       <AnimatePresence>{notes}</AnimatePresence>
     </motion.div>
   );
 }
 
 export default function PaletteResults({ groups, setGroups, refs, threshold, level }) {
+  const { lang, t } = useLang();
   function updateSwatch(groupIndex, swatchIndex, nextSwatch) {
     setGroups(prev => {
       const next = prev.map(g => ({ ...g, swatches: g.swatches.slice() }));
@@ -141,8 +148,8 @@ export default function PaletteResults({ groups, setGroups, refs, threshold, lev
           transition={{ duration: 0.6, ease: EASE }}
         >
           <div className="pg-group-head">
-            <h3 className="card-title" style={{ margin: 0 }}>{group.name}</h3>
-            <span className="badge badge-neutral">{group.percentage} of the UI</span>
+            <h3 className="card-title" style={{ margin: 0 }}>{localName(group.name, lang)}</h3>
+            <span className="badge badge-neutral">{group.percentage} {t('of the UI', 'de la interfaz')}</span>
           </div>
           <div className="swatch-grid">
             {group.swatches.map((sw, si) => (

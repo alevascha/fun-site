@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { getTheme, setTheme } from '../lib/theme';
 import { track } from '../lib/analytics';
+import { useLang } from '../i18n';
 
 const Moon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -16,6 +17,7 @@ const Sun = () => (
 );
 
 export default function ThemeToggle() {
+  const { t } = useLang();
   const [theme, setLocal] = useState(getTheme);
 
   useEffect(() => {
@@ -35,8 +37,8 @@ export default function ThemeToggle() {
       type="button"
       className="theme-toggle"
       onClick={toggle}
-      aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-      title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+      aria-label={theme === 'dark' ? t('Switch to light mode', 'Cambiar a modo claro') : t('Switch to dark mode', 'Cambiar a modo oscuro')}
+      title={theme === 'dark' ? t('Light mode', 'Modo claro') : t('Dark mode', 'Modo oscuro')}
       whileHover={{ scale: 1.08 }}
       whileTap={{ scale: 0.9 }}
     >

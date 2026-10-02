@@ -8,6 +8,7 @@
 // Omit `path` (or set active:false) for a "coming soon" placeholder card.
 
 import { SEO } from './seo.js';
+import { ES, HOME_ES } from './seo-es.js';
 
 export const SITE = {
   name: "Ale's Fun Lab",
@@ -23,6 +24,11 @@ export const SITE = {
   // the ad unit slot ids from AdSense → Ads → By ad unit. Empty = no ads,
   // no AdSense script, no ads.txt.
   adsenseClient: '',
+  // Brevo forms (Contacts → Forms → your form → Share → copy the form's
+  // action URL, e.g. https://xxxx.sibforms.com/serve/MUIF…). One form per
+  // list: newsletter and the Lab Pro waitlist. Empty = signup hidden in
+  // production (still visible in dev so it can be styled).
+  newsletter: { action: '', waitlistAction: '' },
   adSlots: { hub: '', tool: '' },
 };
 
@@ -181,18 +187,25 @@ export const HOME_META = {
   description: SITE.description,
   path: '/',
   image: '/og/home.png',
+  lang: 'en',
+  alternates: { en: '/', es: '/es' },
 };
 
-export function getSeo(id) {
-  return SEO[id] || {};
+export function getSeo(id, lang = 'en') {
+  return (lang === 'es' ? ES[id] : SEO[id]) || {};
 }
 
-export function getPageMeta(exp) {
-  const seo = getSeo(exp.id);
+export function getPageMeta(exp, lang = 'en') {
+  const seo = getSeo(exp.id, lang);
+  const es = lang === 'es' && ES[exp.id];
   return {
     title: `${seo.title || exp.title} — ${SITE.name}`,
     description: seo.description || exp.description,
-    path: exp.path,
+    path: es ? `/es/${ES[exp.id].slug}` : exp.path,
     image: `/og/${exp.id}.png`,
+    lang,
+    alternates: { en: exp.path, es: `/es/${ES[exp.id]?.slug}` },
   };
 }
+
+export const HOME_META_ES = { ...HOME_ES, path: '/es', image: '/og/home.png', lang: 'es', alternates: { en: '/', es: '/es' } };

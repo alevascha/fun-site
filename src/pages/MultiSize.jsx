@@ -4,7 +4,8 @@ import { zipSync } from 'fflate';
 import ToolPage from '../components/ToolPage';
 import { ColorField, Reveal, Segmented } from '../components/ui';
 import { EASE } from '../lib/motion';
-import { drawCreative, ensureFonts, sampleImage, SIZES } from '../lib/creative';
+import { drawCreative, ensureFonts, SAFE_ES, sampleImage, SIZE_ES, SIZES } from '../lib/creative';
+import { useLang } from '../i18n';
 import { track } from '../lib/analytics';
 import { haptic } from '../lib/haptics';
 
@@ -18,6 +19,7 @@ function save(blob, name) {
 }
 
 function SafeZones({ size }) {
+  const { t } = useLang();
   return size.safe.map((z, i) => {
     const style = z.inset != null
       ? { inset: `${z.inset * 100}%`, border: '1.5px dashed rgba(255, 206, 31, 0.9)', borderRadius: 4 }
@@ -28,13 +30,15 @@ function SafeZones({ size }) {
         };
     return (
       <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'absolute', pointerEvents: 'none', ...style }}>
-        {z.label && <span style={{ position: 'absolute', left: 6, top: 4, fontSize: 10, fontWeight: 700, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,.6)' }}>{z.label}</span>}
+        {z.label && <span style={{ position: 'absolute', left: 6, top: 4, fontSize: 10, fontWeight: 700, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,.6)' }}>{t(z.label, SAFE_ES[z.label])}</span>}
       </motion.span>
     );
   });
 }
 
 function Preview({ size, data, fontsReady, showSafe, index }) {
+  const { t } = useLang();
+  const sizeName = t(size.name, SIZE_ES[size.id]);
   const ref = useRef(null);
   useEffect(() => {
     if (!fontsReady || !ref.current) return;
@@ -62,25 +66,26 @@ function Preview({ size, data, fontsReady, showSafe, index }) {
     >
       <div style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 8, borderRadius: 14, background: 'var(--surface-2)' }}>
         <motion.div whileHover={{ scale: 1.02 }} style={{ position: 'relative', width: '100%', maxWidth: size.w / size.h < 0.7 ? 220 : '100%', aspectRatio: `${size.w} / ${size.h}`, borderRadius: 6, overflow: 'hidden', boxShadow: '0 12px 30px -18px rgba(0,0,0,.6)' }}>
-          <canvas ref={ref} role="img" aria-label={`${size.name} preview`} style={{ width: '100%', height: '100%', display: 'block' }} />
+          <canvas ref={ref} role="img" aria-label={t(`${size.name} preview`, `Vista previa: ${sizeName}`)} style={{ width: '100%', height: '100%', display: 'block' }} />
           <AnimatePresence>{showSafe && <SafeZones size={size} />}</AnimatePresence>
         </motion.div>
       </div>
       <figcaption style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
         <span style={{ minWidth: 0 }}>
-          <strong style={{ display: 'block', fontSize: 14 }}>{size.name}</strong>
+          <strong style={{ display: 'block', fontSize: 14 }}>{sizeName}</strong>
           <span className="mono small muted">{size.w}×{size.h}</span>
         </span>
-        <button type="button" className="btn btn-ghost btn-sm" onClick={download} aria-label={`Download ${size.name} PNG`}>PNG ↓</button>
+        <button type="button" className="btn btn-ghost btn-sm" onClick={download} aria-label={t(`Download ${size.name} PNG`, `Descargar PNG: ${sizeName}`)}>PNG ↓</button>
       </figcaption>
     </motion.figure>
   );
 }
 
 export default function MultiSize() {
-  const [headline, setHeadline] = useState('Design tools, built for fun');
-  const [sub, setSub] = useState('Free experiments for color, type and motion.');
-  const [cta, setCta] = useState('Try it free');
+  const { t } = useLang();
+  const [headline, setHeadline] = useState(() => t('Design tools, built for fun', 'Herramientas de diseño, hechas por diversión'));
+  const [sub, setSub] = useState(() => t('Free experiments for color, type and motion.', 'Experimentos gratis de color, tipografía y movimiento.'));
+  const [cta, setCta] = useState(() => t('Try it free', 'Pruébalo gratis'));
   const [logo, setLogo] = useState("Ale's Fun Lab");
   const [brand, setBrand] = useState('#CD57FF');
   const [accent, setAccent] = useState('#FFCE1F');
@@ -132,30 +137,30 @@ export default function MultiSize() {
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
-            <h2 className="eyebrow">Message</h2>
+            <h2 className="eyebrow">{t('Message', 'Mensaje')}</h2>
             <div className="stack" style={{ gap: 12 }}>
-              <div className="field"><label className="field-label" htmlFor="ms-head">Headline</label><input id="ms-head" className="input" value={headline} onChange={e => setHeadline(e.target.value)} /></div>
-              <div className="field"><label className="field-label" htmlFor="ms-sub">Supporting line</label><input id="ms-sub" className="input" value={sub} onChange={e => setSub(e.target.value)} /></div>
+              <div className="field"><label className="field-label" htmlFor="ms-head">{t('Headline', 'Título')}</label><input id="ms-head" className="input" value={headline} onChange={e => setHeadline(e.target.value)} /></div>
+              <div className="field"><label className="field-label" htmlFor="ms-sub">{t('Supporting line', 'Texto de apoyo')}</label><input id="ms-sub" className="input" value={sub} onChange={e => setSub(e.target.value)} /></div>
               <div className="grid-2" style={{ gap: 12 }}>
-                <div className="field"><label className="field-label" htmlFor="ms-cta">Button</label><input id="ms-cta" className="input" value={cta} onChange={e => setCta(e.target.value)} /></div>
-                <div className="field"><label className="field-label" htmlFor="ms-logo">Brand</label><input id="ms-logo" className="input" value={logo} onChange={e => setLogo(e.target.value)} /></div>
+                <div className="field"><label className="field-label" htmlFor="ms-cta">{t('Button', 'Botón')}</label><input id="ms-cta" className="input" value={cta} onChange={e => setCta(e.target.value)} /></div>
+                <div className="field"><label className="field-label" htmlFor="ms-logo">{t('Brand', 'Marca')}</label><input id="ms-logo" className="input" value={logo} onChange={e => setLogo(e.target.value)} /></div>
               </div>
             </div>
           </Reveal>
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Colors</h2>
+            <h2 className="eyebrow">{t('Colors', 'Colores')}</h2>
             <div className="stack" style={{ gap: 12 }}>
-              <ColorField label="Button" value={brand} onChange={setBrand} />
-              <ColorField label="Accent (brand name)" value={accent} onChange={setAccent} />
-              <ColorField label="Background" value={bg} onChange={setBg} />
+              <ColorField label={t('Button', 'Botón')} value={brand} onChange={setBrand} />
+              <ColorField label={t('Accent (brand name)', 'Acento (nombre de marca)')} value={accent} onChange={setAccent} />
+              <ColorField label={t('Background', 'Fondo')} value={bg} onChange={setBg} />
             </div>
           </Reveal>
           <Reveal className="card" delay={0.1}>
             <h2 className="eyebrow">
-              Image & focal point
+              {t('Image & focal point', 'Imagen y punto focal')}
               <span className="chip-row">
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()}>Upload</button>
-                {image && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setImage(null)}>None</button>}
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()}>{t('Upload', 'Subir')}</button>
+                {image && <button type="button" className="btn btn-ghost btn-sm" onClick={() => setImage(null)}>{t('None', 'Ninguna')}</button>}
               </span>
             </h2>
             <input ref={fileRef} type="file" accept="image/*" hidden onChange={e => loadFile(e.target.files?.[0])} />
@@ -167,7 +172,7 @@ export default function MultiSize() {
                 onPointerMove={e => { if (e.buttons) moveFocal(e); }}
                 role="slider"
                 tabIndex={0}
-                aria-label={`Focal point at ${Math.round(focal.x * 100)}% across, ${Math.round(focal.y * 100)}% down. Use arrow keys to move.`}
+                aria-label={t(`Focal point at ${Math.round(focal.x * 100)}% across, ${Math.round(focal.y * 100)}% down. Use arrow keys to move.`, `Punto focal al ${Math.round(focal.x * 100)}% horizontal y ${Math.round(focal.y * 100)}% vertical. Usa las flechas para mover.`)}
                 aria-valuenow={Math.round(focal.x * 100)}
                 onKeyDown={e => {
                   const d = e.shiftKey ? 0.1 : 0.02;
@@ -183,18 +188,18 @@ export default function MultiSize() {
                 />
               </div>
             ) : (
-              <p className="small muted" style={{ margin: 0 }}>No image — layouts use the brand color as a glow instead.</p>
+              <p className="small muted" style={{ margin: 0 }}>{t('No image — layouts use the brand color as a glow instead.', 'Sin imagen: los diseños usan el color de marca como brillo.')}</p>
             )}
           </Reveal>
         </div>
 
         <div className="stack">
           <Reveal className="card" style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center', justifyContent: 'space-between' }}>
-            <Segmented label="Size group" value={group} onChange={setGroup} options={['All', 'Social', 'Display ads'].map(g => ({ value: g, label: g }))} />
+            <Segmented label={t('Size group', 'Grupo de tamaños')} value={group} onChange={setGroup} options={['All', 'Social', 'Display ads'].map(g => ({ value: g, label: t(g, { All: 'Todos', Social: 'Redes', 'Display ads': 'Anuncios display' }[g]) }))} />
             <span className="chip-row">
-              <Segmented label="Safe zones" value={showSafe ? 'on' : 'off'} onChange={v => setShowSafe(v === 'on')} options={[{ value: 'on', label: 'Safe zones' }, { value: 'off', label: 'Clean' }]} />
+              <Segmented label={t('Safe zones', 'Zonas seguras')} value={showSafe ? 'on' : 'off'} onChange={v => setShowSafe(v === 'on')} options={[{ value: 'on', label: t('Safe zones', 'Zonas seguras') }, { value: 'off', label: t('Clean', 'Limpio') }]} />
               <motion.button type="button" className="btn btn-primary btn-sm" whileTap={{ scale: 0.94 }} onClick={downloadAll} disabled={zipping}>
-                {zipping ? 'Rendering…' : `Download ${sizes.length} PNGs (ZIP)`}
+                {zipping ? t('Rendering…', 'Generando…') : t(`Download ${sizes.length} PNGs (ZIP)`, `Descargar ${sizes.length} PNG (ZIP)`)}
               </motion.button>
             </span>
           </Reveal>

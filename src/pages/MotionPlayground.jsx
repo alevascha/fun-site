@@ -1,4 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import useUrlState, { num } from '../hooks/useUrlState';
+import ShareLink from '../components/ShareLink';
 import { motion } from 'framer-motion';
 import ToolPage from '../components/ToolPage';
 import { CopyButton, RangeField, Reveal, Segmented } from '../components/ui';
@@ -7,6 +10,7 @@ import { kebab } from '../lib/tokens';
 import useCopy from '../hooks/useCopy';
 import { haptic } from '../lib/haptics';
 import { track } from '../lib/analytics';
+import { useLang } from '../i18n';
 
 /* ---------- cubic-bezier editor ---------- */
 
@@ -14,6 +18,7 @@ const X = x => 20 + x * 200;
 const Y = y => 230 - y * 180;
 
 function BezierEditor({ value, onChange }) {
+  const { t } = useLang();
   const svgRef = useRef(null);
   const [x1, y1, x2, y2] = value;
 
@@ -64,7 +69,7 @@ function BezierEditor({ value, onChange }) {
         cx={X(hx)} cy={Y(hy)} r="10"
         tabIndex={0}
         role="slider"
-        aria-label={`Control point ${i + 1}: x ${hx}, y ${hy}. Use arrow keys to move.`}
+        aria-label={t(`Control point ${i + 1}: x ${hx}, y ${hy}. Use arrow keys to move.`, `Punto de control ${i + 1}: x ${hx}, y ${hy}. Usa las flechas para mover.`)}
         aria-valuenow={hy}
         fill={i === 0 ? '#CD57FF' : '#FFCE1F'}
         stroke="var(--surface)"
@@ -94,8 +99,8 @@ function BezierEditor({ value, onChange }) {
       </defs>
       {handle(0, x1, y1)}
       {handle(1, x2, y2)}
-      <text x={X(0)} y={Y(0) + 22} fontSize="11" fill="var(--muted)">time →</text>
-      <text x={X(0) - 6} y={Y(1) - 8} fontSize="11" fill="var(--muted)">progress</text>
+      <text x={X(0)} y={Y(0) + 22} fontSize="11" fill="var(--muted)">{t('time →', 'tiempo →')}</text>
+      <text x={X(0) - 6} y={Y(1) - 8} fontSize="11" fill="var(--muted)">{t('progress', 'progreso')}</text>
     </svg>
   );
 }
@@ -118,14 +123,23 @@ function SpringPlot({ sim }) {
 /* ---------- page ---------- */
 
 export default function MotionPlayground() {
-  const [bezier, setBezier] = useState([0.16, 1, 0.3, 1]);
-  const [duration, setDuration] = useState(600);
-  const [spring, setSpring] = useState({ stiffness: 300, damping: 18, mass: 1 });
+  const { t } = useLang();
+  const [params] = useSearchParams();
+  const [bezier, setBezier] = useState(() => {
+    const v = (params.get('bz') || '').split(',').map(Number);
+    return v.length === 4 && v.every(Number.isFinite) ? [Math.min(1, Math.max(0, v[0])), v[1], Math.min(1, Math.max(0, v[2])), v[3]] : [0.16, 1, 0.3, 1];
+  });
+  const [duration, setDuration] = useState(() => num(params.get('d'), 600, 100, 1500));
+  const [spring, setSpring] = useState(() => ({
+    stiffness: num(params.get('k'), 300, 20, 800), damping: num(params.get('c'), 18, 2, 80), mass: num(params.get('mass'), 1, 0.2, 5),
+  }));
   const [demoSource, setDemoSource] = useState('spring');
   // Looping is opt-in for people who asked their OS for less motion.
   const [loop, setLoop] = useState(() => !window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   const [name, setName] = useState('standard');
   const [exportFormat, setExportFormat] = useState('css');
+
+  useUrlState(() => ({ bz: bezier.join(','), d: duration, k: spring.stiffness, c: spring.damping, mass: spring.mass }), [bezier, duration, spring]);
   const [copied, copy] = useCopy();
   const lanesRef = useRef([]);
   const demoRefs = useRef({});
@@ -139,10 +153,10 @@ export default function MotionPlayground() {
   const bezierCss = `cubic-bezier(${bezier.join(', ')})`;
 
   const lanes = useMemo(() => [
-    { label: 'Linear', easing: 'linear', duration },
-    { label: 'Your curve', easing: bezierCss, duration },
-    { label: 'Your spring', easing: springEasing, duration: springMs },
-  ], [duration, bezierCss, springEasing, springMs]);
+    { label: t('Linear', 'Lineal'), easing: 'linear', duration },
+    { label: t('Your curve', 'Tu curva'), easing: bezierCss, duration },
+    { label: t('Your spring', 'Tu resorte'), easing: springEasing, duration: springMs },
+  ], [duration, bezierCss, springEasing, springMs, t]);
 
   const play = useCallback(() => {
     const trackEl = trackRef.current;
@@ -211,21 +225,21 @@ extension Animation {
             {BEZIER_PRESETS.map(p => (
               <motion.button key={p.name} type="button" className="btn btn-ghost btn-sm" whileTap={{ scale: 0.92 }} aria-pressed={bezier.join() === p.value.join()} onClick={() => setBezier(p.value)}
                 style={bezier.join() === p.value.join() ? { background: 'var(--chip-bg)', color: 'var(--chip-text)' } : undefined}>
-                {p.name}
+                {t(p.name, p.es)}
               </motion.button>
             ))}
           </div>
           <div style={{ marginTop: 16 }}>
-            <RangeField label="Duration" value={duration} min={100} max={1500} step={10} onChange={setDuration} format={v => `${v}ms`} />
+            <RangeField label={t('Duration', 'Duración')} value={duration} min={100} max={1500} step={10} onChange={setDuration} format={v => `${v}ms`} />
           </div>
         </Reveal>
 
         <Reveal className="card" delay={0.05}>
           <h2 className="eyebrow">
-            Spring
+            {t('Spring', 'Resorte')}
             <span className="chip-row">
-              <span className="badge badge-neutral">settles {springMs}ms</span>
-              <span className="badge badge-neutral">overshoot {Math.round(overshoot * 100)}%</span>
+              <span className="badge badge-neutral">{t('settles', 'se asienta en')} {springMs}ms</span>
+              <span className="badge badge-neutral">{t('overshoot', 'rebote')} {Math.round(overshoot * 100)}%</span>
             </span>
           </h2>
           <SpringPlot sim={sim} />
@@ -235,25 +249,25 @@ extension Animation {
               return (
                 <motion.button key={p.name} type="button" className="btn btn-ghost btn-sm" whileTap={{ scale: 0.92 }} aria-pressed={on} onClick={() => setSpring(p.value)}
                   style={on ? { background: 'var(--chip-bg)', color: 'var(--chip-text)' } : undefined}>
-                  {p.name}
+                  {t(p.name, p.es)}
                 </motion.button>
               );
             })}
           </div>
           <div className="stack" style={{ gap: 10, marginTop: 16 }}>
-            <RangeField label="Stiffness" value={spring.stiffness} min={20} max={800} step={5} onChange={v => setSpring(s => ({ ...s, stiffness: v }))} />
-            <RangeField label="Damping" value={spring.damping} min={2} max={80} step={1} onChange={v => setSpring(s => ({ ...s, damping: v }))} />
-            <RangeField label="Mass" value={spring.mass} min={0.2} max={5} step={0.1} onChange={v => setSpring(s => ({ ...s, mass: v }))} />
+            <RangeField label={t('Stiffness', 'Rigidez')} value={spring.stiffness} min={20} max={800} step={5} onChange={v => setSpring(s => ({ ...s, stiffness: v }))} />
+            <RangeField label={t('Damping', 'Amortiguación')} value={spring.damping} min={2} max={80} step={1} onChange={v => setSpring(s => ({ ...s, damping: v }))} />
+            <RangeField label={t('Mass', 'Masa')} value={spring.mass} min={0.2} max={5} step={0.1} onChange={v => setSpring(s => ({ ...s, mass: v }))} />
           </div>
         </Reveal>
       </div>
 
       <Reveal className="card" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
         <h2 className="eyebrow">
-          The race
+          {t('The race', 'La carrera')}
           <span className="chip-row">
-            <Segmented label="Loop" value={loop ? 'loop' : 'once'} onChange={v => setLoop(v === 'loop')} options={[{ value: 'loop', label: 'Loop' }, { value: 'once', label: 'Once' }]} />
-            <motion.button type="button" className="btn btn-primary btn-sm" whileTap={{ scale: 0.92 }} onClick={() => { play(); track('Motion replay'); }}>▶ Replay</motion.button>
+            <Segmented label={t('Loop', 'Repetir')} value={loop ? 'loop' : 'once'} onChange={v => setLoop(v === 'loop')} options={[{ value: 'loop', label: t('Loop', 'En bucle') }, { value: 'once', label: t('Once', 'Una vez') }]} />
+            <motion.button type="button" className="btn btn-primary btn-sm" whileTap={{ scale: 0.92 }} onClick={() => { play(); track('Motion replay'); }}>▶ {t('Replay', 'Repetir')}</motion.button>
           </span>
         </h2>
         <div ref={trackRef} className="stack" style={{ gap: 12 }}>
@@ -272,8 +286,8 @@ extension Animation {
       <div className="grid-2" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
         <Reveal className="card">
           <h2 className="eyebrow">
-            In real UI
-            <Segmented label="Demo easing" value={demoSource} onChange={setDemoSource} options={[{ value: 'spring', label: 'Spring' }, { value: 'bezier', label: 'Curve' }]} />
+            {t('In real UI', 'En una interfaz real')}
+            <Segmented label={t('Demo easing', 'Easing de la demo')} value={demoSource} onChange={setDemoSource} options={[{ value: 'spring', label: t('Spring', 'Resorte') }, { value: 'bezier', label: t('Curve', 'Curva') }]} />
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
             <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
@@ -285,7 +299,7 @@ extension Animation {
             </div>
             <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
               <div ref={el => { demoRefs.current.toast = el; }} style={{ position: 'absolute', left: 12, right: 12, bottom: 12, padding: '12px 14px', borderRadius: 14, background: 'var(--chip-bg)', color: 'var(--chip-text)', fontSize: 13, fontWeight: 600 }}>
-                ✓ Changes saved
+                ✓ {t('Changes saved', 'Cambios guardados')}
               </div>
             </div>
             <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
@@ -298,12 +312,15 @@ extension Animation {
 
         <Reveal className="card" delay={0.05}>
           <h2 className="eyebrow">
-            Export
-            <CopyButton copied={copied === 'out'} onClick={() => copy(exports[exportFormat], 'out', { name: 'Copy', props: { tool: 'motion-playground', format: exportFormat } })}>Copy</CopyButton>
+            {t('Export', 'Exportar')}
+            <span className="chip-row">
+              <ShareLink tool="motion-playground" />
+              <CopyButton copied={copied === 'out'} onClick={() => copy(exports[exportFormat], 'out', { name: 'Copy', props: { tool: 'motion-playground', format: exportFormat } })}>{t('Copy', 'Copiar')}</CopyButton>
+            </span>
           </h2>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 12 }}>
-            <input className="input" aria-label="Token name" value={name} onChange={e => setName(e.target.value)} style={{ maxWidth: 160 }} />
-            <Segmented label="Export format" value={exportFormat} onChange={setExportFormat} options={[{ value: 'css', label: 'CSS' }, { value: 'tokens', label: 'Tokens' }, { value: 'framer', label: 'Framer Motion' }, { value: 'swift', label: 'SwiftUI' }]} />
+            <input className="input" aria-label={t('Token name', 'Nombre del token')} value={name} onChange={e => setName(e.target.value)} style={{ maxWidth: 160 }} />
+            <Segmented label={t('Export format', 'Formato de exportación')} value={exportFormat} onChange={setExportFormat} options={[{ value: 'css', label: 'CSS' }, { value: 'tokens', label: 'Tokens' }, { value: 'framer', label: 'Framer Motion' }, { value: 'swift', label: 'SwiftUI' }]} />
           </div>
           <pre className="code-block" data-lenis-prevent style={{ maxHeight: 300 }}>{exports[exportFormat]}</pre>
         </Reveal>

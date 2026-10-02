@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { HARMONIES } from '../lib/palette';
+import { HARMONIES, HARMONY_ES } from '../lib/palette';
+import { useLang } from '../i18n';
 
 function HarmonyIcon({ offsets }) {
   const R = 15, C = 19;
@@ -22,8 +23,9 @@ function HarmonyIcon({ offsets }) {
 }
 
 export default function HarmonyPicker({ value, onChange }) {
+  const { t } = useLang();
   return (
-    <div className="harmony-grid" role="group" aria-label="Color harmony">
+    <div className="harmony-grid" role="group" aria-label={t('Color harmony', 'Armonía de color')}>
       {HARMONIES.map(h => {
         const selected = value === h.id;
         return (
@@ -41,7 +43,7 @@ export default function HarmonyPicker({ value, onChange }) {
             <motion.span animate={{ rotate: selected ? 360 : 0 }} transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} style={{ display: 'grid' }}>
               <HarmonyIcon offsets={h.offsets} />
             </motion.span>
-            <span>{h.label}</span>
+            <span>{t(h.label, HARMONY_ES[h.id])}</span>
           </motion.button>
         );
       })}

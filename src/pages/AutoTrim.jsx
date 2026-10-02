@@ -7,6 +7,7 @@ import { EASE } from '../lib/motion';
 import { makeSamples, trimImage } from '../lib/trim';
 import { track } from '../lib/analytics';
 import { haptic } from '../lib/haptics';
+import { useLang } from '../i18n';
 
 let uid = 0;
 
@@ -20,6 +21,7 @@ function saveBlob(blob, name) {
 const trimmedName = name => name.replace(/\.[^.]+$/, '') + '-trimmed.png';
 
 function ResultCard({ item, result, onRemove, index }) {
+  const { t } = useLang();
   const [compare, setCompare] = useState(false);
   const saved = result && !result.empty ? 1 - (result.width * result.height) / (result.origW * result.origH) : 0;
   return (
@@ -35,12 +37,12 @@ function ResultCard({ item, result, onRemove, index }) {
       <div className="checker" style={{ position: 'relative', aspectRatio: '4 / 3', borderRadius: 16, overflow: 'hidden', display: 'grid', placeItems: 'center' }}>
         <AnimatePresence mode="wait" initial={false}>
           {!result ? (
-            <motion.span key="busy" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>Trimming…</motion.span>
+            <motion.span key="busy" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{t('Trimming…', 'Recortando…')}</motion.span>
           ) : result.empty ? (
-            <motion.span key="empty" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>Nothing left — the image is fully transparent.</motion.span>
+            <motion.span key="empty" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('Nothing left — the image is fully transparent.', 'No queda nada: la imagen es completamente transparente.')}</motion.span>
           ) : compare ? (
             <motion.div key="before" style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%', aspectRatio: `${result.origW} / ${result.origH}`, width: result.origW >= result.origH ? '92%' : 'auto', height: result.origW >= result.origH ? 'auto' : '92%' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-              <img src={item.url} alt={`${item.name}, original`} style={{ width: '100%', height: '100%', objectFit: 'contain', boxShadow: '0 0 0 1px rgba(127,127,127,.4)' }} />
+              <img src={item.url} alt={`${item.name}, ${t('original', 'original')}`} style={{ width: '100%', height: '100%', objectFit: 'contain', boxShadow: '0 0 0 1px rgba(127,127,127,.4)' }} />
               <motion.span
                 initial={{ opacity: 0, scale: 1.15 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -54,30 +56,31 @@ function ResultCard({ item, result, onRemove, index }) {
               />
             </motion.div>
           ) : (
-            <motion.img key={result.url} src={result.url} alt={`${item.name}, trimmed`} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: EASE }}
+            <motion.img key={result.url} src={result.url} alt={`${item.name}, ${t('trimmed', 'recortada')}`} initial={{ opacity: 0, scale: 0.92 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.4, ease: EASE }}
               style={{ maxWidth: '88%', maxHeight: '88%', objectFit: 'contain', boxShadow: '0 0 0 1px rgba(205,87,255,.45)' }} />
           )}
         </AnimatePresence>
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8, alignItems: 'baseline' }}>
         <strong style={{ fontSize: 14, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }} title={item.name}>{item.name}</strong>
-        {result && !result.empty && <span className="badge badge-pass">−{Math.round(saved * 100)}% area</span>}
+        {result && !result.empty && <span className="badge badge-pass">−{Math.round(saved * 100)}% {t('area', 'de área')}</span>}
       </div>
       {result && !result.empty && (
         <span className="mono small muted">{result.origW}×{result.origH} → {result.width}×{result.height}</span>
       )}
       <div className="chip-row">
         <button type="button" className="btn btn-ghost btn-sm" aria-pressed={compare} onClick={() => { setCompare(c => !c); haptic(); }} disabled={!result || result.empty}>
-          {compare ? 'Show result' : 'Show crop'}
+          {compare ? t('Show result', 'Ver resultado') : t('Show crop', 'Ver recorte')}
         </button>
-        <button type="button" className="btn btn-primary btn-sm" disabled={!result || result.empty} onClick={() => { saveBlob(result.blob, trimmedName(item.name)); track('Download', { tool: 'auto-trim', count: '1' }); }}>Download</button>
-        <button type="button" className="btn btn-ghost btn-sm" aria-label={`Remove ${item.name}`} onClick={onRemove} style={{ marginLeft: 'auto' }}>✕</button>
+        <button type="button" className="btn btn-primary btn-sm" disabled={!result || result.empty} onClick={() => { saveBlob(result.blob, trimmedName(item.name)); track('Download', { tool: 'auto-trim', count: '1' }); }}>{t('Download', 'Descargar')}</button>
+        <button type="button" className="btn btn-ghost btn-sm" aria-label={t(`Remove ${item.name}`, `Quitar ${item.name}`)} onClick={onRemove} style={{ marginLeft: 'auto' }}>✕</button>
       </div>
     </motion.article>
   );
 }
 
 export default function AutoTrim() {
+  const { t } = useLang();
   const [items, setItems] = useState([]);
   const [results, setResults] = useState({});
   const [opts, setOpts] = useState({ alphaThreshold: 8, padding: 0, trimSolid: false, tolerance: 12 });
@@ -146,7 +149,7 @@ export default function AutoTrim() {
               className={'dropzone' + (over ? ' is-over' : '')}
               role="button"
               tabIndex={0}
-              aria-label="Choose images, or drop them here"
+              aria-label={t('Choose images, or drop them here', 'Elige imágenes o suéltalas aquí')}
               style={{ minHeight: 220 }}
               onClick={() => fileRef.current?.click()}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileRef.current?.click(); } }}
@@ -157,29 +160,29 @@ export default function AutoTrim() {
               <input ref={fileRef} type="file" accept="image/*" multiple hidden onChange={e => { addFiles(e.target.files); e.target.value = ''; }} />
               <div style={{ display: 'grid', gap: 8, justifyItems: 'center' }}>
                 <motion.span aria-hidden="true" style={{ fontSize: 40 }} animate={{ rotate: [0, -12, 12, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>✂️</motion.span>
-                <strong>Drop images here</strong>
-                <span className="small muted">PNG, WebP, GIF, JPG — as many as you like</span>
+                <strong>{t('Drop images here', 'Suelta imágenes aquí')}</strong>
+                <span className="small muted">{t('PNG, WebP, GIF, JPG — as many as you like', 'PNG, WebP, GIF, JPG, todas las que quieras')}</span>
               </div>
             </motion.div>
             <div className="chip-row" style={{ marginTop: 12 }}>
-              <button type="button" className="btn btn-ghost btn-sm" onClick={async () => addFiles(await makeSamples())}>Try samples</button>
-              {items.length > 0 && <button type="button" className="btn btn-ghost btn-sm" onClick={() => { items.forEach(i => URL.revokeObjectURL(i.url)); setItems([]); }}>Clear all</button>}
+              <button type="button" className="btn btn-ghost btn-sm" onClick={async () => addFiles(await makeSamples())}>{t('Try samples', 'Probar ejemplos')}</button>
+              {items.length > 0 && <button type="button" className="btn btn-ghost btn-sm" onClick={() => { items.forEach(i => URL.revokeObjectURL(i.url)); setItems([]); }}>{t('Clear all', 'Quitar todas')}</button>}
             </div>
           </Reveal>
 
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Trim settings</h2>
+            <h2 className="eyebrow">{t('Trim settings', 'Ajustes de recorte')}</h2>
             <div className="stack" style={{ gap: 14 }}>
-              <Segmented full label="What counts as empty" value={opts.trimSolid ? 'solid' : 'alpha'} onChange={v => setOpts(o => ({ ...o, trimSolid: v === 'solid' }))} options={[{ value: 'alpha', label: 'Transparent' }, { value: 'solid', label: '+ Solid background' }]} />
-              <RangeField label="Alpha threshold" value={opts.alphaThreshold} min={0} max={128} onChange={v => setOpts(o => ({ ...o, alphaThreshold: v }))} />
+              <Segmented full label={t('What counts as empty', 'Qué se considera vacío')} value={opts.trimSolid ? 'solid' : 'alpha'} onChange={v => setOpts(o => ({ ...o, trimSolid: v === 'solid' }))} options={[{ value: 'alpha', label: t('Transparent', 'Transparente') }, { value: 'solid', label: t('+ Solid background', '+ Fondo sólido') }]} />
+              <RangeField label={t('Alpha threshold', 'Umbral de transparencia')} value={opts.alphaThreshold} min={0} max={128} onChange={v => setOpts(o => ({ ...o, alphaThreshold: v }))} />
               <AnimatePresence initial={false}>
                 {opts.trimSolid && (
                   <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
-                    <RangeField label="Background tolerance" value={opts.tolerance} min={0} max={80} onChange={v => setOpts(o => ({ ...o, tolerance: v }))} />
+                    <RangeField label={t('Background tolerance', 'Tolerancia del fondo')} value={opts.tolerance} min={0} max={80} onChange={v => setOpts(o => ({ ...o, tolerance: v }))} />
                   </motion.div>
                 )}
               </AnimatePresence>
-              <RangeField label="Padding" value={opts.padding} min={0} max={64} onChange={v => setOpts(o => ({ ...o, padding: v }))} format={v => `${v}px`} />
+              <RangeField label={t('Padding', 'Margen')} value={opts.padding} min={0} max={64} onChange={v => setOpts(o => ({ ...o, padding: v }))} format={v => `${v}px`} />
             </div>
           </Reveal>
 
@@ -187,7 +190,7 @@ export default function AutoTrim() {
             {ready > 0 && (
               <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}>
                 <motion.button type="button" className="btn btn-primary" style={{ width: '100%' }} whileTap={{ scale: 0.96 }} onClick={downloadAll} disabled={zipping}>
-                  {zipping ? 'Zipping…' : `Download all (${ready}) as ZIP`}
+                  {zipping ? t('Zipping…', 'Comprimiendo…') : t(`Download all (${ready}) as ZIP`, `Descargar todas (${ready}) en ZIP`)}
                 </motion.button>
               </motion.div>
             )}
@@ -198,8 +201,8 @@ export default function AutoTrim() {
           {items.length === 0 ? (
             <Reveal className="card" style={{ minHeight: 360, display: 'grid', placeItems: 'center', textAlign: 'center' }}>
               <div>
-                <h2 className="card-title">Your trimmed images appear here</h2>
-                <p className="small muted" style={{ maxWidth: 380, margin: '0 auto' }}>Add a few images or try the samples. Use “Show crop” to see exactly what was removed.</p>
+                <h2 className="card-title">{t('Your trimmed images appear here', 'Tus imágenes recortadas aparecerán aquí')}</h2>
+                <p className="small muted" style={{ maxWidth: 380, margin: '0 auto' }}>{t('Add a few images or try the samples. Use “Show crop” to see exactly what was removed.', 'Agrega algunas imágenes o prueba los ejemplos. Usa “Ver recorte” para ver exactamente qué se quitó.')}</p>
               </div>
             </Reveal>
           ) : (

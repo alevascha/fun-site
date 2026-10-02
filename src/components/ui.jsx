@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { normalizeHex } from '../lib/color';
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
 import { haptic } from '../lib/haptics';
+import { useLang } from '../i18n';
 
 /* Fades/slides its children in the first time they scroll into view. */
 export function Reveal({ as = 'div', delay = 0, className, style, children, ...rest }) {
@@ -69,7 +70,7 @@ export function ColorField({ label, value, onChange, id: idProp, hideLabel = fal
       {label && <label className={hideLabel ? 'sr-only' : 'field-label'} htmlFor={id}>{label}</label>}
       <div className="color-field">
         <motion.div className="color-swatch" style={{ background: value }}>
-          <input type="color" aria-label={`${label || 'Color'} picker`} value={value.toLowerCase()} onChange={e => onChange(e.target.value.toUpperCase())} />
+          <input type="color" aria-label={`${label || 'Color'} — picker`} value={value.toLowerCase()} onChange={e => onChange(e.target.value.toUpperCase())} />
         </motion.div>
         <input
           id={id}
@@ -86,7 +87,8 @@ export function ColorField({ label, value, onChange, id: idProp, hideLabel = fal
   );
 }
 
-export function CopyButton({ copied, onClick, children = 'Copy', className = 'btn btn-ghost btn-sm' }) {
+export function CopyButton({ copied, onClick, children, className = 'btn btn-ghost btn-sm' }) {
+  const { t } = useLang();
   return (
     <motion.button type="button" className={className} onClick={e => { haptic(12); onClick(e); }} whileTap={{ scale: 0.94 }} style={{ position: 'relative' }}>
       <AnimatePresence>
@@ -97,11 +99,11 @@ export function CopyButton({ copied, onClick, children = 'Copy', className = 'bt
             animate={{ opacity: 1, y: 0, x: '-50%' }}
             exit={{ opacity: 0, y: -6, x: '-50%' }}
           >
-            Copied ✓
+            {t('Copied ✓', 'Copiado ✓')}
           </motion.span>
         )}
       </AnimatePresence>
-      {children}
+      {children ?? t('Copy', 'Copiar')}
     </motion.button>
   );
 }
@@ -109,6 +111,7 @@ export function CopyButton({ copied, onClick, children = 'Copy', className = 'bt
 /* Stays mounted while values change (no flicker while dragging a color);
    only the icon swaps, and only when pass/fail actually flips. */
 export function PassBadge({ pass, children }) {
+  const { t } = useLang();
   return (
     <span className={'badge ' + (pass ? 'badge-pass' : 'badge-fail')} style={{ transition: 'background-color .3s ease, color .3s ease' }}>
       <AnimatePresence mode="wait" initial={false}>
@@ -123,7 +126,7 @@ export function PassBadge({ pass, children }) {
           {pass ? '✓' : '✕'}
         </motion.span>
       </AnimatePresence>
-      {children ?? (pass ? 'Pass' : 'Fail')}
+      {children ?? (pass ? t('Pass', 'Pasa') : t('Fail', 'Falla'))}
     </span>
   );
 }

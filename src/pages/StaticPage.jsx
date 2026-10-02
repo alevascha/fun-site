@@ -8,11 +8,14 @@ import SplitText from '../components/motion/SplitText';
 import { Reveal } from '../components/ui';
 import { EASE } from '../lib/motion';
 import usePageMeta from '../hooks/usePageMeta';
-import { getStaticPage } from '../pages-content';
+import { getStaticPage, STATIC_PAGES_ES } from '../pages-content';
+import { useLang } from '../i18n';
 
 export default function StaticPage({ id }) {
-  const page = getStaticPage(id);
-  usePageMeta({ title: page.metaTitle, description: page.description, path: page.path, image: '/og/home.png' });
+  const { lang, t, to } = useLang();
+  const page = getStaticPage(id, lang);
+  const enPath = getStaticPage(id).path;
+  usePageMeta({ title: page.metaTitle, description: page.description, path: page.path, image: '/og/home.png', alternates: { en: enPath, es: STATIC_PAGES_ES[id].path } });
   useEffect(() => { document.documentElement.scrollTop = 0; }, [id]);
 
   return (
@@ -22,11 +25,11 @@ export default function StaticPage({ id }) {
         <SiteNav />
         <header className="tool-header" style={{ maxWidth: 820 }}>
           <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.5, ease: EASE }}>
-            <Link to="/" className="back-link"><span className="arrow" aria-hidden="true">←</span> Back to the lab</Link>
+            <Link to={to('/')} className="back-link"><span className="arrow" aria-hidden="true">←</span> {t('Back to the lab', 'Volver al lab')}</Link>
           </motion.div>
-          <SplitText as="h1" className="tool-title" text={page.title} delay={0.1} stagger={0.03} reactive />
+          <SplitText key={lang} as="h1" className="tool-title" text={page.title} delay={0.1} stagger={0.03} reactive />
           <p className="tool-desc">{page.description}</p>
-          <p className="small muted" style={{ margin: 0 }}>Last updated {new Date(page.updated + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          <p className="small muted" style={{ margin: 0 }}>{t('Last updated', 'Última actualización:')} {new Date(page.updated + 'T00:00:00').toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </header>
         <main className="stack" style={{ maxWidth: 820 }}>
           {page.sections.map((s, i) => (

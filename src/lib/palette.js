@@ -132,3 +132,19 @@ export function buildPaletteGroups(baseHsl, harmony) {
 
   return [...colorGroups, neutralLight, neutralDark];
 }
+
+/* Spanish labels for generated group/swatch/text-color names and harmonies. */
+const NAME_ES = [
+  ['Neutral Light', 'Neutro claro'], ['Neutral Dark', 'Neutro oscuro'], ['Main', 'Principal'],
+  ['Secondary', 'Secundario'], ['Tertiary', 'Terciario'], ['Accent', 'Acento'], ['Dark', 'Oscuro'], ['Light', 'Claro'],
+];
+export function localName(name, lang) {
+  if (lang !== 'es') return name;
+  for (const [en, es] of NAME_ES) if (name.startsWith(en)) return es + name.slice(en.length);
+  return name;
+}
+
+export const HARMONY_ES = {
+  complementary: 'Complementaria', analogous: 'Análoga', 'split-complementary': 'Compl. dividida', triad: 'Tríada',
+  square: 'Cuadrada', compound: 'Compuesta', shades: 'Matices', monochromatic: 'Mono',
+};

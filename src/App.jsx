@@ -5,6 +5,10 @@ import Cursor from './components/motion/Cursor';
 import { EASE } from './lib/motion';
 import { scrollToTop, startSmoothScroll } from './lib/smoothScroll';
 import Home from './pages/Home';
+import CommandPalette from './components/CommandPalette';
+import { experiments } from './experiments';
+import { ES, PAGE_PATHS } from './seo-es';
+import LangProvider from './components/LangProvider';
 
 const PaletteGenerator = lazy(() => import('./pages/PaletteGenerator'));
 const ContrastChecker = lazy(() => import('./pages/ContrastChecker'));
@@ -21,6 +25,26 @@ const A11yAudit = lazy(() => import('./pages/A11yAudit'));
 const MultiSize = lazy(() => import('./pages/MultiSize'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
+const ProPage = lazy(() => import('./pages/ProPage'));
+const GuidesIndex = lazy(() => import('./pages/GuidesIndex'));
+const GuidePage = lazy(() => import('./pages/GuidePage'));
+const Changelog = lazy(() => import('./pages/Changelog'));
+
+const TOOLS = {
+  'palette-generator': PaletteGenerator,
+  'contrast-checker': ContrastChecker,
+  'image-palette': ImagePalette,
+  'color-blindness': ColorBlindness,
+  'type-scale': TypeScale,
+  'gradient-generator': GradientGenerator,
+  'component-states': ComponentStates,
+  'token-converter': TokenConverter,
+  'motion-playground': MotionPlayground,
+  'auto-trim': AutoTrim,
+  'text-expansion': TextExpansion,
+  'a11y-audit': A11yAudit,
+  'multi-size': MultiSize,
+};
 
 export default function App() {
   const location = useLocation();
@@ -36,9 +60,13 @@ export default function App() {
     setNavCount(n => n + 1);
   }
 
+  const lang = location.pathname === '/es' || location.pathname.startsWith('/es/') ? 'es' : 'en';
+
   return (
+    <LangProvider lang={lang}>
     <MotionConfig reducedMotion="user">
       <Cursor />
+      <CommandPalette />
       {navCount > 0 && (
         // Gradient curtain that wipes away on every client-side navigation.
         <motion.div
@@ -53,25 +81,27 @@ export default function App() {
       )}
       <Suspense fallback={<div className="page" />}>
         <Routes location={location} key={location.pathname}>
-          <Route path="/" element={<Home />} />
-          <Route path="/palette-generator" element={<PaletteGenerator />} />
-          <Route path="/contrast-checker" element={<ContrastChecker />} />
-          <Route path="/image-palette" element={<ImagePalette />} />
-          <Route path="/color-blindness" element={<ColorBlindness />} />
-          <Route path="/type-scale" element={<TypeScale />} />
-          <Route path="/gradient-generator" element={<GradientGenerator />} />
-          <Route path="/component-states" element={<ComponentStates />} />
-          <Route path="/token-converter" element={<TokenConverter />} />
-          <Route path="/motion-playground" element={<MotionPlayground />} />
-          <Route path="/auto-trim" element={<AutoTrim />} />
-          <Route path="/text-expansion" element={<TextExpansion />} />
-          <Route path="/a11y-audit" element={<A11yAudit />} />
-          <Route path="/multi-size" element={<MultiSize />} />
-          <Route path="/about" element={<StaticPage id="about" />} />
-          <Route path="/privacy" element={<StaticPage id="privacy" />} />
+          {['en', 'es'].map(l => {
+            const p = path => (l === 'es' ? PAGE_PATHS[path] : path);
+            return [
+              <Route key={`${l}-home`} path={p('/')} element={<Home />} />,
+              ...experiments.filter(e => e.active).map(e => {
+                const Tool = TOOLS[e.id];
+                const path = l === 'es' ? `/es/${ES[e.id].slug}` : e.path;
+                return <Route key={`${l}-${e.id}`} path={path} element={<Tool />} />;
+              }),
+              <Route key={`${l}-about`} path={p('/about')} element={<StaticPage id="about" />} />,
+              <Route key={`${l}-privacy`} path={p('/privacy')} element={<StaticPage id="privacy" />} />,
+              <Route key={`${l}-pro`} path={p('/pro')} element={<ProPage />} />,
+              <Route key={`${l}-guides`} path={p('/guides')} element={<GuidesIndex />} />,
+              <Route key={`${l}-guide`} path={`${p('/guides')}/:slug`} element={<GuidePage />} />,
+              <Route key={`${l}-changelog`} path={p('/changelog')} element={<Changelog />} />,
+            ];
+          })}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </MotionConfig>
+    </LangProvider>
   );
 }

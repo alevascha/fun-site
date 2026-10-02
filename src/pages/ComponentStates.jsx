@@ -6,6 +6,19 @@ import { ColorField, CopyButton, RangeField, Reveal, Segmented } from '../compon
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
 import { haptic } from '../lib/haptics';
 import useCopy from '../hooks/useCopy';
+import { useLang } from '../i18n';
+
+const STATE_ES = {
+  default: 'predeterminado', hover: 'hover', focus: 'foco', pressed: 'presionado', loading: 'cargando', success: 'éxito',
+  disabled: 'deshabilitado', filled: 'completado', error: 'error', off: 'apagado', on: 'encendido', 'pressed-on': 'presionado (on)',
+  unchecked: 'sin marcar', checked: 'marcado', indeterminate: 'indeterminado', selected: 'seleccionado',
+};
+const NOTE_ES = {
+  Label: 'Etiqueta', Shape: 'Forma', Ring: 'Anillo', 'Exempt from contrast (1.4.3)': 'Exento de contraste (1.4.3)', 'Exempt from contrast': 'Exento de contraste',
+  'Text + icon': 'Texto + icono', 'aria-busy + text': 'aria-busy + texto', Message: 'Mensaje', 'Icon + text': 'Icono + texto',
+  'Focus border': 'Borde de foco', Border: 'Borde', Track: 'Pista', 'Check on thumb': 'Check en el control', Mark: 'Marca', Box: 'Casilla',
+  'Radio dot, not color alone': 'Punto de radio, no solo color', 'Meta text': 'Texto secundario',
+};
 import './ComponentStates.css';
 
 const SURFACES = {
@@ -20,9 +33,9 @@ const SIZES = {
 };
 
 const STYLES = [
-  { value: 'solid', label: 'Solid' },
-  { value: 'gradient', label: 'Gradient' },
-  { value: 'soft', label: 'Soft' },
+  { value: 'solid', label: 'Solid', es: 'Sólido' },
+  { value: 'gradient', label: 'Gradient', es: 'Degradado' },
+  { value: 'soft', label: 'Soft', es: 'Suave' },
 ];
 
 function deriveTokens(accent, surfaceKey) {
@@ -76,7 +89,9 @@ function CheckIcon({ size = 16, drawn = true }) {
   );
 }
 
-function Button({ variant, state, label = 'Save changes', onClick, live }) {
+function Button({ variant, state, label: labelProp, onClick, live }) {
+  const { t } = useLang();
+  const label = labelProp ?? t('Save changes', 'Guardar cambios');
   const ref = useRef(null);
   const [ripples, setRipples] = useState([]);
 
@@ -112,8 +127,8 @@ function Button({ variant, state, label = 'Save changes', onClick, live }) {
           exit={{ y: -14, opacity: 0, filter: 'blur(4px)' }}
           transition={{ duration: 0.25, ease: EASE }}
         >
-          {state === 'loading' && <><Spinner /> Saving…</>}
-          {state === 'success' && <><CheckIcon /> Saved</>}
+          {state === 'loading' && <><Spinner /> {t('Saving…', 'Guardando…')}</>}
+          {state === 'success' && <><CheckIcon /> {t('Saved', 'Guardado')}</>}
           {!busy && label}
         </motion.span>
       </AnimatePresence>
@@ -122,6 +137,7 @@ function Button({ variant, state, label = 'Save changes', onClick, live }) {
 }
 
 function Field({ state, live, value, onChange, onBlur, valid }) {
+  const { t } = useLang();
   const shown = live ? undefined : state === 'filled' || state === 'success' ? 'ale@alevasquez.dev' : state === 'error' ? 'ale@' : '';
   const status = live ? valid : state;
   return (
@@ -140,7 +156,7 @@ function Field({ state, live, value, onChange, onBlur, valid }) {
           aria-invalid={status === 'error' || undefined}
           aria-describedby={live ? 'cs-live-email-help' : undefined}
         />
-        <label htmlFor={live ? 'cs-live-email' : undefined}>Email address</label>
+        <label htmlFor={live ? 'cs-live-email' : undefined}>{t('Email address', 'Correo electrónico')}</label>
         <span className="csx-field-icon" aria-hidden="true">
           <AnimatePresence>
             {status === 'success' && (
@@ -164,14 +180,16 @@ function Field({ state, live, value, onChange, onBlur, valid }) {
           exit={{ opacity: 0, y: 4 }}
           transition={{ duration: 0.18 }}
         >
-          {status === 'error' ? 'Add the rest of your email, like name@domain.com' : 'We’ll only use it to send you the palette.'}
+          {status === 'error' ? t('Add the rest of your email, like name@domain.com', 'Completa tu correo, por ejemplo nombre@dominio.com') : t('We’ll only use it to send you the palette.', 'Solo lo usaremos para enviarte la paleta.')}
         </motion.span>
       </AnimatePresence>
     </div>
   );
 }
 
-function Toggle({ state, live, checked, onChange, label = 'Notifications' }) {
+function Toggle({ state, live, checked, onChange, label: labelProp }) {
+  const { t } = useLang();
+  const label = labelProp ?? t('Notifications', 'Notificaciones');
   const on = live ? checked : state === 'on' || state === 'pressed-on';
   return (
     <span className="csx-toggle-row">
@@ -197,7 +215,9 @@ function Toggle({ state, live, checked, onChange, label = 'Notifications' }) {
   );
 }
 
-function Checkbox({ state, live, checked, onChange, label = 'Send me new experiments' }) {
+function Checkbox({ state, live, checked, onChange, label: labelProp }) {
+  const { t } = useLang();
+  const label = labelProp ?? t('Send me new experiments', 'Envíame experimentos nuevos');
   const indeterminate = state === 'indeterminate';
   const on = live ? checked : state === 'checked' || indeterminate;
   return (
@@ -221,7 +241,9 @@ function Checkbox({ state, live, checked, onChange, label = 'Send me new experim
   );
 }
 
-function PlanCard({ state, live, selected, onSelect, name = 'Pro', price = '$12', perks = 'Unlimited experiments' }) {
+function PlanCard({ state, live, selected, onSelect, name = 'Pro', price = '$12', perks: perksProp }) {
+  const { t } = useLang();
+  const perks = perksProp ?? t('Unlimited experiments', 'Experimentos ilimitados');
   const isSelected = live ? selected : state === 'selected';
   return (
     <button
@@ -240,7 +262,7 @@ function PlanCard({ state, live, selected, onSelect, name = 'Pro', price = '$12'
         <span className="csx-card-name">{name}</span>
         <span className="csx-radio"><motion.span initial={false} animate={{ scale: isSelected ? 1 : 0 }} transition={{ type: 'spring', stiffness: 600, damping: 20 }} /></span>
       </span>
-      <span className="csx-card-price">{price}<small>/mo</small></span>
+      <span className="csx-card-price">{price}<small>{t('/mo', '/mes')}</small></span>
       <span className="csx-card-perks">{perks}</span>
     </button>
   );
@@ -310,6 +332,7 @@ const MATRIX = {
 };
 
 function StateCell({ name, notes, index, children }) {
+  const { lang, t } = useLang();
   return (
     <motion.div
       className="csx-cell"
@@ -320,11 +343,11 @@ function StateCell({ name, notes, index, children }) {
     >
       <div className="csx-stage" aria-hidden="true">{children}</div>
       <div className="csx-cell-meta">
-        <span className="csx-state-name">{name.replace('-', ' ')}</span>
+        <span className="csx-state-name">{lang === 'es' ? STATE_ES[name] : name.replace('-', ' ')}</span>
         <div className="csx-notes">
           {notes.map(n => (
-            <span key={n.label} className={'badge ' + (n.pass === undefined ? 'badge-neutral' : n.pass ? 'badge-pass' : 'badge-fail')} title={n.target ? `Needs ${n.target}:1` : undefined}>
-              {n.pass === undefined ? '' : n.pass ? '✓ ' : '✕ '}{n.label}{n.text ? ` ${n.text}` : ''}
+            <span key={n.label} className={'badge ' + (n.pass === undefined ? 'badge-neutral' : n.pass ? 'badge-pass' : 'badge-fail')} title={n.target ? `${t('Needs', 'Requiere')} ${n.target}:1` : undefined}>
+              {n.pass === undefined ? '' : n.pass ? '✓ ' : '✕ '}{t(n.label, NOTE_ES[n.label])}{n.text ? ` ${n.text}` : ''}
             </span>
           ))}
         </div>
@@ -338,6 +361,7 @@ function StateCell({ name, notes, index, children }) {
    ------------------------------------------------------------------------- */
 
 export default function ComponentStates() {
+  const { t: tr } = useLang();
   const [accent, setAccent] = useState('#8B6CF0');
   const [surface, setSurface] = useState('light');
   const [size, setSize] = useState('md');
@@ -403,37 +427,37 @@ export default function ComponentStates() {
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
-            <h2 className="eyebrow">Tokens in</h2>
+            <h2 className="eyebrow">{tr('Tokens in', 'Tokens de entrada')}</h2>
             <div className="stack" style={{ gap: 16 }}>
-              <ColorField label="Accent" value={accent} onChange={setAccent} />
+              <ColorField label={tr('Accent', 'Acento')} value={accent} onChange={setAccent} />
               <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 {['#8B6CF0', '#CD57FF', '#FF7AB6', '#FFCE1F', '#1A73E8', '#11804A', '#111011'].map(c => (
                   <motion.button
-                    key={c} type="button" aria-label={`Use ${c}`} aria-pressed={accent === c}
+                    key={c} type="button" aria-label={tr(`Use ${c}`, `Usar ${c}`)} aria-pressed={accent === c}
                     onClick={() => setAccent(c)} whileHover={{ y: -3, rotate: -6 }} whileTap={{ scale: 0.85 }}
                     style={{ width: 30, height: 30, borderRadius: 10, border: 'none', background: c, boxShadow: accent === c ? '0 0 0 2px var(--surface), 0 0 0 4px var(--focus)' : 'inset 0 0 0 1px rgba(127,127,127,.3)', transition: 'box-shadow .2s ease' }}
                   />
                 ))}
               </div>
               <div className="field">
-                <span className="field-label">Button style</span>
-                <Segmented full label="Button style" value={style} onChange={setStyle} options={STYLES} />
+                <span className="field-label">{tr('Button style', 'Estilo de botón')}</span>
+                <Segmented full label={tr('Button style', 'Estilo de botón')} value={style} onChange={setStyle} options={STYLES.map(s => ({ value: s.value, label: tr(s.label, s.es) }))} />
               </div>
               <div className="field">
-                <span className="field-label">Preview surface</span>
-                <Segmented full label="Preview surface" value={surface} onChange={setSurface} options={[{ value: 'light', label: 'Light' }, { value: 'dark', label: 'Dark' }]} />
+                <span className="field-label">{tr('Preview surface', 'Superficie de vista previa')}</span>
+                <Segmented full label={tr('Preview surface', 'Superficie de vista previa')} value={surface} onChange={setSurface} options={[{ value: 'light', label: tr('Light', 'Clara') }, { value: 'dark', label: tr('Dark', 'Oscura') }]} />
               </div>
               <div className="field">
-                <span className="field-label">Size</span>
-                <Segmented full label="Size" value={size} onChange={setSize} options={[{ value: 'sm', label: 'S' }, { value: 'md', label: 'M' }, { value: 'lg', label: 'L' }]} />
+                <span className="field-label">{tr('Size', 'Tamaño')}</span>
+                <Segmented full label={tr('Size', 'Tamaño')} value={size} onChange={setSize} options={[{ value: 'sm', label: 'S' }, { value: 'md', label: 'M' }, { value: 'lg', label: 'L' }]} />
               </div>
-              <RangeField label="Corner radius" value={radius} min={0} max={28} onChange={setRadius} format={v => `${v}px`} />
+              <RangeField label={tr('Corner radius', 'Radio de las esquinas')} value={radius} min={0} max={28} onChange={setRadius} format={v => `${v}px`} />
             </div>
           </Reveal>
           <Reveal className="card" delay={0.05}>
             <h2 className="eyebrow">
-              Tokens out
-              <CopyButton copied={copied === 'css'} onClick={() => copy(css, 'css', { name: 'Copy', props: { tool: 'component-states' } })}>Copy</CopyButton>
+              {tr('Tokens out', 'Tokens de salida')}
+              <CopyButton copied={copied === 'css'} onClick={() => copy(css, 'css', { name: 'Copy', props: { tool: 'component-states' } })}>{tr('Copy', 'Copiar')}</CopyButton>
             </h2>
             <pre className="code-block" data-lenis-prevent style={{ maxHeight: 280 }}>{css}</pre>
           </Reveal>
@@ -441,12 +465,12 @@ export default function ComponentStates() {
 
         <div className="stack">
           <Reveal className="card">
-            <h2 className="eyebrow">Playground — click, type, tab through</h2>
+            <h2 className="eyebrow">{tr('Playground — click, type, tab through', 'Área de pruebas: haz clic, escribe, navega con Tab')}</h2>
             <div className="csx-root csx-playground" style={vars}>
               <div className="csx-play-col">
                 <div className="csx-play-row">
-                  <Button live variant={style} state={btnState} onClick={runButton} label="Save changes" />
-                  <Button live variant="outline" state="default" label="Cancel" />
+                  <Button live variant={style} state={btnState} onClick={runButton} />
+                  <Button live variant="outline" state="default" label={tr('Cancel', 'Cancelar')} />
                 </div>
                 <Field
                   live
@@ -457,26 +481,26 @@ export default function ComponentStates() {
                 />
                 <div className="csx-play-row" style={{ gap: 24 }}>
                   <Toggle live checked={toggle} onChange={setToggle} />
-                  <Checkbox live checked={checked} onChange={setChecked} label="Remember me" />
+                  <Checkbox live checked={checked} onChange={setChecked} label={tr('Remember me', 'Recordarme')} />
                 </div>
               </div>
-              <div className="csx-play-col" role="radiogroup" aria-label="Plan">
-                <PlanCard live selected={plan === 'starter'} onSelect={() => setPlan('starter')} name="Starter" price="$0" perks="3 experiments a month" />
-                <PlanCard live selected={plan === 'pro'} onSelect={() => setPlan('pro')} name="Pro" price="$12" perks="Unlimited experiments" />
+              <div className="csx-play-col" role="radiogroup" aria-label={tr('Plan', 'Plan')}>
+                <PlanCard live selected={plan === 'starter'} onSelect={() => setPlan('starter')} name={tr('Starter', 'Inicial')} price="$0" perks={tr('3 experiments a month', '3 experimentos al mes')} />
+                <PlanCard live selected={plan === 'pro'} onSelect={() => setPlan('pro')} name="Pro" price="$12" />
               </div>
             </div>
           </Reveal>
 
           <Reveal className="card" delay={0.05}>
             <h2 className="eyebrow">
-              Every state
+              {tr('Every state', 'Todos los estados')}
               <Segmented
-                label="Component"
+                label={tr('Component', 'Componente')}
                 value={component}
                 onChange={setComponent}
                 options={[
-                  { value: 'button', label: 'Button' }, { value: 'input', label: 'Input' }, { value: 'toggle', label: 'Toggle' },
-                  { value: 'checkbox', label: 'Checkbox' }, { value: 'card', label: 'Card' },
+                  { value: 'button', label: tr('Button', 'Botón') }, { value: 'input', label: tr('Input', 'Campo') }, { value: 'toggle', label: tr('Toggle', 'Interruptor') },
+                  { value: 'checkbox', label: tr('Checkbox', 'Casilla') }, { value: 'card', label: tr('Card', 'Tarjeta') },
                 ]}
               />
             </h2>

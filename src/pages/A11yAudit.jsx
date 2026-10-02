@@ -3,18 +3,20 @@ import { AnimatePresence, motion, useSpring, useTransform } from 'framer-motion'
 import ToolPage from '../components/ToolPage';
 import { Reveal, Segmented } from '../components/ui';
 import { EASE } from '../lib/motion';
-import { audit, SAMPLE_HTML, score } from '../lib/a11y';
+import { audit, PASSED_ES, SAMPLE_HTML, score } from '../lib/a11y';
+import { useLang } from '../i18n';
 import { track } from '../lib/analytics';
 
 const SEVERITY = {
-  error: { label: 'Error', cls: 'badge-fail' },
-  warning: { label: 'Warning', cls: 'badge-neutral', style: { color: '#b7791f', background: 'rgba(255, 206, 31, 0.16)' } },
-  notice: { label: 'Notice', cls: 'badge-neutral' },
+  error: { label: 'Error', es: 'Error', cls: 'badge-fail' },
+  warning: { label: 'Warning', es: 'Advertencia', cls: 'badge-neutral', style: { color: '#b7791f', background: 'rgba(255, 206, 31, 0.16)' } },
+  notice: { label: 'Notice', es: 'Aviso', cls: 'badge-neutral' },
 };
 
 const HIGHLIGHT_CSS = `.__a11y-hl { outline: 3px solid #cd57ff !important; outline-offset: 3px !important; box-shadow: 0 0 0 9999px rgba(205,87,255,.12) !important; transition: outline-color .2s; }`;
 
 function ScoreRing({ value }) {
+  const { t } = useLang();
   const spring = useSpring(0, { stiffness: 90, damping: 20 });
   useEffect(() => { spring.set(value); }, [spring, value]);
   const text = useTransform(spring, v => Math.round(v));
@@ -30,7 +32,7 @@ function ScoreRing({ value }) {
       <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', textAlign: 'center' }}>
         <div>
           <motion.div className="display" style={{ fontSize: 40, lineHeight: 1 }}>{text}</motion.div>
-          <div className="small muted">score</div>
+          <div className="small muted">{t('score', 'puntaje')}</div>
         </div>
       </div>
     </div>
@@ -38,6 +40,7 @@ function ScoreRing({ value }) {
 }
 
 export default function A11yAudit() {
+  const { lang, t } = useLang();
   const [html, setHtml] = useState(SAMPLE_HTML);
   const [rendered, setRendered] = useState(SAMPLE_HTML);
   const [result, setResult] = useState(null);
@@ -58,7 +61,7 @@ export default function A11yAudit() {
     const style = doc.createElement('style');
     style.textContent = HIGHLIGHT_CSS;
     doc.head?.appendChild(style);
-    const r = audit(doc);
+    const r = audit(doc, lang);
     doc.documentElement.removeAttribute('data-full-doc');
     setResult(r);
     setActive(null);
@@ -87,17 +90,17 @@ export default function A11yAudit() {
             <h2 className="eyebrow">
               HTML
               <span className="chip-row">
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => setHtml(SAMPLE_HTML)}>Sample</button>
-                <button type="button" className="btn btn-ghost btn-sm" onClick={() => setHtml('')}>Clear</button>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => setHtml(SAMPLE_HTML)}>{t('Sample', 'Ejemplo')}</button>
+                <button type="button" className="btn btn-ghost btn-sm" onClick={() => setHtml('')}>{t('Clear', 'Borrar')}</button>
               </span>
             </h2>
-            <textarea className="textarea" data-lenis-prevent spellCheck={false} value={html} onChange={e => setHtml(e.target.value)} aria-label="HTML to audit" placeholder="<button><svg …></svg></button>" style={{ minHeight: 320 }} />
+            <textarea className="textarea" data-lenis-prevent spellCheck={false} value={html} onChange={e => setHtml(e.target.value)} aria-label={t('HTML to audit', 'HTML a auditar')} placeholder="<button><svg …></svg></button>" style={{ minHeight: 320 }} />
           </Reveal>
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Rendered preview</h2>
+            <h2 className="eyebrow">{t('Rendered preview', 'Vista previa renderizada')}</h2>
             <iframe
               ref={frameRef}
-              title="Audited HTML preview"
+              title={t('Audited HTML preview', 'Vista previa del HTML auditado')}
               sandbox="allow-same-origin"
               srcDoc={rendered}
               onLoad={runAudit}
@@ -112,22 +115,22 @@ export default function A11yAudit() {
               <ScoreRing value={result ? score(issues) : 0} />
               <div className="stack" style={{ gap: 8, flex: 1, minWidth: 180 }}>
                 <h2 className="card-title" style={{ margin: 0 }}>
-                  {!result ? 'Auditing…' : issues.length === 0 ? 'No issues found 🎉' : `${issues.length} thing${issues.length === 1 ? '' : 's'} to fix`}
+                  {!result ? t('Auditing…', 'Auditando…') : issues.length === 0 ? t('No issues found 🎉', 'No se encontraron problemas 🎉') : t(`${issues.length} thing${issues.length === 1 ? '' : 's'} to fix`, `${issues.length} cosa${issues.length === 1 ? '' : 's'} por corregir`)}
                 </h2>
                 <div className="chip-row">
-                  <span className="badge badge-fail">{count('error')} errors</span>
-                  <span className="badge badge-neutral" style={SEVERITY.warning.style}>{count('warning')} warnings</span>
-                  <span className="badge badge-neutral">{count('notice')} notices</span>
+                  <span className="badge badge-fail">{count('error')} {t('errors', 'errores')}</span>
+                  <span className="badge badge-neutral" style={SEVERITY.warning.style}>{count('warning')} {t('warnings', 'advertencias')}</span>
+                  <span className="badge badge-neutral">{count('notice')} {t('notices', 'avisos')}</span>
                 </div>
-                <p className="small muted" style={{ margin: 0 }}>Automated checks catch roughly a third of real issues — still test with a keyboard and a screen reader.</p>
+                <p className="small muted" style={{ margin: 0 }}>{t('Automated checks catch roughly a third of real issues — still test with a keyboard and a screen reader.', 'Las verificaciones automáticas detectan cerca de un tercio de los problemas reales: prueba también con teclado y lector de pantalla.')}</p>
               </div>
             </div>
           </Reveal>
 
           <Reveal className="card" delay={0.1}>
             <h2 className="eyebrow">
-              Issues
-              <Segmented label="Filter issues" value={filter} onChange={setFilter} options={[{ value: 'all', label: 'All' }, { value: 'error', label: 'Errors' }, { value: 'warning', label: 'Warnings' }, { value: 'notice', label: 'Notices' }]} />
+              {t('Issues', 'Problemas')}
+              <Segmented label={t('Filter issues', 'Filtrar problemas')} value={filter} onChange={setFilter} options={[{ value: 'all', label: t('All', 'Todos') }, { value: 'error', label: t('Errors', 'Errores') }, { value: 'warning', label: t('Warnings', 'Advertencias') }, { value: 'notice', label: t('Notices', 'Avisos') }]} />
             </h2>
             <div className="check-list" style={{ maxHeight: 640, overflow: 'auto' }} data-lenis-prevent>
               <AnimatePresence initial={false} mode="popLayout">
@@ -147,14 +150,14 @@ export default function A11yAudit() {
                       style={{ border: 'none', textAlign: 'left', color: 'var(--text)', gridTemplateColumns: '1fr', boxShadow: active === issue.id ? 'inset 0 0 0 1.5px var(--focus)' : undefined }}
                     >
                       <span style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
-                        <span className={'badge ' + sev.cls} style={sev.style}>{sev.label}</span>
+                        <span className={'badge ' + sev.cls} style={sev.style}>{t(sev.label, sev.es)}</span>
                         <span className="check-row-label">{issue.message}</span>
                       </span>
                       {issue.snippet && <code className="mono small muted" style={{ display: 'block', marginTop: 6, overflowWrap: 'anywhere' }}>{issue.snippet}</code>}
                       <AnimatePresence initial={false}>
                         {active === issue.id && (
                           <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ display: 'block', overflow: 'hidden' }}>
-                            <span className="small" style={{ display: 'block', marginTop: 8 }}><b>Fix:</b> {issue.fix}</span>
+                            <span className="small" style={{ display: 'block', marginTop: 8 }}><b>{t('Fix:', 'Solución:')}</b> {issue.fix}</span>
                             <span className="small muted" style={{ display: 'block', marginTop: 4 }}>WCAG {issue.wcag}</span>
                           </motion.span>
                         )}
@@ -163,15 +166,15 @@ export default function A11yAudit() {
                   );
                 })}
               </AnimatePresence>
-              {result && shown.length === 0 && <p className="muted small" style={{ margin: 0 }}>Nothing in this category.</p>}
+              {result && shown.length === 0 && <p className="muted small" style={{ margin: 0 }}>{t('Nothing in this category.', 'Nada en esta categoría.')}</p>}
             </div>
           </Reveal>
 
           {result?.passed?.length > 0 && (
             <Reveal className="card" delay={0.1}>
-              <h2 className="eyebrow">Passed</h2>
+              <h2 className="eyebrow">{t('Passed', 'Aprobado')}</h2>
               <div className="chip-row">
-                {result.passed.map(p => <span key={p} className="badge badge-pass">✓ {p}</span>)}
+                {result.passed.map(p => <span key={p} className="badge badge-pass">✓ {t(p, PASSED_ES[p])}</span>)}
               </div>
             </Reveal>
           )}

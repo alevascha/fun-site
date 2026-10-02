@@ -1,7 +1,10 @@
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
 import { useMemo, useRef, useState } from 'react';
-import { experiments, HOME_META } from '../experiments';
+import { experiments, HOME_META, HOME_META_ES } from '../experiments';
+import { useLang } from '../i18n';
+import { GUIDES } from '../guides';
+import Newsletter from '../components/Newsletter';
 import Background from '../components/Background';
 import SiteNav from '../components/SiteNav';
 import usePageMeta from '../hooks/usePageMeta';
@@ -18,8 +21,11 @@ import AdSlot from '../components/AdSlot';
 
 const MotionLink = motion.create(Link);
 
+const CATEGORY_ES = { All: 'Todos', Color: 'Color', Accessibility: 'Accesibilidad', Typography: 'Tipografía', UI: 'UI', 'Design systems': 'Design systems', Motion: 'Movimiento', Assets: 'Recursos' };
+
 function ExpCard({ exp, fresh, index }) {
   const ref = useRef(null);
+  const { lang, t, to, name, blurb } = useLang();
   // 3D tilt: pointer position → spring-smoothed rotateX/rotateY.
   const px = useMotionValue(0.5), py = useMotionValue(0.5);
   const spring = { stiffness: 200, damping: 18, mass: 0.5 };
@@ -67,14 +73,14 @@ function ExpCard({ exp, fresh, index }) {
       <motion.div style={{ y: parallaxY, height: '100%' }}>
       <MotionLink
         ref={ref}
-        to={exp.path}
+        to={to(exp.path)}
         className="exp-card"
         style={isTouch
           ? { '--card-accent': exp.accent, rotateX: focusRotateX, scale: focusScale, transformPerspective: 900 }
           : { '--card-accent': exp.accent, rotateX, rotateY, transformPerspective: 900 }}
         onMouseMove={isTouch ? undefined : handleMouseMove}
         onMouseLeave={isTouch ? undefined : handleMouseLeave}
-        data-cursor="Open"
+        data-cursor={t('Open', 'Abrir')}
         whileHover={isTouch ? undefined : { y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
         whileTap={{ scale: isTouch ? 0.95 : 0.98 }}
       >
@@ -90,14 +96,14 @@ function ExpCard({ exp, fresh, index }) {
           >
             {exp.emoji}
           </motion.div>
-          {fresh && <span className="new-badge">New</span>}
+          {fresh && <span className="new-badge">{t('New', 'Nuevo')}</span>}
         </div>
         <div>
-          <h3 className="exp-card-title">{exp.title}</h3>
-          <p className="exp-card-desc">{exp.description}</p>
+          <h3 className="exp-card-title">{name(exp)}</h3>
+          <p className="exp-card-desc">{blurb(exp)}</p>
         </div>
         <div className="exp-card-foot">
-          <span>{exp.category}</span>
+          <span>{lang === 'es' ? CATEGORY_ES[exp.category] || exp.category : exp.category}</span>
           <span className="exp-card-go" aria-hidden="true">→</span>
         </div>
       </MotionLink>
@@ -107,7 +113,8 @@ function ExpCard({ exp, fresh, index }) {
 }
 
 export default function Home() {
-  usePageMeta(HOME_META);
+  const { lang, t, to } = useLang();
+  usePageMeta(lang === 'es' ? HOME_META_ES : HOME_META);
   const [filter, setFilter] = useState('All');
   // Computed once per visit, so badges don't vanish mid-session.
   const [freshIds] = useState(() => new Set(experiments.filter(e => isNew(e)).map(e => e.id)));
@@ -150,7 +157,7 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, ease: EASE }}
           >
-            <span className="gradient-dot" /> Alejandro Vasquez · code playground
+            <span className="gradient-dot" /> Alejandro Vasquez · {t('code playground', 'laboratorio de código')}
           </motion.div>
           <h1 className="hub-title" aria-label="Ale's Fun Lab">
             <SplitText text="Ale's Fun" delay={0.15} stagger={0.04} reactive />{' '}
@@ -162,8 +169,10 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
           >
-            Small, fun tools I build on the side — color, type and design-system experiments with
-            accessibility baked in. Pick one and play.
+            {t(
+              'Small, fun tools I build on the side — color, type and design-system experiments with accessibility baked in. Pick one and play.',
+              'Herramientas pequeñas y divertidas que construyo por mi cuenta: experimentos de color, tipografía y design systems con la accesibilidad incluida. Elige una y juega.',
+            )}
           </motion.p>
           <motion.div
             className="hub-hero-actions"
@@ -173,8 +182,8 @@ export default function Home() {
           >
             <Magnetic>
             <motion.a href="#experiments" className="btn btn-chip" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
-              <span className="gradient-dot" /> Explore {active.length} experiments
-              {freshIds.size > 0 && <span className="muted" style={{ color: 'inherit', opacity: 0.6 }}>· {freshIds.size} new</span>}
+              <span className="gradient-dot" /> {t(`Explore ${active.length} experiments`, `Explora ${active.length} experimentos`)}
+              {freshIds.size > 0 && <span className="muted" style={{ color: 'inherit', opacity: 0.6 }}>· {freshIds.size} {t('new', freshIds.size === 1 ? 'nuevo' : 'nuevos')}</span>}
             </motion.a>
             </Magnetic>
             <Magnetic>
@@ -186,23 +195,25 @@ export default function Home() {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
             >
-              See my work <span className="arrow" aria-hidden="true">›</span>
+              {t('See my work', 'Ver mi trabajo')} <span className="arrow" aria-hidden="true">›</span>
             </motion.a>
             </Magnetic>
           </motion.div>
           </motion.div>
         </motion.header>
 
-        <Marquee items={['Color', 'Accessibility', 'Typography', 'Design tokens', 'WCAG 2.2', 'React', 'Canvas', 'Motion']} />
+        <Marquee items={lang === 'es'
+          ? ['Color', 'Accesibilidad', 'Tipografía', 'Design tokens', 'WCAG 2.2', 'React', 'Canvas', 'Movimiento']
+          : ['Color', 'Accessibility', 'Typography', 'Design tokens', 'WCAG 2.2', 'React', 'Canvas', 'Motion']} />
 
         <section id="experiments" ref={sectionRef} style={{ scrollMarginTop: 96 }}>
           <Reveal className="hub-section-head">
             <motion.div style={{ x: titleX }}>
-              <SplitText as="h2" className="hub-section-title" text="Experiments" inView stagger={0.03} />
+              <SplitText key={lang} as="h2" className="hub-section-title" text={t('Experiments', 'Experimentos')} inView stagger={0.03} />
             </motion.div>
             <Segmented
-              label="Filter experiments"
-              options={categories.map(c => ({ value: c, label: c }))}
+              label={t('Filter experiments', 'Filtrar experimentos')}
+              options={categories.map(c => ({ value: c, label: lang === 'es' ? CATEGORY_ES[c] || c : c }))}
               value={filter}
               onChange={setFilter}
             />
@@ -215,13 +226,33 @@ export default function Home() {
           </motion.div>
         </section>
 
+        <section aria-label={t('Guides', 'Guías')} style={{ marginTop: 'clamp(48px, 8vw, 96px)' }}>
+          <Reveal className="hub-section-head">
+            <SplitText key={lang} as="h2" className="hub-section-title" text={t('Guides', 'Guías')} inView stagger={0.03} />
+            <Link to={to('/guides')} className="btn btn-ghost btn-sm">{t('All guides', 'Todas las guías')} <span className="arrow" aria-hidden="true">→</span></Link>
+          </Reveal>
+          <div className="card-grid">
+            {GUIDES.map((g, i) => (
+              <Reveal key={g.slug} delay={i * 0.05}>
+                <Link to={to(`/guides/${g.slug}`)} className="guide-card">
+                  <span className="guide-card-meta">📖 {g.minutes} min</span>
+                  <h3 className="exp-card-title" style={{ fontSize: 24 }}>{g[lang].title}</h3>
+                  <p className="exp-card-desc">{g[lang].description}</p>
+                </Link>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <Newsletter source="home" />
+
         <AdSlot slot="hub" />
 
         <Reveal as="section" className="hub-cta">
           <div className="hub-hero-orb" aria-hidden="true" style={{ opacity: 0.3 }} />
-          <SplitText as="h2" text="Do you want to work with me?" inView stagger={0.018} />
+          <SplitText key={lang} as="h2" text={t('Do you want to work with me?', '¿Quieres trabajar conmigo?')} inView stagger={0.018} />
           <p className="hub-sub" style={{ marginBottom: 28 }}>
-            I build design systems and the tools around them. These experiments are the fun side of that.
+            {t('I build design systems and the tools around them. These experiments are the fun side of that.', 'Construyo design systems y las herramientas que los rodean. Estos experimentos son el lado divertido de eso.')}
           </p>
           <Magnetic strength={0.5}>
             <motion.a
@@ -231,9 +262,9 @@ export default function Home() {
               className="btn btn-chip"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.96 }}
-              data-cursor="Hi! 👋"
+              data-cursor={t('Hi! 👋', '¡Hola! 👋')}
             >
-              <span className="gradient-dot" /> Connect with me <span className="arrow" aria-hidden="true">→</span>
+              <span className="gradient-dot" /> {t('Connect with me', 'Conectemos')} <span className="arrow" aria-hidden="true">→</span>
             </motion.a>
           </Magnetic>
         </Reveal>

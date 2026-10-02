@@ -7,6 +7,7 @@ import ToolPage from '../components/ToolPage';
 import { CopyButton, Reveal, Segmented } from '../components/ui';
 import { EASE } from '../lib/motion';
 import useCopy from '../hooks/useCopy';
+import { useLang } from '../i18n';
 import { track } from '../lib/analytics';
 
 const MAX_SAMPLE = 120;
@@ -62,6 +63,7 @@ function ratioColor(r) {
 }
 
 export default function ImagePalette() {
+  const { t, to } = useLang();
   const [src, setSrc] = useState(null);
   const [k, setK] = useState(6);
   const [colors, setColors] = useState([]);
@@ -74,18 +76,18 @@ export default function ImagePalette() {
   useEffect(() => {
     if (!src) return;
     let cancelled = false;
-    loadImage(src).then(img => { if (!cancelled) setColors(sample(img, k)); }).catch(() => setError('That file could not be read as an image.'));
+    loadImage(src).then(img => { if (!cancelled) setColors(sample(img, k)); }).catch(() => setError(t('That file could not be read as an image.', 'No se pudo leer ese archivo como imagen.')));
     return () => { cancelled = true; };
-  }, [src, k]);
+  }, [src, k, t]);
 
   const handleFile = useCallback(file => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) { setError('That doesn’t look like an image — try a PNG, JPG, WebP or GIF.'); return; }
+    if (!file.type.startsWith('image/')) { setError(t('That doesn’t look like an image — try a PNG, JPG, WebP or GIF.', 'Eso no parece una imagen: prueba con un PNG, JPG, WebP o GIF.')); return; }
     setError('');
     const reader = new FileReader();
     reader.onload = () => { setSrc(reader.result); track('Image extracted', { source: 'upload' }); };
     reader.readAsDataURL(file);
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     function onPaste(e) {
@@ -117,12 +119,12 @@ export default function ImagePalette() {
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
-            <h2 className="eyebrow">Image</h2>
+            <h2 className="eyebrow">{t('Image', 'Imagen')}</h2>
             <motion.div
               className={'dropzone' + (over ? ' is-over' : '')}
               role="button"
               tabIndex={0}
-              aria-label="Choose an image, or drop one here"
+              aria-label={t('Choose an image, or drop one here', 'Elige una imagen o suéltala aquí')}
               onClick={() => fileRef.current?.click()}
               onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileRef.current?.click(); } }}
               onDragOver={e => { e.preventDefault(); setOver(true); }}
@@ -137,7 +139,7 @@ export default function ImagePalette() {
                   <motion.img
                     key={src.slice(-40)}
                     src={src}
-                    alt="Uploaded image"
+                    alt={t('Uploaded image', 'Imagen subida')}
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
@@ -146,22 +148,22 @@ export default function ImagePalette() {
                 ) : (
                   <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ display: 'grid', gap: 10, justifyItems: 'center' }}>
                     <motion.span style={{ fontSize: 44 }} animate={{ y: [0, -8, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} aria-hidden="true">🖼️</motion.span>
-                    <strong style={{ fontSize: 16 }}>Drop an image here</strong>
-                    <span className="small muted">or click to browse · or paste with ⌘V / Ctrl+V</span>
+                    <strong style={{ fontSize: 16 }}>{t('Drop an image here', 'Suelta una imagen aquí')}</strong>
+                    <span className="small muted">{t('or click to browse · or paste with ⌘V / Ctrl+V', 'o haz clic para buscar · o pega con ⌘V / Ctrl+V')}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
             </motion.div>
             {error && <p role="alert" className="small" style={{ color: 'var(--fail)', margin: '12px 0 0' }}>{error}</p>}
             <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
-              <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(0)}>Try a sunset</button>
-              <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(1)}>Try a garden</button>
-              {src && <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSrc(null); setColors([]); }}>Clear</button>}
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(0)}>{t('Try a sunset', 'Prueba un atardecer')}</button>
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(1)}>{t('Try a garden', 'Prueba un jardín')}</button>
+              {src && <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSrc(null); setColors([]); }}>{t('Clear', 'Quitar')}</button>}
             </div>
           </Reveal>
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">How many colors</h2>
-            <Segmented full label="Number of colors" value={k} onChange={setK} options={[4, 5, 6, 8, 10].map(n => ({ value: n, label: String(n) }))} />
+            <h2 className="eyebrow">{t('How many colors', 'Cuántos colores')}</h2>
+            <Segmented full label={t('Number of colors', 'Número de colores')} value={k} onChange={setK} options={[4, 5, 6, 8, 10].map(n => ({ value: n, label: String(n) }))} />
           </Reveal>
         </div>
 
@@ -169,24 +171,24 @@ export default function ImagePalette() {
           {!colors.length ? (
             <Reveal className="card" style={{ display: 'grid', placeItems: 'center', minHeight: 320, textAlign: 'center' }}>
               <div>
-                <h2 className="card-title">Your palette shows up here</h2>
-                <p className="muted small" style={{ maxWidth: 360, margin: '0 auto' }}>Add an image or try one of the samples to extract its colors.</p>
+                <h2 className="card-title">{t('Your palette shows up here', 'Tu paleta aparecerá aquí')}</h2>
+                <p className="muted small" style={{ maxWidth: 360, margin: '0 auto' }}>{t('Add an image or try one of the samples to extract its colors.', 'Agrega una imagen o prueba un ejemplo para extraer sus colores.')}</p>
               </div>
             </Reveal>
           ) : (
             <>
               <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE }}>
                 <h2 className="eyebrow">
-                  Dominant colors
-                  <CopyButton copied={copied === 'css'} onClick={() => copy(cssVars, 'css', { name: 'Copy', props: { tool: 'image-palette', format: 'css' } })}>Copy CSS</CopyButton>
+                  {t('Dominant colors', 'Colores dominantes')}
+                  <CopyButton copied={copied === 'css'} onClick={() => copy(cssVars, 'css', { name: 'Copy', props: { tool: 'image-palette', format: 'css' } })}>{t('Copy CSS', 'Copiar CSS')}</CopyButton>
                 </h2>
                 <div style={{ display: 'flex', height: 120, borderRadius: 22, overflow: 'hidden', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
                   {colors.map((c, i) => (
                     <motion.button
                       key={c.hex + i}
                       type="button"
-                      title={`Copy ${c.hex}`}
-                      aria-label={`Copy ${c.hex}, ${Math.round(c.share * 100)}% of the image`}
+                      title={t(`Copy ${c.hex}`, `Copiar ${c.hex}`)}
+                      aria-label={t(`Copy ${c.hex}, ${Math.round(c.share * 100)}% of the image`, `Copiar ${c.hex}, ${Math.round(c.share * 100)}% de la imagen`)}
                       onClick={() => copy(c.hex, c.hex)}
                       initial={{ flexGrow: 0 }}
                       animate={{ flexGrow: Math.max(c.share, 0.04) * (hovered === i ? 1.6 : 1) }}
@@ -195,7 +197,7 @@ export default function ImagePalette() {
                       onHoverEnd={() => setHovered(null)}
                       style={{ flexBasis: 0, border: 'none', background: c.hex, color: bestTextColor(c.rgb), display: 'flex', alignItems: 'flex-end', padding: 10, fontFamily: 'var(--font-mono)', fontSize: 11, minWidth: 0, overflow: 'hidden' }}
                     >
-                      {copied === c.hex ? 'Copied!' : c.share > 0.07 ? `${Math.round(c.share * 100)}%` : ''}
+                      {copied === c.hex ? t('Copied!', '¡Copiado!') : c.share > 0.07 ? `${Math.round(c.share * 100)}%` : ''}
                     </motion.button>
                   ))}
                 </div>
@@ -215,8 +217,8 @@ export default function ImagePalette() {
                         <span style={{ minWidth: 0 }}>
                           <span className="mono" style={{ fontSize: 14, fontWeight: 500 }}>{c.hex}</span>
                           <span className="check-row-sub" style={{ display: 'flex', gap: 10 }}>
-                            <span title="Contrast with white text">◻ {formatRatio(onWhite)}</span>
-                            <span title="Contrast with black text">◼ {formatRatio(onBlack)}</span>
+                            <span title={t('Contrast with white text', 'Contraste con texto blanco')}>◻ {formatRatio(onWhite)}</span>
+                            <span title={t('Contrast with black text', 'Contraste con texto negro')}>◼ {formatRatio(onBlack)}</span>
                           </span>
                         </span>
                       </motion.div>
@@ -224,14 +226,14 @@ export default function ImagePalette() {
                   })}
                 </div>
                 <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
-                  <Link className="btn btn-primary btn-sm" to={`/palette-generator?base=${colors[0].hex.slice(1)}`}>Build a full palette from {colors[0].hex} <span className="arrow">→</span></Link>
-                  <Link className="btn btn-ghost btn-sm" to={`/color-blindness?colors=${colors.map(c => c.hex.slice(1)).join(',')}`}>Check for color blindness</Link>
+                  <Link className="btn btn-primary btn-sm" to={`${to('/palette-generator')}?base=${colors[0].hex.slice(1)}`}>{t('Build a full palette from', 'Crea una paleta completa desde')} {colors[0].hex} <span className="arrow">→</span></Link>
+                  <Link className="btn btn-ghost btn-sm" to={`${to('/color-blindness')}?colors=${colors.map(c => c.hex.slice(1)).join(',')}`}>{t('Check for color blindness', 'Revisar daltonismo')}</Link>
                 </div>
               </motion.div>
 
               <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.1 }}>
-                <h2 className="eyebrow">Contrast matrix</h2>
-                <p className="small muted" style={{ marginTop: -6 }}>Every color against every other. Green ≥ 4.5:1 is safe for normal text; grey ≥ 3:1 works for large text and UI.</p>
+                <h2 className="eyebrow">{t('Contrast matrix', 'Matriz de contraste')}</h2>
+                <p className="small muted" style={{ marginTop: -6 }}>{t('Every color against every other. Green ≥ 4.5:1 is safe for normal text; grey ≥ 3:1 works for large text and UI.', 'Cada color contra todos los demás. Verde ≥ 4.5:1 es seguro para texto normal; gris ≥ 3:1 sirve para texto grande e interfaz.')}</p>
                 <div className="table-scroll" data-lenis-prevent>
                   <div className="matrix" style={{ gridTemplateColumns: `44px repeat(${colors.length}, minmax(44px, 1fr))`, minWidth: 44 * (colors.length + 1) + 4 * colors.length }}>
                     <span />
@@ -244,15 +246,15 @@ export default function ImagePalette() {
               </motion.div>
 
               <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}>
-                <h2 className="eyebrow">Pairs that pass AA ({passingPairs.length})</h2>
+                <h2 className="eyebrow">{t('Pairs that pass AA', 'Pares que pasan AA')} ({passingPairs.length})</h2>
                 {passingPairs.length === 0 ? (
-                  <p className="small muted">No pair in this image reaches 4.5:1. Pair these colors with black or white text instead — see the ◻/◼ ratios above.</p>
+                  <p className="small muted">{t('No pair in this image reaches 4.5:1. Pair these colors with black or white text instead — see the ◻/◼ ratios above.', 'Ningún par de esta imagen llega a 4.5:1. Combina estos colores con texto negro o blanco; mira los ratios ◻/◼ de arriba.')}</p>
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: 10 }}>
                     {passingPairs.slice(0, 12).map(({ a, b, r }) => (
                       <motion.div key={a.hex + b.hex} whileHover={{ y: -4, rotate: -1 }} style={{ background: a.hex, color: b.hex, borderRadius: 18, padding: '18px 16px', boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.25)' }}>
                         <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, lineHeight: 1 }}>Aa</div>
-                        <div className="mono" style={{ fontSize: 11, marginTop: 8 }}>{b.hex} on {a.hex}</div>
+                        <div className="mono" style={{ fontSize: 11, marginTop: 8 }}>{b.hex} {t('on', 'sobre')} {a.hex}</div>
                         <div style={{ fontWeight: 600, fontSize: 13 }}>{formatRatio(r)}:1 {r >= 7 ? '· AAA' : '· AA'}</div>
                       </motion.div>
                     ))}
@@ -268,6 +270,7 @@ export default function ImagePalette() {
 }
 
 function FragmentRow({ row, colors }) {
+  const { t } = useLang();
   return (
     <>
       <span className="matrix-cell" style={{ background: row.hex }} aria-hidden="true" />
@@ -278,7 +281,7 @@ function FragmentRow({ row, colors }) {
           <span
             key={j}
             className="matrix-cell"
-            title={`${col.hex} on ${row.hex}: ${formatRatio(r)}:1`}
+            title={`${col.hex} ${t('on', 'sobre')} ${row.hex}: ${formatRatio(r)}:1`}
             style={{
               background: same ? 'transparent' : 'var(--surface-2)',
               color: same ? 'var(--faint)' : ratioColor(r),

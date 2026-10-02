@@ -73,16 +73,16 @@ export const BEZIER_PRESETS = [
   { name: 'Ease', value: [0.25, 0.1, 0.25, 1] },
   { name: 'Ease in-out', value: [0.42, 0, 0.58, 1] },
   { name: 'Material standard', value: [0.2, 0, 0, 1] },
-  { name: 'Material emphasized decel.', value: [0.05, 0.7, 0.1, 1] },
+  { name: 'Material emphasized decel.', es: 'Material enfatizado (desacel.)', value: [0.05, 0.7, 0.1, 1] },
   { name: 'Back out', value: [0.34, 1.56, 0.64, 1] },
-  { name: 'Anticipate', value: [0.36, 0, 0.66, -0.56] },
-  { name: 'Snap', value: [0.85, 0, 0.15, 1] },
+  { name: 'Anticipate', es: 'Anticipación', value: [0.36, 0, 0.66, -0.56] },
+  { name: 'Snap', es: 'Seco', value: [0.85, 0, 0.15, 1] },
 ];
 
 export const SPRING_PRESETS = [
-  { name: 'Gentle', value: { stiffness: 120, damping: 20, mass: 1 } },
-  { name: 'Snappy', value: { stiffness: 400, damping: 30, mass: 1 } },
-  { name: 'Bouncy', value: { stiffness: 300, damping: 12, mass: 1 } },
-  { name: 'Wobbly', value: { stiffness: 180, damping: 8, mass: 1 } },
-  { name: 'Heavy', value: { stiffness: 200, damping: 30, mass: 3 } },
+  { name: 'Gentle', es: 'Suave', value: { stiffness: 120, damping: 20, mass: 1 } },
+  { name: 'Snappy', es: 'Ágil', value: { stiffness: 400, damping: 30, mass: 1 } },
+  { name: 'Bouncy', es: 'Rebotón', value: { stiffness: 300, damping: 12, mass: 1 } },
+  { name: 'Wobbly', es: 'Tembloroso', value: { stiffness: 180, damping: 8, mass: 1 } },
+  { name: 'Heavy', es: 'Pesado', value: { stiffness: 200, damping: 30, mass: 3 } },
 ];

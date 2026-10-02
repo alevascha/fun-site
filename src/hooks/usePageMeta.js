@@ -13,7 +13,22 @@ function setMeta(attr, key, value) {
 
 // Keeps <title> and the share tags in sync on client-side navigation.
 // Crawlers get the same values from the prerendered HTML for each route.
-export default function usePageMeta({ title, description, path, image }) {
+function setAlternates(alternates) {
+  document.head.querySelectorAll('link[rel="alternate"][hreflang]').forEach(l => l.remove());
+  if (!alternates) return;
+  const add = (hreflang, href) => {
+    const l = document.createElement('link');
+    l.rel = 'alternate'; l.hreflang = hreflang; l.href = SITE.url + href;
+    document.head.appendChild(l);
+  };
+  add('en', alternates.en);
+  add('es', alternates.es);
+  add('x-default', alternates.en);
+}
+
+export default function usePageMeta({ title, description, path, image, alternates }) {
+  useEffect(() => { setAlternates(alternates); }, [alternates?.en, alternates?.es]); // eslint-disable-line react-hooks/exhaustive-deps
+
   useEffect(() => {
     document.title = title;
     const url = SITE.url + path;

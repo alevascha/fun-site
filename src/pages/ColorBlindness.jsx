@@ -8,6 +8,7 @@ import ToolPage from '../components/ToolPage';
 import { ColorField, RangeField, Reveal, Segmented } from '../components/ui';
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
 import { track } from '../lib/analytics';
+import { useLang } from '../i18n';
 
 const DEFAULT_COLORS = ['#D93025', '#1E8E3E', '#F9AB00', '#1A73E8', '#CD57FF', '#5F6368'];
 // Below this perceptual distance (CIE76 ΔE) two colors are easy to confuse.
@@ -32,6 +33,8 @@ function confusablePairs(hexes) {
 const CHART = [62, 88, 45, 74, 56, 92, 38, 66, 80, 50];
 
 export default function ColorBlindness() {
+  const { lang, t } = useLang();
+  const vt = v => (lang === 'es' ? { ...v, ...v.es } : v);
   const [params, setParams] = useSearchParams();
   const [colors, setColors] = useState(() => parseColors(params.get('colors')) || DEFAULT_COLORS);
   const [severity, setSeverity] = useState(100);
@@ -65,8 +68,8 @@ export default function ColorBlindness() {
         <div className="stack sticky-col">
           <Reveal className="card">
             <h2 className="eyebrow">
-              Palette
-              <motion.button type="button" className="btn btn-ghost btn-sm" onClick={randomPalette} whileTap={{ scale: 0.9, rotate: -8 }}>🎲 Random</motion.button>
+              {t('Palette', 'Paleta')}
+              <motion.button type="button" className="btn btn-ghost btn-sm" onClick={randomPalette} whileTap={{ scale: 0.9, rotate: -8 }}>🎲 {t('Random', 'Aleatoria')}</motion.button>
             </h2>
             <div className="stack" style={{ gap: 10 }}>
               <AnimatePresence initial={false}>
@@ -83,7 +86,7 @@ export default function ColorBlindness() {
                     <button
                       type="button"
                       className="btn btn-ghost btn-icon"
-                      aria-label={`Remove color ${i + 1}`}
+                      aria-label={t(`Remove color ${i + 1}`, `Quitar color ${i + 1}`)}
                       disabled={colors.length <= 2}
                       onClick={() => commit(colors.filter((_, j) => j !== i))}
                       style={{ height: 44, width: 44 }}
@@ -99,19 +102,19 @@ export default function ColorBlindness() {
                 disabled={colors.length >= 10}
                 onClick={() => commit([...colors, '#8B6CF0'])}
               >
-                + Add color
+                + {t('Add color', 'Agregar color')}
               </button>
             </div>
           </Reveal>
           <Reveal className="card" delay={0.05}>
-            <RangeField label="Severity" value={severity} min={10} max={100} step={10} onChange={setSeverity} format={v => (v === 100 ? 'Full (‑opia)' : `${v}% (‑anomaly)`)} />
-            <p className="small muted" style={{ margin: '10px 0 0' }}>Lower values approximate the milder, more common anomalous trichromacy.</p>
+            <RangeField label={t('Severity', 'Severidad')} value={severity} min={10} max={100} step={10} onChange={setSeverity} format={v => (v === 100 ? t('Full (‑opia)', 'Total (‑opia)') : `${v}% (${t('‑anomaly', '‑anomalía')})`)} />
+            <p className="small muted" style={{ margin: '10px 0 0' }}>{t('Lower values approximate the milder, more common anomalous trichromacy.', 'Los valores bajos se aproximan a la tricromacia anómala, más leve y más común.')}</p>
           </Reveal>
         </div>
 
         <div className="stack">
           <Reveal className="card">
-            <h2 className="eyebrow">Side by side</h2>
+            <h2 className="eyebrow">{t('Side by side', 'Lado a lado')}</h2>
             <div className="stack" style={{ gap: 18 }}>
               {rows.map((row, ri) => (
                 <motion.div
@@ -123,12 +126,14 @@ export default function ColorBlindness() {
                 >
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, flexWrap: 'wrap', marginBottom: 8 }}>
                     <div>
-                      <strong style={{ fontSize: 15 }}>{row.label}</strong>
-                      <span className="small muted" style={{ marginLeft: 8 }}>{row.note}</span>
+                      <strong style={{ fontSize: 15 }}>{vt(row).label}</strong>
+                      <span className="small muted" style={{ marginLeft: 8 }}>{vt(row).note}</span>
                     </div>
                     {row.id !== 'normal' && (
                       <span className={'badge ' + (row.pairs.length ? 'badge-fail' : 'badge-pass')}>
-                        {row.pairs.length ? `${row.pairs.length} pair${row.pairs.length > 1 ? 's' : ''} collapse` : 'All distinct'}
+                        {row.pairs.length
+                          ? t(`${row.pairs.length} pair${row.pairs.length > 1 ? 's' : ''} collapse`, `${row.pairs.length} par${row.pairs.length > 1 ? 'es' : ''} se confunde${row.pairs.length > 1 ? 'n' : ''}`)
+                          : t('All distinct', 'Todos distinguibles')}
                       </span>
                     )}
                   </div>
@@ -162,11 +167,11 @@ export default function ColorBlindness() {
           </Reveal>
 
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">In a real UI</h2>
-            <Segmented label="Vision type" value={view} onChange={setView} options={VISION_TYPES.map(v => ({ value: v.id, label: v.short }))} />
+            <h2 className="eyebrow">{t('In a real UI', 'En una interfaz real')}</h2>
+            <Segmented label={t('Vision type', 'Tipo de visión')} value={view} onChange={setView} options={VISION_TYPES.map(v => ({ value: v.id, label: vt(v).short }))} />
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 260px), 1fr))', gap: 16, marginTop: 18 }}>
               <div style={{ background: 'var(--surface-2)', borderRadius: 20, padding: 18, boxShadow: 'inset 0 0 0 1px var(--border)' }}>
-                <div className="small muted" style={{ marginBottom: 12 }}>Revenue by channel</div>
+                <div className="small muted" style={{ marginBottom: 12 }}>{t('Revenue by channel', 'Ingresos por canal')}</div>
                 <div style={{ display: 'flex', alignItems: 'flex-end', gap: 8, height: 160 }}>
                   {viewRow.sim.map((hex, i) => (
                     <motion.div
@@ -181,20 +186,20 @@ export default function ColorBlindness() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px 12px', marginTop: 12 }}>
                   {viewRow.sim.map((hex, i) => (
                     <span key={i} className="small" style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-                      <motion.span animate={{ backgroundColor: hex }} style={{ width: 10, height: 10, borderRadius: 3 }} /> Series {i + 1}
+                      <motion.span animate={{ backgroundColor: hex }} style={{ width: 10, height: 10, borderRadius: 3 }} /> {t('Series', 'Serie')} {i + 1}
                     </span>
                   ))}
                 </div>
               </div>
               <div style={{ background: 'var(--surface-2)', borderRadius: 20, padding: 18, boxShadow: 'inset 0 0 0 1px var(--border)', display: 'grid', gap: 10, alignContent: 'start' }}>
-                <div className="small muted">Status pills</div>
+                <div className="small muted">{t('Status pills', 'Etiquetas de estado')}</div>
                 {viewRow.sim.slice(0, 4).map((hex, i) => (
                   <motion.div
                     key={i}
                     animate={{ backgroundColor: hex, color: bestTextColor(hexToRgb(hex)) }}
                     style={{ padding: '10px 14px', borderRadius: 999, fontWeight: 600, fontSize: 14, width: 'fit-content' }}
                   >
-                    {['Error', 'Success', 'Warning', 'Info'][i]}
+                    {(lang === 'es' ? ['Error', 'Éxito', 'Advertencia', 'Info'] : ['Error', 'Success', 'Warning', 'Info'])[i]}
                   </motion.div>
                 ))}
               </div>
@@ -202,14 +207,14 @@ export default function ColorBlindness() {
           </Reveal>
 
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Takeaways</h2>
+            <h2 className="eyebrow">{t('Takeaways', 'Conclusiones')}</h2>
             {worst.pairs.length === 0 ? (
-              <p className="muted" style={{ margin: 0 }}>Nice — every color stays distinguishable under every simulation. 🎉</p>
+              <p className="muted" style={{ margin: 0 }}>{t('Nice — every color stays distinguishable under every simulation. 🎉', '¡Bien! Todos los colores siguen distinguiéndose en cada simulación. 🎉')}</p>
             ) : (
               <ul className="muted" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
-                <li><b style={{ color: 'var(--text)' }}>{worst.label}</b> is the hardest case: {worst.pairs.map(([a, b]) => `${colors[a]} ↔ ${colors[b]}`).join(', ')}.</li>
-                <li>Don’t rely on color alone — add icons, labels or patterns to charts and status states (WCAG 1.4.1).</li>
-                <li>Vary lightness, not just hue: colors that differ in lightness survive every type of color blindness.</li>
+                <li><b style={{ color: 'var(--text)' }}>{vt(worst).label}</b> {t('is the hardest case:', 'es el caso más difícil:')} {worst.pairs.map(([a, b]) => `${colors[a]} ↔ ${colors[b]}`).join(', ')}.</li>
+                <li>{t('Don’t rely on color alone — add icons, labels or patterns to charts and status states (WCAG 1.4.1).', 'No dependas solo del color: añade iconos, etiquetas o patrones a gráficos y estados (WCAG 1.4.1).')}</li>
+                <li>{t('Vary lightness, not just hue: colors that differ in lightness survive every type of color blindness.', 'Varía la luminosidad, no solo el tono: los colores con distinta luminosidad resisten cualquier tipo de daltonismo.')}</li>
               </ul>
             )}
           </Reveal>

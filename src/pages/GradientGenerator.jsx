@@ -1,4 +1,8 @@
 import { useRef, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import useUrlState, { num } from '../hooks/useUrlState';
+import ShareLink from '../components/ShareLink';
+import { normalizeHex } from '../lib/color';
 import { AnimatePresence, motion } from 'framer-motion';
 import { hslToHex } from '../lib/color';
 import { getHarmonyHues } from '../lib/palette';
@@ -6,6 +10,9 @@ import ToolPage from '../components/ToolPage';
 import { ColorField, CopyButton, RangeField, Reveal, Segmented } from '../components/ui';
 import { EASE } from '../lib/motion';
 import useCopy from '../hooks/useCopy';
+import { useLang } from '../i18n';
+
+const PRESET_ES = { lab: 'lab', sunset: 'atardecer', mint: 'menta' };
 import { track } from '../lib/analytics';
 
 let uid = 0;
@@ -32,6 +39,27 @@ function fromPreset(name) {
     stops: p.stops.map(([color, pos]) => ({ id: nextId(), color, pos })),
     meshBg: p.mesh.bg,
     points: p.mesh.points.map(([color, x, y, size]) => ({ id: nextId(), color, x, y, size })),
+  };
+}
+
+/* Restore a shared gradient from the URL; null when there's nothing valid. */
+function fromParams(params) {
+  const stops = (params.get('s') || '').split('_').map(chunk => {
+    const [hex, pos] = chunk.split('-');
+    const color = normalizeHex(hex || '');
+    return color ? { id: nextId(), color, pos: num(pos, 50, 0, 100) } : null;
+  }).filter(Boolean);
+  const points = (params.get('p') || '').split('_').map(chunk => {
+    const [hex, x, y, size] = chunk.split('-');
+    const color = normalizeHex(hex || '');
+    return color ? { id: nextId(), color, x: num(x, 50, 0, 100), y: num(y, 50, 0, 100), size: num(size, 45, 10, 90) } : null;
+  }).filter(Boolean);
+  if (stops.length < 2 && points.length < 2) return null;
+  const preset = fromPreset('lab');
+  return {
+    stops: stops.length >= 2 ? stops.slice(0, 8) : preset.stops,
+    points: points.length >= 2 ? points.slice(0, 8) : preset.points,
+    meshBg: normalizeHex(params.get('bg') || '') || preset.meshBg,
   };
 }
 
@@ -67,12 +95,13 @@ function useDrag(boxRef, onMove) {
 }
 
 function Handle({ boxRef, x, y, color, label, onMove, onKeyMove, selected, onSelect }) {
+  const { t } = useLang();
   const start = useDrag(boxRef, onMove);
   return (
     <motion.button
       type="button"
       className="mesh-handle"
-      aria-label={`${label}. Drag, or use arrow keys to move.`}
+      aria-label={`${label}. ${t('Drag, or use arrow keys to move.', 'Arrastra o usa las flechas para mover.')}`}
       style={{ left: `${x}%`, top: `${y}%`, background: color, outline: selected ? '3px solid var(--focus)' : 'none', outlineOffset: 3 }}
       onPointerDown={e => { onSelect(); start(e); }}
       onKeyDown={e => {
@@ -90,17 +119,27 @@ function Handle({ boxRef, x, y, color, label, onMove, onKeyMove, selected, onSel
 }
 
 export default function GradientGenerator() {
-  const [mode, setMode] = useState('mesh');
-  const [angle, setAngle] = useState(135);
-  const [state, setState] = useState(() => fromPreset('lab'));
+  const { t } = useLang();
+  const [params] = useSearchParams();
+  const [mode, setMode] = useState(() => (['mesh', 'linear', 'radial', 'conic'].includes(params.get('m')) ? params.get('m') : 'mesh'));
+  const [angle, setAngle] = useState(() => num(params.get('a'), 135, 0, 360));
+  const [state, setState] = useState(() => fromParams(params) || fromPreset('lab'));
   const [selected, setSelected] = useState(null);
-  const [animate, setAnimate] = useState(false);
+  const [animate, setAnimate] = useState(() => params.get('anim') === '1');
   const [shuffles, setShuffles] = useState(0);
   const boxRef = useRef(null);
   const barRef = useRef(null);
   const [copied, copy] = useCopy();
 
   const { stops, points, meshBg } = state;
+
+  // Stops as hex-pos, points as hex-x-y-size, joined with "_".
+  useUrlState(() => ({
+    m: mode, a: mode === 'linear' || mode === 'conic' ? angle : '', anim: animate ? '1' : '',
+    s: stops.map(s => `${s.color.slice(1)}-${s.pos}`).join('_'),
+    p: points.map(p => `${p.color.slice(1)}-${p.x}-${p.y}-${p.size}`).join('_'),
+    bg: meshBg.slice(1),
+  }), [mode, angle, animate, state]);
   const bg = buildCss({ mode, angle, stops, points, meshBg });
   const items = mode === 'mesh' ? points : stops;
   const sel = items.find(i => i.id === selected) || items[0];
@@ -169,7 +208,7 @@ export default function GradientGenerator() {
                 key={p.id}
                 boxRef={boxRef}
                 x={p.x} y={p.y} color={p.color}
-                label={`Color point ${i + 1}`}
+                label={t(`Color point ${i + 1}`, `Punto de color ${i + 1}`)}
                 selected={sel?.id === p.id}
                 onSelect={() => setSelected(p.id)}
                 onMove={(x, y) => updateItem(p.id, { x, y })}
@@ -178,7 +217,7 @@ export default function GradientGenerator() {
             ))}
             <div style={{ position: 'absolute', left: 14, bottom: 14, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
               <motion.button type="button" className="btn btn-chip btn-sm" onClick={shuffle} whileTap={{ scale: 0.9 }}>
-                <motion.span animate={{ rotate: shuffles * 360 }} transition={{ duration: 0.6, ease: EASE }} style={{ display: 'inline-block' }}>🎲</motion.span> Shuffle colors
+                <motion.span animate={{ rotate: shuffles * 360 }} transition={{ duration: 0.6, ease: EASE }} style={{ display: 'inline-block' }}>🎲</motion.span> {t('Shuffle colors', 'Mezclar colores')}
               </motion.button>
             </div>
           </div>
@@ -187,29 +226,29 @@ export default function GradientGenerator() {
         <div className="grid-sidebar">
           <div className="stack">
             <Reveal className="card">
-              <h2 className="eyebrow">Type</h2>
-              <Segmented full label="Gradient type" value={mode} onChange={m => { setMode(m); setSelected(null); }} options={[
-                { value: 'mesh', label: 'Mesh' }, { value: 'linear', label: 'Linear' }, { value: 'radial', label: 'Radial' }, { value: 'conic', label: 'Conic' },
+              <h2 className="eyebrow">{t('Type', 'Tipo')}</h2>
+              <Segmented full label={t('Gradient type', 'Tipo de degradado')} value={mode} onChange={m => { setMode(m); setSelected(null); }} options={[
+                { value: 'mesh', label: t('Mesh', 'Malla') }, { value: 'linear', label: t('Linear', 'Lineal') }, { value: 'radial', label: 'Radial' }, { value: 'conic', label: t('Conic', 'Cónico') },
               ]} />
               <div className="stack" style={{ gap: 16, marginTop: 18 }}>
                 <AnimatePresence initial={false}>
                   {(mode === 'linear' || mode === 'conic') && (
                     <motion.div key="angle" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
-                      <RangeField label="Angle" value={angle} min={0} max={360} onChange={setAngle} format={v => `${v}°`} />
+                      <RangeField label={t('Angle', 'Ángulo')} value={angle} min={0} max={360} onChange={setAngle} format={v => `${v}°`} />
                     </motion.div>
                   )}
                 </AnimatePresence>
-                {mode === 'mesh' && <ColorField label="Base color" value={meshBg} onChange={c => setState(s => ({ ...s, meshBg: c }))} />}
-                <Segmented full label="Motion" value={animate ? 'on' : 'off'} onChange={v => setAnimate(v === 'on')} options={[{ value: 'off', label: 'Still' }, { value: 'on', label: 'Animated' }]} />
+                {mode === 'mesh' && <ColorField label={t('Base color', 'Color base')} value={meshBg} onChange={c => setState(s => ({ ...s, meshBg: c }))} />}
+                <Segmented full label={t('Motion', 'Movimiento')} value={animate ? 'on' : 'off'} onChange={v => setAnimate(v === 'on')} options={[{ value: 'off', label: t('Still', 'Quieto') }, { value: 'on', label: t('Animated', 'Animado') }]} />
                 <div>
-                  <div className="field-label" style={{ marginBottom: 8 }}>Presets</div>
+                  <div className="field-label" style={{ marginBottom: 8 }}>{t('Presets', 'Ajustes predefinidos')}</div>
                   <div style={{ display: 'flex', gap: 8 }}>
                     {Object.keys(PRESETS).map(name => (
                       <motion.button
                         key={name}
                         type="button"
-                        aria-label={`${name} preset`}
-                        title={name}
+                        aria-label={t(`${name} preset`, `Ajuste ${PRESET_ES[name]}`)}
+                        title={t(name, PRESET_ES[name])}
                         onClick={() => { setState(fromPreset(name)); setSelected(null); }}
                         whileHover={{ y: -3, rotate: -4 }}
                         whileTap={{ scale: 0.9 }}
@@ -225,8 +264,8 @@ export default function GradientGenerator() {
           <div className="stack">
             <Reveal className="card">
               <h2 className="eyebrow">
-                {mode === 'mesh' ? 'Color points' : 'Color stops'}
-                <button type="button" className="btn btn-ghost btn-sm" onClick={addItem} disabled={items.length >= 8}>+ Add</button>
+                {mode === 'mesh' ? t('Color points', 'Puntos de color') : t('Color stops', 'Paradas de color')}
+                <button type="button" className="btn btn-ghost btn-sm" onClick={addItem} disabled={items.length >= 8}>+ {t('Add', 'Agregar')}</button>
               </h2>
               {mode !== 'mesh' && (
                 <div
@@ -238,7 +277,7 @@ export default function GradientGenerator() {
                       key={s.id}
                       boxRef={barRef}
                       x={s.pos} y={50} color={s.color}
-                      label={`Color stop ${i + 1}`}
+                      label={t(`Color stop ${i + 1}`, `Parada de color ${i + 1}`)}
                       selected={sel?.id === s.id}
                       onSelect={() => setSelected(s.id)}
                       onMove={x => updateItem(s.id, { pos: x })}
@@ -261,24 +300,25 @@ export default function GradientGenerator() {
                       style={{ gridTemplateColumns: '1fr', gap: 10, boxShadow: sel?.id === it.id ? 'inset 0 0 0 1.5px var(--focus)' : undefined }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <span className="check-row-label">{mode === 'mesh' ? 'Point' : 'Stop'} {i + 1}</span>
-                        <button type="button" className="btn btn-ghost btn-icon" style={{ width: 30, height: 30, fontSize: 12 }} aria-label={`Remove ${mode === 'mesh' ? 'point' : 'stop'} ${i + 1}`} disabled={items.length <= 2} onClick={e => { e.stopPropagation(); removeItem(it.id); }}>✕</button>
+                        <span className="check-row-label">{mode === 'mesh' ? t('Point', 'Punto') : t('Stop', 'Parada')} {i + 1}</span>
+                        <button type="button" className="btn btn-ghost btn-icon" style={{ width: 30, height: 30, fontSize: 12 }} aria-label={mode === 'mesh' ? t(`Remove point ${i + 1}`, `Quitar punto ${i + 1}`) : t(`Remove stop ${i + 1}`, `Quitar parada ${i + 1}`)} disabled={items.length <= 2} onClick={e => { e.stopPropagation(); removeItem(it.id); }}>✕</button>
                       </div>
                       <ColorField label={`Color ${i + 1}`} hideLabel value={it.color} onChange={c => updateItem(it.id, { color: c })} />
                       {mode === 'mesh'
-                        ? <RangeField label="Spread" value={it.size} min={10} max={90} onChange={v => updateItem(it.id, { size: v })} format={v => `${v}%`} />
-                        : <RangeField label="Position" value={it.pos} min={0} max={100} onChange={v => updateItem(it.id, { pos: v })} format={v => `${v}%`} />}
+                        ? <RangeField label={t('Spread', 'Extensión')} value={it.size} min={10} max={90} onChange={v => updateItem(it.id, { size: v })} format={v => `${v}%`} />
+                        : <RangeField label={t('Position', 'Posición')} value={it.pos} min={0} max={100} onChange={v => updateItem(it.id, { pos: v })} format={v => `${v}%`} />}
                     </motion.div>
                   ))}
                 </AnimatePresence>
               </div>
-              {mode === 'mesh' && <p className="small muted" style={{ margin: '14px 0 0' }}>Tip: drag the dots on the preview (or focus one and use the arrow keys).</p>}
+              {mode === 'mesh' && <p className="small muted" style={{ margin: '14px 0 0' }}>{t('Tip: drag the dots on the preview (or focus one and use the arrow keys).', 'Consejo: arrastra los puntos en la vista previa (o enfoca uno y usa las flechas).')}</p>}
             </Reveal>
 
             <Reveal className="card">
               <h2 className="eyebrow">
                 CSS
-                <CopyButton className="btn btn-primary btn-sm" copied={copied === 'css'} onClick={() => copy(cssText, 'css', { name: 'Copy', props: { tool: 'gradient-generator', mode } })}>Copy CSS</CopyButton>
+                <span className="chip-row"><ShareLink tool="gradient-generator" />
+                <CopyButton className="btn btn-primary btn-sm" copied={copied === 'css'} onClick={() => copy(cssText, 'css', { name: 'Copy', props: { tool: 'gradient-generator', mode } })}>{t('Copy CSS', 'Copiar CSS')}</CopyButton></span>
               </h2>
               <pre className="code-block" data-lenis-prevent>{cssText}</pre>
             </Reveal>

@@ -3,6 +3,13 @@ import { bestTextColor, hexToRgb } from './color';
 /* One creative, laid out for any canvas size. The same draw function renders
    the on-screen previews and the full-resolution PNG exports. */
 
+export const SIZE_ES = {
+  'ig-post': 'Publicación de Instagram', 'ig-story': 'Story / Reel', 'li-link': 'Enlace de LinkedIn / Facebook', 'x-post': 'Publicación de X',
+  'yt-thumb': 'Miniatura de YouTube', pin: 'Pin de Pinterest', mrec: 'Rectángulo mediano', leader: 'Leaderboard', billboard: 'Billboard',
+  half: 'Media página', sky: 'Rascacielos ancho', 'mobile-banner': 'Banner móvil',
+};
+export const SAFE_ES = { 'Profile & close': 'Perfil y cerrar', 'Reply bar & CTA': 'Barra de respuesta y CTA', Timestamp: 'Duración' };
+
 export const SIZES = [
   { id: 'ig-post', group: 'Social', name: 'Instagram post', w: 1080, h: 1080, safe: [{ inset: 0.05 }] },
   { id: 'ig-story', group: 'Social', name: 'Story / Reel', w: 1080, h: 1920, safe: [{ top: 0, height: 0.14, label: 'Profile & close' }, { top: 0.8, height: 0.2, label: 'Reply bar & CTA' }] },

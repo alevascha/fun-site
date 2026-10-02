@@ -6,6 +6,7 @@ import { EASE } from '../lib/motion';
 import { colorRgba, FORMATS, formatColor, kebab, parseTokens, resolveTokens, SAMPLES } from '../lib/tokens';
 import useCopy from '../hooks/useCopy';
 import { track } from '../lib/analytics';
+import { useLang } from '../i18n';
 
 function download(text, filename) {
   const url = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
@@ -34,6 +35,7 @@ function TokenPreview({ t }) {
 }
 
 export default function TokenConverter() {
+  const { t: tr } = useLang();
   const [text, setText] = useState(SAMPLES.dtcg.text);
   const [format, setFormat] = useState('css');
   const [mode, setMode] = useState(null);
@@ -67,11 +69,11 @@ export default function TokenConverter() {
       <div className="grid-2">
         <Reveal className="card">
           <h2 className="eyebrow">
-            Tokens in
+            {tr('Tokens in', 'Tokens de entrada')}
             <span className="chip-row">
               {Object.entries(SAMPLES).map(([key, s]) => (
                 <motion.button key={key} type="button" className="btn btn-ghost btn-sm" whileTap={{ scale: 0.94 }} onClick={() => { setText(s.text); setMode(null); }}>
-                  {s.label}
+                  {s.label === 'Figma Variables' ? tr('Figma Variables', 'Variables de Figma') : s.label}
                 </motion.button>
               ))}
             </span>
@@ -81,7 +83,7 @@ export default function TokenConverter() {
             data-lenis-prevent
             spellCheck={false}
             value={text}
-            aria-label="Token JSON"
+            aria-label={tr('Token JSON', 'JSON de tokens')}
             aria-invalid={!result.ok}
             onChange={e => setText(e.target.value)}
             onDragOver={e => e.preventDefault()}
@@ -95,46 +97,46 @@ export default function TokenConverter() {
                 {result.ok ? `✓ ${result.format}` : `✕ ${result.error}`}
               </motion.span>
             </AnimatePresence>
-            {result.ok && <span className="badge badge-neutral">{result.tokens.length} tokens · {aliasCount} aliases</span>}
+            {result.ok && <span className="badge badge-neutral">{result.tokens.length} tokens · {aliasCount} {tr('aliases', 'alias')}</span>}
             {result.ok && result.issues.map(i => <span key={i} className="badge badge-fail">{i}</span>)}
-            <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()} style={{ marginLeft: 'auto' }}>Open .json</button>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()} style={{ marginLeft: 'auto' }}>{tr('Open .json', 'Abrir .json')}</button>
           </div>
           {result.ok && result.modes.length > 1 && (
             <div className="field" style={{ marginTop: 14 }}>
-              <span className="field-label">Mode</span>
-              <Segmented label="Variable mode" value={result.mode} onChange={setMode} options={result.modes.map(m => ({ value: m, label: m }))} />
+              <span className="field-label">{tr('Mode', 'Modo')}</span>
+              <Segmented label={tr('Variable mode', 'Modo de variables')} value={result.mode} onChange={setMode} options={result.modes.map(m => ({ value: m, label: m }))} />
             </div>
           )}
         </Reveal>
 
         <div className="stack">
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Options</h2>
+            <h2 className="eyebrow">{tr('Options', 'Opciones')}</h2>
             <div className="grid-2" style={{ gap: 14 }}>
               <div className="field">
-                <label className="field-label" htmlFor="tok-prefix">Prefix</label>
-                <input id="tok-prefix" className="input" placeholder="e.g. ds" value={prefix} onChange={e => setPrefix(e.target.value)} />
+                <label className="field-label" htmlFor="tok-prefix">{tr('Prefix', 'Prefijo')}</label>
+                <input id="tok-prefix" className="input" placeholder={tr('e.g. ds', 'p. ej. ds')} value={prefix} onChange={e => setPrefix(e.target.value)} />
               </div>
               <div className="field">
-                <span className="field-label">Colors as</span>
-                <Segmented full label="Color format" value={colorFormat} onChange={setColorFormat} options={[{ value: 'hex', label: 'HEX' }, { value: 'rgb', label: 'RGB' }, { value: 'hsl', label: 'HSL' }]} />
+                <span className="field-label">{tr('Colors as', 'Colores en')}</span>
+                <Segmented full label={tr('Color format', 'Formato de color')} value={colorFormat} onChange={setColorFormat} options={[{ value: 'hex', label: 'HEX' }, { value: 'rgb', label: 'RGB' }, { value: 'hsl', label: 'HSL' }]} />
               </div>
             </div>
             <div className="field" style={{ marginTop: 14 }}>
-              <span className="field-label">Aliases</span>
-              <Segmented full label="Aliases" value={keepAliases ? 'keep' : 'resolve'} onChange={v => setKeepAliases(v === 'keep')} options={[{ value: 'keep', label: 'Keep as references' }, { value: 'resolve', label: 'Resolve to values' }]} />
+              <span className="field-label">{tr('Aliases', 'Alias')}</span>
+              <Segmented full label={tr('Aliases', 'Alias')} value={keepAliases ? 'keep' : 'resolve'} onChange={v => setKeepAliases(v === 'keep')} options={[{ value: 'keep', label: tr('Keep as references', 'Mantener como referencias') }, { value: 'resolve', label: tr('Resolve to values', 'Resolver a valores') }]} />
             </div>
           </Reveal>
 
           <Reveal className="card" delay={0.1}>
             <h2 className="eyebrow">
-              Output
+              {tr('Output', 'Salida')}
               <span className="chip-row">
-                <CopyButton copied={copied === 'out'} onClick={() => copy(output, 'out', { name: 'Copy', props: { tool: 'token-converter', format } })}>Copy</CopyButton>
-                <button type="button" className="btn btn-primary btn-sm" disabled={!result.ok} onClick={() => { download(output, `tokens.${fmt.ext}`); track('Download', { tool: 'token-converter', format }); }}>Download</button>
+                <CopyButton copied={copied === 'out'} onClick={() => copy(output, 'out', { name: 'Copy', props: { tool: 'token-converter', format } })}>{tr('Copy', 'Copiar')}</CopyButton>
+                <button type="button" className="btn btn-primary btn-sm" disabled={!result.ok} onClick={() => { download(output, `tokens.${fmt.ext}`); track('Download', { tool: 'token-converter', format }); }}>{tr('Download', 'Descargar')}</button>
               </span>
             </h2>
-            <Segmented label="Output format" value={format} onChange={setFormat} options={FORMATS.map(f => ({ value: f.value, label: f.label }))} />
+            <Segmented label={tr('Output format', 'Formato de salida')} value={format} onChange={setFormat} options={FORMATS.map(f => ({ value: f.value, label: f.value === 'json' ? tr('Flat JSON', 'JSON plano') : f.label }))} />
             <AnimatePresence mode="wait">
               <motion.pre
                 key={format}
@@ -146,7 +148,7 @@ export default function TokenConverter() {
                 transition={{ duration: 0.2 }}
                 style={{ marginTop: 14, maxHeight: 420 }}
               >
-                {result.ok ? output : '// Fix the JSON on the left to see output'}
+                {result.ok ? output : tr('// Fix the JSON on the left to see output', '// Corrige el JSON de la izquierda para ver la salida')}
               </motion.pre>
             </AnimatePresence>
           </Reveal>
@@ -155,7 +157,7 @@ export default function TokenConverter() {
 
       {result.ok && (
         <Reveal className="card" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
-          <h2 className="eyebrow">Preview · click to copy a variable</h2>
+          <h2 className="eyebrow">{tr('Preview · click to copy a variable', 'Vista previa · haz clic para copiar una variable')}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: 8 }}>
             {result.tokens.slice(0, 120).map((t, i) => {
               const name = `--${kebab([prefix, ...t.path].filter(Boolean).join('-'))}`;
@@ -175,7 +177,7 @@ export default function TokenConverter() {
                 >
                   <TokenPreview t={t} />
                   <span style={{ minWidth: 0 }}>
-                    <span className="mono" style={{ display: 'block', fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{copied === name ? 'Copied ✓' : name}</span>
+                    <span className="mono" style={{ display: 'block', fontSize: 12, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{copied === name ? tr('Copied ✓', 'Copiado ✓') : name}</span>
                     <span className="check-row-sub mono" style={{ display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {t.ref ? `→ ${t.ref.join('.')} · ` : ''}{t.type === 'color' ? formatColor(t.value, colorFormat) : t.css}
                     </span>

@@ -1,6 +1,9 @@
 import { motion } from 'framer-motion';
+import { useLang } from '../i18n';
+import { localName } from '../lib/palette';
 
 export default function AnatomyBar({ groups }) {
+  const { lang } = useLang();
   return (
     <div>
       <div className="anatomy-bar">
@@ -10,7 +13,7 @@ export default function AnatomyBar({ groups }) {
           return (
             <motion.div
               key={group.name}
-              title={`${group.name} · ${group.percentage}`}
+              title={`${localName(group.name, lang)} · ${group.percentage}`}
               initial={false}
               animate={{ width: group.weight + '%', backgroundColor: centerHex }}
               whileHover={{ scaleY: 1.08 }}
@@ -28,7 +31,7 @@ export default function AnatomyBar({ groups }) {
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
             style={{ fontSize: 12, color: 'var(--muted)', minWidth: 0, overflow: 'hidden', paddingRight: 6 }}
           >
-            <b style={{ display: 'block', color: 'var(--text)', fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{group.name}</b>
+            <b style={{ display: 'block', color: 'var(--text)', fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{localName(group.name, lang)}</b>
             {group.percentage}
           </motion.div>
         ))}

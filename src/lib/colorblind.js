@@ -22,11 +22,16 @@ const MATRICES = {
 };
 
 export const VISION_TYPES = [
-  { id: 'normal', label: 'Typical vision', short: 'Typical', note: 'Reference — how the palette was designed.' },
-  { id: 'protanopia', label: 'Protanopia', short: 'Protan', note: 'No red cones. Reds look dark and muddy. ≈1% of men.' },
-  { id: 'deuteranopia', label: 'Deuteranopia', short: 'Deutan', note: 'No green cones. Reds and greens merge. ≈1% of men (the -anomaly form is ≈5%).' },
-  { id: 'tritanopia', label: 'Tritanopia', short: 'Tritan', note: 'No blue cones. Blues/greens and yellows/pinks blur. Very rare.' },
-  { id: 'achromatopsia', label: 'Achromatopsia', short: 'Achroma', note: 'No color at all — only lightness is left. ≈1 in 30,000.' },
+  { id: 'normal', label: 'Typical vision', short: 'Typical', note: 'Reference — how the palette was designed.',
+    es: { label: 'Visión típica', short: 'Típica', note: 'Referencia: cómo se diseñó la paleta.' } },
+  { id: 'protanopia', label: 'Protanopia', short: 'Protan', note: 'No red cones. Reds look dark and muddy. ≈1% of men.',
+    es: { label: 'Protanopia', short: 'Protan', note: 'Sin conos rojos. Los rojos se ven oscuros y apagados. ≈1% de los hombres.' } },
+  { id: 'deuteranopia', label: 'Deuteranopia', short: 'Deutan', note: 'No green cones. Reds and greens merge. ≈1% of men (the -anomaly form is ≈5%).',
+    es: { label: 'Deuteranopia', short: 'Deutan', note: 'Sin conos verdes. Rojos y verdes se confunden. ≈1% de los hombres (la forma -anomalía, ≈5%).' } },
+  { id: 'tritanopia', label: 'Tritanopia', short: 'Tritan', note: 'No blue cones. Blues/greens and yellows/pinks blur. Very rare.',
+    es: { label: 'Tritanopia', short: 'Tritan', note: 'Sin conos azules. Se confunden azules/verdes y amarillos/rosas. Muy rara.' } },
+  { id: 'achromatopsia', label: 'Achromatopsia', short: 'Achroma', note: 'No color at all — only lightness is left. ≈1 in 30,000.',
+    es: { label: 'Acromatopsia', short: 'Acroma', note: 'Sin color: solo queda la luminosidad. ≈1 de cada 30.000.' } },
 ];
 
 export function simulateRgb(rgb, type, severity = 1) {

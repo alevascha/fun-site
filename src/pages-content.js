@@ -70,9 +70,22 @@ export const STATIC_PAGES = [
         ],
       },
       {
+        heading: 'Newsletter and waitlist',
+        body: [
+          'If you subscribe to the newsletter or join the Lab Pro waitlist, your email address is stored by our email provider, Brevo (Sendinblue SAS, France), and used only to send you updates about the lab. You will receive a confirmation email first, every email includes an unsubscribe link, and you can ask for your address to be deleted at any time.',
+        ],
+        links: [{ label: 'Brevo privacy policy', href: 'https://www.brevo.com/legal/privacypolicy/' }],
+      },
+      {
+        heading: 'Feedback',
+        body: [
+          'The “Was this tool useful?” buttons and the optional suggestion box send anonymous events to our analytics. Suggestions are stored as text, so please don’t include personal information in them.',
+        ],
+      },
+      {
         heading: 'Storage in your browser',
         body: [
-          'The site stores a few preferences in your browser’s local storage: your light/dark theme choice and which experiments you have already opened (for the “New” badges). This never leaves your device and you can clear it at any time from your browser settings.',
+          'The site stores a few preferences in your browser’s local storage: your light/dark theme choice, your language, and which experiments you have already opened (for the “New” badges). This never leaves your device and you can clear it at any time from your browser settings.',
         ],
       },
       {
@@ -95,4 +108,94 @@ export const STATIC_PAGES = [
   },
 ];
 
-export const getStaticPage = id => STATIC_PAGES.find(p => p.id === id);
+export const STATIC_PAGES_ES = {
+  about: {
+    path: '/es/acerca-de',
+    title: 'Acerca de',
+    metaTitle: "Acerca de Ale's Fun Lab",
+    description: "Quién construye Ale's Fun Lab, por qué existen estas herramientas gratuitas de diseño y accesibilidad, y cómo contactarme.",
+    sections: [
+      {
+        heading: 'Qué es esto',
+        body: [
+          "Ale's Fun Lab es una colección de herramientas gratuitas para diseñadores y desarrolladores front-end: paletas de colores accesibles, un verificador de contraste WCAG, un convertidor de design tokens, escalas tipográficas, curvas de animación, recorte de imágenes, una auditoría de accesibilidad y más.",
+          'Todas las herramientas funcionan por completo en tu navegador. No hay cuentas, y los archivos que abres (imágenes, HTML, archivos de tokens) se procesan en tu dispositivo y nunca se suben.',
+        ],
+      },
+      {
+        heading: 'Quién lo construye',
+        body: [
+          'Soy Alejandro Vasquez, UX Engineer y Design Systems Engineer con más de ocho años de experiencia uniendo diseño e ingeniería. Estos experimentos son el lado divertido de ese trabajo: pequeñas herramientas que me hubiera gustado tener mientras construía design systems.',
+          'Puedes ver mi trabajo con clientes y mis casos de estudio en alevasquez.dev.',
+        ],
+      },
+      {
+        heading: 'Contacto',
+        body: ['¿Encontraste un error, tienes una idea para una herramienta nueva o quieres trabajar conmigo? Escríbeme por LinkedIn o desde mi portafolio; los enlaces están abajo.'],
+        links: [
+          { label: 'alevasquez.dev', href: 'https://www.alevasquez.dev/' },
+          { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aledvascha/' },
+        ],
+      },
+    ],
+  },
+  privacy: {
+    path: '/es/privacidad',
+    title: 'Política de privacidad',
+    metaTitle: "Política de privacidad — Ale's Fun Lab",
+    description: "Cómo trata tus datos Ale's Fun Lab: herramientas en el navegador, analítica sin cookies, newsletter, publicidad de Google AdSense y tus opciones.",
+    sections: [
+      {
+        heading: 'En resumen',
+        body: ['Las herramientas de este sitio funcionan en tu navegador. Las imágenes, el HTML, los archivos de tokens y los colores con los que trabajas se procesan en tu dispositivo y nunca se envían a un servidor. No hay cuentas.'],
+      },
+      {
+        heading: 'Analítica',
+        body: ['Usamos Umami Cloud para contar visitas y entender qué herramientas se usan. Umami no usa cookies ni recopila datos personales; registra información anónima como la página visitada, el sitio de origen, el navegador, el tipo de dispositivo y el país. También registramos eventos anónimos como “copió CSS” o “descargó un archivo”, sin su contenido.'],
+      },
+      {
+        heading: 'Newsletter y lista de espera',
+        body: ['Si te suscribes a la newsletter o te unes a la lista de espera de Lab Pro, tu correo se guarda en nuestro proveedor de email, Brevo (Sendinblue SAS, Francia), y se usa solo para enviarte novedades del lab. Primero recibirás un correo de confirmación, cada correo incluye un enlace para darte de baja y puedes pedir que se borre tu dirección en cualquier momento.'],
+        links: [{ label: 'Política de privacidad de Brevo', href: 'https://www.brevo.com/legal/privacypolicy/' }],
+      },
+      {
+        heading: 'Comentarios',
+        body: ['Los botones “¿Te sirvió esta herramienta?” y el cuadro opcional de sugerencias envían eventos anónimos a nuestra analítica. Las sugerencias se guardan como texto, así que no incluyas datos personales.'],
+      },
+      {
+        heading: 'Publicidad (Google AdSense)',
+        body: [
+          'Este sitio puede mostrar anuncios de Google AdSense. Proveedores externos, incluido Google, usan cookies para mostrar anuncios basados en tus visitas anteriores a este u otros sitios web.',
+          'El uso de cookies publicitarias permite a Google y a sus socios mostrarte anuncios basados en tus visitas a este sitio y/u otros sitios de Internet. Puedes desactivar la publicidad personalizada en la Configuración de anuncios de Google, y desactivar el uso de cookies de algunos proveedores externos en aboutads.info.',
+          'Donde la ley lo exige (por ejemplo en el Espacio Económico Europeo, el Reino Unido y Suiza), se te pedirá consentimiento antes de usar anuncios personalizados o cookies publicitarias.',
+        ],
+        links: [
+          { label: 'Cómo usa Google los datos de los sitios que usan sus servicios', href: 'https://policies.google.com/technologies/partner-sites?hl=es' },
+          { label: 'Configuración de anuncios de Google', href: 'https://adssettings.google.com/' },
+          { label: 'Exclusión en aboutads.info', href: 'https://www.aboutads.info/choices/' },
+        ],
+      },
+      {
+        heading: 'Almacenamiento en tu navegador',
+        body: ['El sitio guarda algunas preferencias en el almacenamiento local de tu navegador: tu tema claro/oscuro, tu idioma y qué experimentos ya abriste (para las etiquetas “Nuevo”). Nunca sale de tu dispositivo y puedes borrarlo cuando quieras desde la configuración de tu navegador.'],
+      },
+      {
+        heading: 'Alojamiento',
+        body: ['El sitio está alojado en un proveedor de hosting estático, que puede guardar registros estándar del servidor (como la dirección IP y el navegador) por seguridad y fiabilidad, según su propia política de privacidad.'],
+      },
+      {
+        heading: 'Cambios y contacto',
+        body: ['Si esta política cambia, también cambiará la fecha al inicio de esta página. Para preguntas sobre privacidad, contacta a Alejandro Vasquez a través de alevasquez.dev o LinkedIn.'],
+        links: [
+          { label: 'alevasquez.dev', href: 'https://www.alevasquez.dev/' },
+          { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aledvascha/' },
+        ],
+      },
+    ],
+  },
+};
+
+export const getStaticPage = (id, lang = 'en') => {
+  const page = STATIC_PAGES.find(p => p.id === id);
+  return lang === 'es' && STATIC_PAGES_ES[id] ? { ...page, ...STATIC_PAGES_ES[id] } : page;
+};
