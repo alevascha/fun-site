@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import {
   hexToRgb, hslToRgb, rgbToHex, rgbToHsl, contrastRatio, bestTextColor, findAAFix, suggestClosestPassing,
 } from '../lib/color';
@@ -12,7 +13,7 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
   }
 
   return (
-    <div style={{ height: '14.2857%', position: 'relative', background: tone.hex, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
+    <div style={{ height: '14.2857%', position: 'relative', background: tone.hex, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 2, transition: 'background-color 0.25s ease' }}>
       <span style={{ position: 'absolute', top: 2, right: 5, fontSize: 7, fontWeight: 800, opacity: 0.65, color: bestTextColor(bgRgb) }}>{tone.symbol}</span>
       <div style={{ display: 'flex', gap: 3, justifyContent: 'center' }}>
         {refs.map(ref => {
@@ -31,12 +32,14 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
                 if (fixedL === null) return;
                 onToneChange(hslToRgb(tone.hsl.h, tone.hsl.s, fixedL));
               }}
+              className={pass ? '' : 'pg-fail-dot'}
               style={{
                 width: 9, height: 9, borderRadius: '50%',
                 background: pass ? ref.hex : 'transparent',
                 border: pass ? 'none' : '2px dashed rgba(0,0,0,.35)',
                 boxShadow: pass ? '0 0 0 1px rgba(0,0,0,.2)' : 'none',
                 cursor: pass ? 'default' : 'pointer',
+                transition: 'background-color 0.2s ease, transform 0.15s ease',
               }}
             />
           );
@@ -90,7 +93,7 @@ function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
         const suggestion = suggestClosestPassing(centerTone.hsl, fgRgb, threshold);
         if (!suggestion) {
           return (
-            <div key={ref.name} style={{ fontSize: 8.5, color: 'var(--fail)', background: 'rgba(217,48,37,.08)', border: '1px solid rgba(217,48,37,.25)', borderRadius: 7, padding: '5px 7px', lineHeight: 1.3 }}>
+            <div key={ref.name} className="pg-fade-in" style={{ fontSize: 8.5, color: 'var(--fail)', background: 'rgba(217,48,37,.08)', border: '1px solid rgba(217,48,37,.25)', borderRadius: 7, padding: '5px 7px', lineHeight: 1.3 }}>
               None of these pass for <b>{ref.name}</b> text, and no shade of this hue reaches {threshold}:1 against it.
             </div>
           );
@@ -100,6 +103,7 @@ function SwatchCard({ sw, refs, threshold, level, onUpdateSwatch }) {
         return (
           <div
             key={ref.name}
+            className="pg-fade-in pg-suggest-note"
             onClick={() => onUpdateSwatch({ ...sw, tones: buildToneColumn(suggestion) })}
             style={{ fontSize: 8.5, color: 'var(--fail)', background: 'rgba(217,48,37,.08)', border: '1px solid rgba(217,48,37,.25)', borderRadius: 7, padding: '5px 7px', display: 'flex', alignItems: 'center', gap: 5, cursor: 'pointer', lineHeight: 1.3 }}
           >
@@ -124,7 +128,14 @@ export default function PaletteResults({ groups, setGroups, refs, threshold, lev
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
       {groups.map((group, gi) => (
-        <div key={group.name} style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '10px 12px', background: 'var(--panel)' }}>
+        <motion.div
+          key={group.name}
+          style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '10px 12px', background: 'var(--panel)' }}
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: '-40px' }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+        >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: 9 }}>
             <span style={{ fontWeight: 700, fontSize: 12 }}>{group.name}</span>
             <span style={{ color: 'var(--muted)', fontSize: 10.5 }}>{group.percentage}</span>
@@ -137,7 +148,7 @@ export default function PaletteResults({ groups, setGroups, refs, threshold, lev
               />
             ))}
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );

@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { HARMONIES } from '../lib/palette';
 
 function HarmonyIcon({ offsets }) {
@@ -24,20 +25,25 @@ export default function HarmonyPicker({ value, onChange }) {
   return (
     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
       {HARMONIES.map(h => (
-        <button
+        <motion.button
           key={h.id}
           onClick={() => onChange(h.id)}
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.92 }}
+          animate={{ scale: value === h.id ? 1.04 : 1 }}
+          transition={{ type: 'spring', stiffness: 400, damping: 20 }}
           style={{
             display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
             padding: '8px 4px', borderRadius: 10, cursor: 'pointer', fontSize: 9,
             background: value === h.id ? 'var(--panel-active)' : 'var(--panel2)',
             border: value === h.id ? '1px solid var(--text)' : '1px solid var(--border)',
             color: value === h.id ? 'var(--text)' : 'var(--muted)',
+            transition: 'background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease',
           }}
         >
           <HarmonyIcon offsets={h.offsets} />
           <span>{h.label}</span>
-        </button>
+        </motion.button>
       ))}
     </div>
   );

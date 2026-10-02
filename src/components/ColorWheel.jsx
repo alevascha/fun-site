@@ -54,18 +54,35 @@ export default function ColorWheel({ baseHsl, onChange, size = 280 }) {
     const hue = pointToHue(e.clientX, e.clientY);
     onChange({ ...baseHsl, h: hue });
   }
+  function handleTouchStart(e) {
+    draggingRef.current = true;
+    const t = e.touches[0];
+    const hue = pointToHue(t.clientX, t.clientY);
+    onChange({ ...baseHsl, h: hue });
+  }
   useEffect(() => {
     function move(e) {
       if (!draggingRef.current) return;
       const hue = pointToHue(e.clientX, e.clientY);
       onChange(prev => ({ ...prev, h: hue }));
     }
+    function touchMove(e) {
+      if (!draggingRef.current) return;
+      const t = e.touches[0];
+      if (!t) return;
+      const hue = pointToHue(t.clientX, t.clientY);
+      onChange(prev => ({ ...prev, h: hue }));
+    }
     function up() { draggingRef.current = false; }
     window.addEventListener('mousemove', move);
     window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', touchMove, { passive: true });
+    window.addEventListener('touchend', up);
     return () => {
       window.removeEventListener('mousemove', move);
       window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', touchMove);
+      window.removeEventListener('touchend', up);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -74,45 +91,48 @@ export default function ColorWheel({ baseHsl, onChange, size = 280 }) {
   const selectedIdx = Math.round((((baseHsl.h % 360) + 360) % 360) / step) % SPOKES;
 
   return (
-    <svg
-      ref={svgRef}
-      viewBox="-10 -10 620 620"
-      style={{ width: size, height: size, cursor: 'pointer', userSelect: 'none', overflow: 'visible' }}
-      onMouseDown={handlePointerDown}
-    >
-      {spokes.map((spoke, i) => {
-        const isSelectedSpoke = i === selectedIdx;
-        let closest = spoke.dots[0], closestDelta = Infinity;
-        if (isSelectedSpoke) {
-          spoke.dots.forEach(d => {
-            const delta = Math.abs(d.l - baseHsl.l);
-            if (delta < closestDelta) { closestDelta = delta; closest = d; }
-          });
-        }
-        return (
-          <g key={i}>
-            {spoke.dots.map((d, j) => (
-              <circle
-                key={j}
-                cx={d.cx} cy={d.cy} r={d.dotR}
-                fill={d.hex}
-                style={{ cursor: 'pointer' }}
-                stroke={isSelectedSpoke && d === closest ? '#fff' : 'none'}
-                strokeWidth={isSelectedSpoke && d === closest ? 2.5 : 0}
-                onClick={(e) => { e.stopPropagation(); onChange({ h: spoke.hue, s: d.s, l: d.l }); }}
-              />
-            ))}
-            {spoke.letter && (
-              <text
-                x={spoke.dots[RINGS - 1].cx} y={spoke.dots[RINGS - 1].cy + 4}
-                textAnchor="middle" fontWeight="800" fontSize="11" fill="#fff" pointerEvents="none"
-              >
-                {spoke.letter}
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
+    <div style={{ width: '100%', maxWidth: size, margin: '0 auto' }}>
+      <svg
+        ref={svgRef}
+        viewBox="-10 -10 620 620"
+        style={{ width: '100%', height: 'auto', aspectRatio: '1 / 1', display: 'block', cursor: 'pointer', userSelect: 'none', overflow: 'visible', touchAction: 'none' }}
+        onMouseDown={handlePointerDown}
+        onTouchStart={handleTouchStart}
+      >
+        {spokes.map((spoke, i) => {
+          const isSelectedSpoke = i === selectedIdx;
+          let closest = spoke.dots[0], closestDelta = Infinity;
+          if (isSelectedSpoke) {
+            spoke.dots.forEach(d => {
+              const delta = Math.abs(d.l - baseHsl.l);
+              if (delta < closestDelta) { closestDelta = delta; closest = d; }
+            });
+          }
+          return (
+            <g key={i}>
+              {spoke.dots.map((d, j) => (
+                <circle
+                  key={j}
+                  className="wheel-dot"
+                  cx={d.cx} cy={d.cy} r={d.dotR}
+                  fill={d.hex}
+                  stroke={isSelectedSpoke && d === closest ? '#fff' : 'none'}
+                  strokeWidth={isSelectedSpoke && d === closest ? 2.5 : 0}
+                  onClick={(e) => { e.stopPropagation(); onChange({ h: spoke.hue, s: d.s, l: d.l }); }}
+                />
+              ))}
+              {spoke.letter && (
+                <text
+                  x={spoke.dots[RINGS - 1].cx} y={spoke.dots[RINGS - 1].cy + 4}
+                  textAnchor="middle" fontWeight="800" fontSize="11" fill="#fff" pointerEvents="none"
+                >
+                  {spoke.letter}
+                </text>
+              )}
+            </g>
+          );
+        })}
+      </svg>
+    </div>
   );
 }

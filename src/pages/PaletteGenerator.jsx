@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { hexToRgb, hslToRgb, rgbToHex, rgbToHsl, AA_THRESHOLDS } from '../lib/color';
 import { buildPaletteGroups } from '../lib/palette';
 import ColorWheel from '../components/ColorWheel';
@@ -8,6 +9,13 @@ import HarmonyPreview from '../components/HarmonyPreview';
 import AnatomyBar from '../components/AnatomyBar';
 import PaletteResults from '../components/PaletteResults';
 import TextColorInputs, { DEFAULT_TEXT_COLORS } from '../components/TextColorInputs';
+import SiteNav from '../components/SiteNav';
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.16, 1, 0.3, 1] } },
+};
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } } };
 
 export default function PaletteGenerator() {
   const [baseHsl, setBaseHsl] = useState({ h: 217, s: 88, l: 55 });
@@ -62,27 +70,31 @@ export default function PaletteGenerator() {
   }
 
   return (
-    <div style={{ maxWidth: 980, margin: '0 auto', padding: '28px 20px 80px', display: 'flex', flexDirection: 'column', gap: 20 }}>
-      <div>
+    <motion.div
+      style={{ maxWidth: 980, margin: '0 auto', padding: '28px 20px 80px', display: 'flex', flexDirection: 'column', gap: 20 }}
+      variants={stagger} initial="hidden" animate="show"
+    >
+      <SiteNav />
+      <motion.div variants={fadeUp}>
         <Link to="/" style={{ color: 'var(--muted)', fontSize: 12, textDecoration: 'none' }}>&larr; back to the lab</Link>
         <h1 style={{ fontSize: 22, margin: '8px 0 4px', fontWeight: 800 }}>🎨 Palette Generator</h1>
         <p style={{ color: 'var(--muted)', fontSize: 13, lineHeight: 1.5, maxWidth: 640, margin: 0 }}>
           Pick a hue on the wheel, choose a harmony, set your text colors — everything updates live.
         </p>
-      </div>
+      </motion.div>
 
-      <div style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 12, padding: '10px 14px', fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.5 }}>
+      <motion.div variants={fadeUp} style={{ background: 'var(--panel)', border: '1px solid var(--border)', borderRadius: 12, padding: '10px 14px', fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.5 }}>
         <b style={{ color: 'var(--text)' }}>Foreground vs. background:</b> Dark / Light / Accent are fixed <b style={{ color: 'var(--text)' }}>text colors</b>.
         Every generated tone is a <b style={{ color: 'var(--text)' }}>background</b> — the dots on each swatch show which text colors are safe on top of it.
-      </div>
+      </motion.div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1.15fr .85fr', gap: 16, alignItems: 'start' }} className="grid2">
-        <section style={sectionStyle}>
-          <h2 style={h2Style}>Base Color</h2>
+      <motion.div variants={fadeUp} style={{ display: 'grid', gridTemplateColumns: '1.15fr .85fr', gap: 16, alignItems: 'start' }} className="grid2">
+        <section className="pg-section">
+          <h2 className="pg-h2">Base Color</h2>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
             <ColorWheel baseHsl={baseHsl} onChange={handleWheelChange} size={260} />
             <div style={{ display: 'flex', gap: 10, width: '100%', maxWidth: 260, alignItems: 'center' }}>
-              <div style={{ width: 40, height: 40, borderRadius: 9, border: '1px solid var(--border)', background: baseHex, flex: 'none' }} />
+              <div className="pg-swatch-transition" style={{ width: 40, height: 40, borderRadius: 9, border: '1px solid var(--border)', background: baseHex, flex: 'none' }} />
               <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 8 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   <label style={{ width: 50, color: 'var(--muted)', fontSize: 11 }}>Hex</label>
@@ -106,27 +118,27 @@ export default function PaletteGenerator() {
         </section>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          <section style={sectionStyle}>
-            <h2 style={h2Style}>Color Harmony</h2>
+          <section className="pg-section">
+            <h2 className="pg-h2">Color Harmony</h2>
             <HarmonyPicker value={harmony} onChange={handleHarmonyChange} />
           </section>
-          <section style={sectionStyle}>
+          <section className="pg-section">
             <TextColorInputs refs={refs} setRefs={setRefs} />
           </section>
         </div>
-      </div>
+      </motion.div>
 
-      <section style={sectionStyle}>
-        <h2 style={h2Style}>Live Preview</h2>
+      <motion.section variants={fadeUp} className="pg-section">
+        <h2 className="pg-h2">Live Preview</h2>
         <div style={{ display: 'flex', gap: 14, alignItems: 'center', flexWrap: 'wrap' }}>
           <HarmonyPreview baseHsl={baseHsl} harmony={harmony} />
           <div style={{ flex: 1, minWidth: 220 }}>
             <AnatomyBar groups={groups} />
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      <section style={{ ...sectionStyle, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+      <motion.section variants={fadeUp} className="pg-section" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flex: 1, minWidth: 200 }}>
           <label style={{ color: 'var(--muted)', fontSize: 11 }}>Compliance</label>
           <select value={level} onChange={e => setLevel(e.target.value)} style={selectStyle}>
@@ -141,16 +153,23 @@ export default function PaletteGenerator() {
             <option value="large">Large text / UI &amp; icons</option>
           </select>
         </div>
-      </section>
+      </motion.section>
 
-      <PaletteResults groups={groups} setGroups={setGroups} refs={refs} threshold={threshold} level={level} />
+      <motion.div variants={fadeUp}>
+        <PaletteResults groups={groups} setGroups={setGroups} refs={refs} threshold={threshold} level={level} />
+      </motion.div>
 
-      <button onClick={copyPaletteJson} style={secondaryBtnStyle}>Copy palette as JSON</button>
-    </div>
+      <motion.button
+        variants={fadeUp}
+        onClick={copyPaletteJson}
+        className="pg-btn-secondary"
+        whileHover={{ scale: 1.015 }}
+        whileTap={{ scale: 0.97 }}
+      >
+        Copy palette as JSON
+      </motion.button>
+    </motion.div>
   );
 }
 
-const sectionStyle = { border: '1px solid var(--border)', borderRadius: 12, padding: '12px 14px', background: 'var(--panel)' };
-const h2Style = { fontSize: 10.5, textTransform: 'uppercase', letterSpacing: '.05em', color: 'var(--muted)', margin: '0 0 10px', fontWeight: 700 };
 const selectStyle = { fontSize: 11, padding: '6px 7px', border: '1px solid var(--border)', borderRadius: 6, width: '100%', background: 'var(--panel2)', color: 'var(--text)' };
-const secondaryBtnStyle = { background: 'var(--panel2)', color: 'var(--text)', border: '1px solid var(--border)', borderRadius: 9, padding: '11px 16px', fontSize: 13, fontWeight: 700, cursor: 'pointer', width: '100%' };
