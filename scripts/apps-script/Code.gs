@@ -165,10 +165,17 @@ function sendConfirmation_(email, list, lang, token) {
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="bg" style="background:#F4F2EF">' +
     '<tr><td align="center" style="padding:32px 16px">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px">' +
-    // Wordmark
+    // Header: round photo + wordmark ("by Alejandro Vasquez")
     '<tr><td style="padding:0 8px 16px">' +
-    '<span class="ink" style="font:400 22px/1 Georgia,\'Times New Roman\',serif;color:#111011">Ale\u2019s Fun Lab</span>' +
-    '<span style="font:700 22px/1 Georgia,serif;color:#CD57FF"> \u2726</span></td></tr>' +
+    '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
+    '<td style="padding-right:12px;vertical-align:middle">' +
+    '<img src="' + SITE_URL + '/email/ale.jpg" width="48" height="48" alt="Alejandro Vasquez" ' +
+    'style="display:block;width:48px;height:48px;border-radius:50%;border:2px solid #CD57FF;object-fit:cover"></td>' +
+    '<td style="vertical-align:middle">' +
+    '<div class="ink" style="font:400 22px/1.1 Georgia,\'Times New Roman\',serif;color:#111011">Ale\u2019s Fun Lab' +
+    '<span style="color:#CD57FF"> \u2726</span></div>' +
+    '<div class="muted" style="font:500 12px/1.4 ' + font + ';color:#8A8580">' + t('by Alejandro Vasquez', 'por Alejandro Vasquez') + '</div>' +
+    '</td></tr></table></td></tr>' +
     // Card
     '<tr><td class="card" style="background:#FFFFFF;border:1px solid #E7E3DE;border-radius:24px;overflow:hidden">' +
     '<div style="height:6px;line-height:6px;font-size:0;background:#CD57FF;background-image:linear-gradient(90deg,#CD57FF,#FF7AB6,#FFCE1F)">&nbsp;</div>' +
