@@ -1,0 +1,352 @@
+/* Component States Explorer — every rule pairs the real pseudo-class (live
+   playground) with a forced [data-state] (state matrix). Tokens come in as
+   --cs-* custom properties set from the accent color. */
+
+.csx-root {
+  --cs-spring: cubic-bezier(0.3, 1.4, 0.5, 1);
+  --cs-out: cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--cs-text);
+  font-family: var(--font-body);
+}
+
+/* ---- Playground ---- */
+.csx-playground {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 32px);
+  padding: clamp(20px, 3.5vw, 40px);
+  border-radius: calc(var(--radius-lg) - 6px);
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--cs-text) 9%, transparent) 1px, transparent 0) 0 0 / 18px 18px,
+    var(--cs-surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: background-color 0.35s ease;
+}
+.csx-play-col { display: grid; gap: 18px; align-content: start; }
+.csx-play-row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+@media (max-width: 760px) { .csx-playground { grid-template-columns: minmax(0, 1fr); } }
+
+/* ---- Matrix ---- */
+.csx-matrix {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 220px), 1fr));
+  gap: 14px;
+}
+.csx-cell { display: grid; gap: 10px; align-content: start; }
+.csx-stage {
+  position: relative;
+  min-height: 140px;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  padding: 24px 18px;
+  background:
+    radial-gradient(circle at 1px 1px, color-mix(in srgb, var(--cs-text) 9%, transparent) 1px, transparent 0) 0 0 / 16px 16px,
+    var(--cs-surface);
+  box-shadow: inset 0 0 0 1px var(--border);
+  transition: transform 0.3s var(--cs-out), box-shadow 0.3s ease;
+}
+.csx-cell:hover .csx-stage { transform: translateY(-3px); box-shadow: inset 0 0 0 1px var(--border-strong), 0 18px 30px -22px rgba(0, 0, 0, 0.6); }
+.csx-stage > * { pointer-events: none; }
+.csx-cell-meta { display: grid; gap: 6px; }
+.csx-state-name {
+  font-family: var(--font-label);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: capitalize;
+  color: var(--text);
+}
+.csx-notes { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---- Button ---- */
+.csx-btn {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 140px;
+  height: var(--cs-h);
+  padding: 0 var(--cs-padx);
+  border-radius: var(--cs-r);
+  border: 1.5px solid transparent;
+  font: 600 var(--cs-fs) / 1 var(--font-body);
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.3s ease, transform 0.25s var(--cs-spring), filter 0.2s ease;
+}
+.csx-btn-label { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+
+/* sheen sweep */
+.csx-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.38) 50%, transparent 70%);
+  transform: translateX(-130%);
+  transition: transform 0.7s var(--cs-out);
+  pointer-events: none;
+}
+.csx-btn:is(:hover:not(:disabled), [data-state='hover'])::after { transform: translateX(130%); }
+
+.csx-btn[data-variant='solid'] {
+  background: var(--cs-accent);
+  color: var(--cs-on-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 8px 18px -10px var(--cs-accent);
+}
+.csx-btn[data-variant='gradient'] {
+  background: linear-gradient(135deg, var(--cs-accent), var(--cs-accent-2));
+  color: var(--cs-on-accent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 10px 24px -10px var(--cs-accent-2);
+}
+.csx-btn[data-variant='soft'] {
+  background: color-mix(in srgb, var(--cs-accent) 14%, var(--cs-surface));
+  color: var(--cs-accent-text);
+}
+.csx-btn[data-variant='outline'] {
+  background: transparent;
+  color: var(--cs-accent-text);
+  border-color: color-mix(in srgb, var(--cs-accent-text) 40%, transparent);
+}
+
+.csx-btn:is(:hover:not(:disabled), [data-state='hover']) { transform: translateY(-2px); }
+.csx-btn[data-variant='solid']:is(:hover:not(:disabled), [data-state='hover']) {
+  background: var(--cs-hover);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 14px 26px -12px var(--cs-accent);
+}
+.csx-btn[data-variant='gradient']:is(:hover:not(:disabled), [data-state='hover']) { filter: brightness(1.07) saturate(1.1); box-shadow: 0 16px 30px -12px var(--cs-accent-2); }
+.csx-btn[data-variant='soft']:is(:hover:not(:disabled), [data-state='hover']) { background: color-mix(in srgb, var(--cs-accent) 22%, var(--cs-surface)); }
+.csx-btn[data-variant='outline']:is(:hover:not(:disabled), [data-state='hover']) { border-color: var(--cs-accent-text); background: color-mix(in srgb, var(--cs-accent) 8%, transparent); }
+
+.csx-btn:is(:active:not(:disabled), [data-state='pressed']) { transform: translateY(0) scale(0.96); transition-duration: 0.08s; }
+.csx-btn[data-variant='solid']:is(:active:not(:disabled), [data-state='pressed']) { background: var(--cs-active); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2); }
+.csx-btn[data-variant='gradient']:is(:active:not(:disabled), [data-state='pressed']) { filter: brightness(0.94); box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.2); }
+
+.csx-btn:is(:focus-visible, [data-state='focus']) {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--cs-surface), 0 0 0 5px var(--cs-ring);
+}
+
+.csx-btn[data-state='loading'] { cursor: progress; }
+.csx-btn[data-state='success'] {
+  background: var(--cs-success) !important;
+  color: var(--cs-on-success) !important;
+  border-color: transparent !important;
+  filter: none;
+  box-shadow: 0 0 0 0 var(--cs-success);
+  animation: csx-pulse 0.9s var(--cs-out);
+}
+@keyframes csx-pulse {
+  from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--cs-success) 60%, transparent); }
+  to { box-shadow: 0 0 0 14px transparent; }
+}
+
+.csx-btn:disabled {
+  background: var(--cs-dis-bg);
+  color: var(--cs-dis-text);
+  border-color: transparent;
+  box-shadow: none;
+  filter: none;
+  cursor: not-allowed;
+}
+.csx-btn[data-variant='outline']:disabled { background: transparent; border-color: var(--cs-dis-bg); }
+.csx-btn:disabled::after { display: none; }
+
+.csx-ripple {
+  position: absolute;
+  z-index: 0;
+  width: 12px; height: 12px;
+  margin: -6px 0 0 -6px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.35;
+  pointer-events: none;
+  animation: csx-ripple 0.65s var(--cs-out) forwards;
+}
+@keyframes csx-ripple { to { transform: scale(28); opacity: 0; } }
+
+.csx-spinner {
+  width: 15px; height: 15px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: csx-spin 0.7s linear infinite;
+}
+@keyframes csx-spin { to { transform: rotate(360deg); } }
+
+/* ---- Floating-label field ---- */
+.csx-field { display: grid; gap: 6px; width: 100%; max-width: 360px; }
+.csx-field-box { position: relative; }
+.csx-field input {
+  width: 100%;
+  height: calc(var(--cs-h) + 12px);
+  padding: 18px 42px 4px 15px;
+  border-radius: calc(var(--cs-r) * 0.8);
+  border: 1.5px solid var(--cs-border-strong);
+  background: var(--cs-field);
+  color: var(--cs-text);
+  font: 500 var(--cs-fs) / 1.2 var(--font-body);
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+}
+.csx-field label {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  transform-origin: left center;
+  color: var(--cs-muted);
+  font-size: var(--cs-fs);
+  pointer-events: none;
+  transition: transform 0.25s var(--cs-out), color 0.2s ease, top 0.25s var(--cs-out);
+}
+.csx-field input:focus + label,
+.csx-field input:not(:placeholder-shown) + label,
+.csx-field:is([data-state='focus'], [data-state='filled'], [data-state='error'], [data-state='success']) label {
+  top: 14px;
+  transform: translateY(-50%) scale(0.76);
+}
+.csx-field:is(:hover, [data-state='hover']) input:not(:disabled) { border-color: var(--cs-text); }
+.csx-field input:focus,
+.csx-field[data-state='focus'] input {
+  outline: none;
+  border-color: var(--cs-ring);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--cs-ring) 22%, transparent);
+  background: var(--cs-surface);
+}
+.csx-field input:focus + label, .csx-field[data-state='focus'] label { color: var(--cs-accent-text); }
+.csx-field[data-state='error'] input { border-color: var(--cs-error); box-shadow: 0 0 0 4px color-mix(in srgb, var(--cs-error) 16%, transparent); }
+.csx-field[data-state='error'] label { color: var(--cs-error); }
+.csx-field[data-state='error'] .csx-field-box { animation: csx-shake 0.42s var(--cs-out); }
+.csx-field[data-state='success'] input { border-color: var(--cs-success); }
+.csx-field input:disabled { background: var(--cs-dis-bg); border-color: var(--cs-dis-bg); color: var(--cs-dis-text); cursor: not-allowed; }
+.csx-field[data-state='disabled'] label, .csx-field[data-state='disabled'] .csx-help { color: var(--cs-dis-text); }
+.csx-field-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); display: grid; }
+.csx-field-err {
+  display: grid; place-items: center;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: var(--cs-error); color: #fff;
+  font-size: 13px; font-weight: 700;
+}
+.csx-help { font-size: 12.5px; color: var(--cs-muted); min-height: 18px; }
+.csx-field[data-state='error'] .csx-help { color: var(--cs-error); }
+@keyframes csx-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-7px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(2px); }
+}
+
+/* ---- Toggle ---- */
+.csx-toggle-row, .csx-check-row { display: inline-flex; align-items: center; gap: 12px; font-size: var(--cs-fs); font-weight: 500; }
+.csx-toggle {
+  position: relative;
+  width: 54px; height: 32px;
+  flex: none;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--cs-track);
+  box-shadow: inset 0 0 0 1.5px var(--cs-border-strong);
+  cursor: pointer;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+.csx-toggle-thumb {
+  position: absolute;
+  top: 4px; left: 4px;
+  width: 24px; height: 24px;
+  border-radius: 999px;
+  background: #fff;
+  display: grid; place-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25), 0 0 0 0.5px rgba(0, 0, 0, 0.08);
+  transition: transform 0.45s var(--cs-spring), width 0.2s var(--cs-out);
+}
+.csx-toggle[aria-checked='true'] { background: var(--cs-accent); box-shadow: inset 0 0 0 1.5px transparent; }
+.csx-toggle[aria-checked='true'] .csx-toggle-thumb { transform: translateX(22px); }
+.csx-toggle:is(:hover:not(:disabled), [data-state='hover']) .csx-toggle-thumb { box-shadow: 0 0 0 6px color-mix(in srgb, var(--cs-accent) 18%, transparent), 0 2px 6px rgba(0, 0, 0, 0.25); }
+/* squash & stretch while pressed */
+.csx-toggle:is(:active:not(:disabled), [data-state='pressed-on']) .csx-toggle-thumb { width: 30px; }
+.csx-toggle[aria-checked='true']:is(:active:not(:disabled), [data-state='pressed-on']) .csx-toggle-thumb { transform: translateX(16px); }
+.csx-toggle:is(:focus-visible, [data-state='focus']) { outline: none; box-shadow: 0 0 0 3px var(--cs-surface), 0 0 0 5px var(--cs-ring); }
+.csx-toggle:disabled { background: var(--cs-dis-bg); box-shadow: none; cursor: not-allowed; }
+.csx-toggle:disabled .csx-toggle-thumb { background: var(--cs-surface); box-shadow: none; }
+
+/* ---- Checkbox ---- */
+.csx-check {
+  width: 24px; height: 24px;
+  flex: none;
+  padding: 0;
+  display: grid; place-items: center;
+  border-radius: 8px;
+  border: 1.5px solid var(--cs-border-strong);
+  background: var(--cs-field);
+  color: var(--cs-on-accent);
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.3s var(--cs-spring), box-shadow 0.25s ease;
+}
+.csx-check[data-on] { background: var(--cs-accent); border-color: var(--cs-accent); animation: csx-pop 0.35s var(--cs-spring); }
+@keyframes csx-pop { 50% { transform: scale(1.18); } }
+.csx-check:is(:hover:not(:disabled), [data-state='hover']) { border-color: var(--cs-text); box-shadow: 0 0 0 6px color-mix(in srgb, var(--cs-accent) 14%, transparent); }
+.csx-check:active:not(:disabled) { transform: scale(0.88); }
+.csx-check:is(:focus-visible, [data-state='focus']) { outline: none; box-shadow: 0 0 0 3px var(--cs-surface), 0 0 0 5px var(--cs-ring); }
+.csx-check-dash { width: 11px; height: 2.6px; border-radius: 2px; background: currentColor; }
+.csx-check:disabled { background: var(--cs-dis-bg); border-color: var(--cs-dis-bg); color: var(--cs-dis-text); cursor: not-allowed; }
+
+/* ---- Selectable plan card ---- */
+.csx-card {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  max-width: 300px;
+  padding: 18px 20px;
+  text-align: left;
+  border-radius: calc(var(--cs-r) * 1.3);
+  border: 1.5px solid var(--cs-border);
+  background: var(--cs-surface);
+  color: var(--cs-text);
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: transform 0.35s var(--cs-out), box-shadow 0.3s ease, border-color 0.2s ease;
+}
+.csx-card:is(:hover:not(:disabled), [data-state='hover']) {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 34px -24px rgba(0, 0, 0, 0.55);
+  border-color: var(--cs-border-strong);
+}
+.csx-card:active:not(:disabled) { transform: translateY(-1px) scale(0.985); }
+.csx-card:is(:focus-visible, [data-state='focus']) { outline: none; box-shadow: 0 0 0 3px var(--cs-surface), 0 0 0 5px var(--cs-ring); }
+.csx-card[data-state='selected'],
+.csx-card[data-selected]:not([data-state]) { border-color: transparent; }
+.csx-card[data-state='selected'] { box-shadow: 0 0 0 2px var(--cs-accent-text), 0 18px 34px -20px var(--cs-accent); }
+.csx-card-ring {
+  position: absolute;
+  inset: -1.5px;
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px var(--cs-accent-text), 0 18px 34px -20px var(--cs-accent);
+  pointer-events: none;
+}
+.csx-card-top { display: flex; justify-content: space-between; align-items: center; }
+.csx-card-name { font-weight: 600; font-size: 15px; }
+.csx-card-price { font-family: var(--font-display); font-weight: 300; font-size: 34px; letter-spacing: -0.03em; line-height: 1; }
+.csx-card-price small { font-family: var(--font-body); font-size: 13px; color: var(--cs-muted); margin-left: 2px; letter-spacing: 0; }
+.csx-card-perks { font-size: 13px; color: var(--cs-muted); }
+.csx-radio {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--cs-border-strong);
+  display: grid; place-items: center;
+  transition: border-color 0.2s ease;
+}
+.csx-radio > span { width: 10px; height: 10px; border-radius: 50%; background: var(--cs-accent-text); }
+.csx-card:is([data-selected], [data-state='selected']) .csx-radio { border-color: var(--cs-accent-text); }
+.csx-card:disabled { background: var(--cs-dis-bg); color: var(--cs-dis-text); border-color: var(--cs-dis-bg); cursor: not-allowed; }
+.csx-card:disabled .csx-card-perks, .csx-card:disabled small { color: var(--cs-dis-text); }
+
+@media (prefers-reduced-motion: reduce) {
+  .csx-root *, .csx-root *::before, .csx-root *::after { animation: none !important; transition-duration: 0.01ms !important; }
+}

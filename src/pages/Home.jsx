@@ -150,8 +150,8 @@ export default function Home() {
           >
             <span className="gradient-dot" /> Alejandro Vasquez · code playground
           </motion.div>
-          <h1 className="hub-title" aria-label="The Fun Lab">
-            <SplitText text="The Fun" delay={0.15} stagger={0.04} reactive />{' '}
+          <h1 className="hub-title" aria-label="Ale's Fun Lab">
+            <SplitText text="Ale's Fun" delay={0.15} stagger={0.04} reactive />{' '}
             <SplitText text="Lab" as="em" delay={0.45} stagger={0.06} reactive />
           </h1>
           <motion.p

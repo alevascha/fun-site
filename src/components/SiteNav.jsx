@@ -23,11 +23,11 @@ export default function SiteNav() {
       animate={{ y: hidden ? -96 : 0, opacity: hidden ? 0 : 1, scale: hidden ? 0.96 : 1 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link to="/" className="site-nav-brand" aria-label="The Fun Lab — home">
+      <Link to="/" className="site-nav-brand" aria-label="Ale's Fun Lab — home">
         <motion.span className="site-nav-logo" whileHover={{ rotate: -12, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400, damping: 14 }}>
           f
         </motion.span>
-        <span className="site-nav-brand-text">The Fun Lab</span>
+        <span className="site-nav-brand-text">Ale's Fun Lab</span>
       </Link>
       <div className="site-nav-links">
         <Link to="/" className="site-nav-link site-nav-link--hide-sm" aria-current={onHome ? 'page' : undefined}>

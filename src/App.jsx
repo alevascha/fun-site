@@ -1,8 +1,9 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { motion, MotionConfig } from 'framer-motion';
 import Cursor from './components/motion/Cursor';
 import { EASE } from './lib/motion';
+import { scrollToTop, startSmoothScroll } from './lib/smoothScroll';
 import Home from './pages/Home';
 
 const PaletteGenerator = lazy(() => import('./pages/PaletteGenerator'));
@@ -17,6 +18,9 @@ export default function App() {
   const location = useLocation();
   // Play the curtain only when the *page* changes. Query-string updates
   // (tools that sync their state to the URL) must not trigger it.
+  useEffect(() => { startSmoothScroll(); }, []);
+  useEffect(() => { scrollToTop(); }, [location.pathname]);
+
   const [prevPath, setPrevPath] = useState(location.pathname);
   const [navCount, setNavCount] = useState(0);
   if (location.pathname !== prevPath) {

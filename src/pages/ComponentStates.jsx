@@ -1,157 +1,327 @@
-import { useMemo, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import { bestTextColor, clamp, contrastRatio, formatRatio, hexToHsl, hexToRgb, hslToHex } from '../lib/color';
 import ToolPage from '../components/ToolPage';
 import { ColorField, CopyButton, RangeField, Reveal, Segmented } from '../components/ui';
 import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
+import { haptic } from '../lib/haptics';
 import useCopy from '../hooks/useCopy';
+import './ComponentStates.css';
 
 const SURFACES = {
-  light: { bg: '#FFFFFF', text: '#111011', muted: '#6B6866', border: '#8E8A86', disabledBg: '#ECE9E5', disabledText: '#A19D98', error: '#C62828', field: '#FFFFFF' },
-  dark: { bg: '#1D1C1B', text: '#F7F7F7', muted: '#B5B2AE', border: '#77736F', disabledBg: '#2E2D2B', disabledText: '#6F6C69', error: '#FF7A7A', field: '#121212' },
+  light: { bg: '#FFFFFF', text: '#111011', muted: '#6B6866', border: '#C9C5C0', borderStrong: '#8E8A86', disabledBg: '#EFECE8', disabledText: '#A19D98', error: '#C62828', success: '#11804A', field: '#FBFAF8', track: '#D9D5D0' },
+  dark: { bg: '#1D1C1B', text: '#F7F7F7', muted: '#B5B2AE', border: '#3D3B39', borderStrong: '#77736F', disabledBg: '#2B2A28', disabledText: '#6F6C69', error: '#FF7A7A', success: '#3DDC84', field: '#141312', track: '#3D3B39' },
 };
 
 const SIZES = {
-  sm: { pad: '8px 14px', font: 13, h: 36 },
-  md: { pad: '12px 20px', font: 15, h: 44 },
-  lg: { pad: '16px 26px', font: 17, h: 52 },
+  sm: { h: 36, fs: 13, padx: 14 },
+  md: { h: 44, fs: 15, padx: 20 },
+  lg: { h: 52, fs: 16, padx: 26 },
 };
+
+const STYLES = [
+  { value: 'solid', label: 'Solid' },
+  { value: 'gradient', label: 'Gradient' },
+  { value: 'soft', label: 'Soft' },
+];
 
 function deriveTokens(accent, surfaceKey) {
   const s = SURFACES[surfaceKey];
   const hsl = hexToHsl(accent);
-  const dir = hsl.l < 30 ? 1 : -1; // very dark accents get lighter on hover instead
-  const hover = hslToHex(hsl.h, hsl.s, clamp(hsl.l + dir * 8, 0, 100));
-  const active = hslToHex(hsl.h, hsl.s, clamp(hsl.l + dir * 16, 0, 100));
   const fg = bestTextColor(hexToRgb(accent)).toUpperCase();
-  // Outline/secondary text uses the accent if it's readable on the surface,
-  // otherwise a nudged version that passes 4.5:1.
-  let outline = accent;
-  for (let l = hsl.l, i = 0; contrastRatio(hexToRgb(outline), hexToRgb(s.bg)) < 4.5 && i < 100; i++) {
+  // Hover/pressed move *away* from the label color (lighter under dark text,
+  // darker under light text), so interacting never lowers label contrast.
+  const dir = fg === '#000000' ? 1 : -1;
+  const hover = hslToHex(hsl.h, hsl.s, clamp(hsl.l + dir * 7, 0, 100));
+  const active = hslToHex(hsl.h, hsl.s, clamp(hsl.l + dir * 14, 0, 100));
+  const accent2 = hslToHex((hsl.h + 32) % 360, clamp(hsl.s + 5, 0, 100), clamp(hsl.l + dir * 4, 0, 100));
+  // Accent used as text/border on the surface must itself pass 4.5:1.
+  let text = accent;
+  for (let l = hsl.l, i = 0; contrastRatio(hexToRgb(text), hexToRgb(s.bg)) < 4.5 && i < 100; i++) {
     l += surfaceKey === 'light' ? -1 : 1;
-    outline = hslToHex(hsl.h, hsl.s, clamp(l, 0, 100));
+    text = hslToHex(hsl.h, hsl.s, clamp(l, 0, 100));
   }
-  return { ...s, accent, hover, active, fg, outline, ring: outline };
+  return { ...s, accent, accent2, hover, active, fg, accentText: text, ring: text };
 }
 
-function ratioBadge(fg, bg, target, label) {
+const check = (fg, bg, target, label) => {
   const r = contrastRatio(hexToRgb(fg), hexToRgb(bg));
-  const pass = r >= target;
-  return { label, text: `${formatRatio(r)}:1`, pass, target };
+  return { label, text: `${formatRatio(r)}:1`, pass: r >= target, target };
+};
+const info = label => ({ label });
+
+/* ---------------------------------------------------------------------------
+   Components. The same markup serves the state matrix (forced through
+   data-state) and the live playground (real :hover/:focus/:active).
+   ------------------------------------------------------------------------- */
+
+function Spinner() {
+  return <span className="csx-spinner" aria-hidden="true" />;
 }
 
-const BUTTON_STATES = ['default', 'hover', 'focus', 'pressed', 'loading', 'disabled'];
-const INPUT_STATES = ['default', 'hover', 'focus', 'filled', 'error', 'disabled'];
-const CARD_STATES = ['default', 'hover', 'focus', 'selected', 'disabled'];
-
-function Spinner({ color }) {
+function CheckIcon({ size = 16, drawn = true }) {
   return (
-    <motion.span
-      aria-hidden="true"
-      style={{ width: 14, height: 14, borderRadius: '50%', border: `2px solid ${color}`, borderTopColor: 'transparent', display: 'inline-block' }}
-      animate={{ rotate: 360 }}
-      transition={{ repeat: Infinity, duration: 0.8, ease: 'linear' }}
-    />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <motion.path
+        d="M5 12.5l4.2 4.2L19 7"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        initial={false}
+        animate={{ pathLength: drawn ? 1 : 0 }}
+        transition={{ duration: 0.35, ease: EASE }}
+      />
+    </svg>
   );
 }
 
-function ButtonPreview({ t, variant, state, size, radius, interactive }) {
-  const sz = SIZES[size];
-  const primary = variant === 'primary';
-  let bg = primary ? t.accent : 'transparent';
-  let fg = primary ? t.fg : t.outline;
-  let border = primary ? 'transparent' : t.outline;
-  if (state === 'hover') { bg = primary ? t.hover : `color-mix(in srgb, ${t.outline} 10%, transparent)`; }
-  if (state === 'pressed') { bg = primary ? t.active : `color-mix(in srgb, ${t.outline} 18%, transparent)`; }
-  if (state === 'disabled') { bg = primary ? t.disabledBg : 'transparent'; fg = t.disabledText; border = primary ? 'transparent' : t.disabledBg; }
-  const focus = state === 'focus' ? `0 0 0 2px ${t.bg}, 0 0 0 4px ${t.ring}` : 'none';
-  const style = interactive
-    ? { '--b-bg': primary ? t.accent : 'transparent', '--b-hover': primary ? t.hover : `color-mix(in srgb, ${t.outline} 10%, transparent)`, '--b-active': primary ? t.active : `color-mix(in srgb, ${t.outline} 18%, transparent)`, '--b-ring': t.ring, '--b-surface': t.bg, color: fg, borderColor: border }
-    : { background: bg, color: fg, borderColor: border, boxShadow: focus, transform: state === 'pressed' ? 'scale(0.97)' : undefined };
+function Button({ variant, state, label = 'Save changes', onClick, live }) {
+  const ref = useRef(null);
+  const [ripples, setRipples] = useState([]);
+
+  function handlePointerDown(e) {
+    if (!live) return;
+    const r = ref.current.getBoundingClientRect();
+    const id = Date.now() + Math.random();
+    setRipples(list => [...list, { id, x: e.clientX - r.left, y: e.clientY - r.top }]);
+    setTimeout(() => setRipples(list => list.filter(i => i.id !== id)), 650);
+  }
+
+  const busy = state === 'loading' || state === 'success';
   return (
     <button
+      ref={ref}
       type="button"
-      className={interactive ? 'cs-btn cs-live' : 'cs-btn'}
+      className="csx-btn"
+      data-variant={variant}
+      data-state={live ? (busy ? state : undefined) : state}
       disabled={state === 'disabled'}
-      tabIndex={interactive ? 0 : -1}
-      aria-hidden={interactive ? undefined : true}
-      style={{ ...style, padding: sz.pad, fontSize: sz.font, borderRadius: radius, minHeight: sz.h }}
+      aria-busy={state === 'loading' || undefined}
+      tabIndex={live ? 0 : -1}
+      onPointerDown={handlePointerDown}
+      onClick={onClick}
     >
-      {state === 'loading' && <Spinner color={fg} />}
-      {state === 'loading' ? 'Saving…' : primary ? 'Save changes' : 'Cancel'}
+      {ripples.map(r => <span key={r.id} className="csx-ripple" style={{ left: r.x, top: r.y }} />)}
+      <AnimatePresence mode="popLayout" initial={false}>
+        <motion.span
+          key={state === 'loading' ? 'loading' : state === 'success' ? 'success' : 'idle'}
+          className="csx-btn-label"
+          initial={{ y: 14, opacity: 0, filter: 'blur(4px)' }}
+          animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+          exit={{ y: -14, opacity: 0, filter: 'blur(4px)' }}
+          transition={{ duration: 0.25, ease: EASE }}
+        >
+          {state === 'loading' && <><Spinner /> Saving…</>}
+          {state === 'success' && <><CheckIcon /> Saved</>}
+          {!busy && label}
+        </motion.span>
+      </AnimatePresence>
     </button>
   );
 }
 
-function InputPreview({ t, state, size, radius, interactive }) {
-  const sz = SIZES[size];
-  let border = t.border, shadow = 'none', color = t.text, bg = t.field;
-  if (state === 'hover') border = t.text;
-  if (state === 'focus') { border = t.ring; shadow = `0 0 0 3px color-mix(in srgb, ${t.ring} 30%, transparent)`; }
-  if (state === 'error') { border = t.error; }
-  if (state === 'disabled') { border = t.disabledBg; bg = t.disabledBg; color = t.disabledText; }
-  const value = state === 'filled' || state === 'error' ? (state === 'error' ? 'ale@' : 'ale@alevasquez.dev') : '';
+function Field({ state, live, value, onChange, onBlur, valid }) {
+  const shown = live ? undefined : state === 'filled' || state === 'success' ? 'ale@alevasquez.dev' : state === 'error' ? 'ale@' : '';
+  const status = live ? valid : state;
   return (
-    <div style={{ display: 'grid', gap: 6, width: '100%', fontFamily: 'var(--font-body)' }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: state === 'disabled' ? t.disabledText : t.text }}>Email</span>
-      <input
-        className={interactive ? 'cs-input cs-live' : 'cs-input'}
-        readOnly={!interactive}
-        tabIndex={interactive ? 0 : -1}
-        aria-hidden={interactive ? undefined : true}
-        disabled={state === 'disabled'}
-        placeholder="you@example.com"
-        defaultValue={interactive ? undefined : value}
-        style={interactive
-          ? { '--i-border': t.border, '--i-hover': t.text, '--i-ring': t.ring, borderRadius: radius / 1.5, height: sz.h, fontSize: sz.font, background: t.field, color: t.text, '--i-placeholder': t.muted }
-          : { borderColor: border, boxShadow: shadow, color, background: bg, borderRadius: radius / 1.5, height: sz.h, fontSize: sz.font, '--i-placeholder': t.muted }}
-      />
-      <span style={{ fontSize: 12, color: state === 'error' ? t.error : t.muted, minHeight: 16 }}>
-        {state === 'error' ? '✕ Enter a complete email address' : 'We’ll never share it.'}
-      </span>
-    </div>
-  );
-}
-
-function CardPreview({ t, state, radius, interactive }) {
-  const selected = state === 'selected';
-  let border = `color-mix(in srgb, ${t.text} 14%, transparent)`;
-  let shadow = 'none', transform;
-  if (state === 'hover') { shadow = '0 18px 30px -18px rgba(0,0,0,.5)'; transform = 'translateY(-3px)'; }
-  if (state === 'focus') shadow = `0 0 0 2px ${t.bg}, 0 0 0 4px ${t.ring}`;
-  if (selected) border = t.outline;
-  const disabled = state === 'disabled';
-  return (
-    <div
-      className={interactive ? 'cs-card cs-live' : 'cs-card'}
-      tabIndex={interactive ? 0 : -1}
-      aria-hidden={interactive ? undefined : true}
-      style={interactive
-        ? { '--c-ring': t.ring, '--c-surface': t.bg, borderRadius: radius, borderColor: border, color: t.text, background: t.bg }
-        : { borderRadius: radius, borderColor: border, borderWidth: selected ? 2 : 1, boxShadow: shadow, transform, color: disabled ? t.disabledText : t.text, background: disabled ? t.disabledBg : t.bg }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 8 }}>
-        <strong style={{ fontSize: 15 }}>Pro plan</strong>
-        {selected && <span style={{ width: 20, height: 20, borderRadius: '50%', background: t.accent, color: t.fg, display: 'grid', placeItems: 'center', fontSize: 12 }}>✓</span>}
+    <div className="csx-field" data-state={live ? (valid === 'error' || valid === 'success' ? valid : undefined) : state}>
+      <div className="csx-field-box">
+        <input
+          id={live ? 'cs-live-email' : undefined}
+          type="email"
+          placeholder=" "
+          value={live ? value : shown}
+          readOnly={!live}
+          onChange={onChange}
+          onBlur={onBlur}
+          disabled={state === 'disabled'}
+          tabIndex={live ? 0 : -1}
+          aria-invalid={status === 'error' || undefined}
+          aria-describedby={live ? 'cs-live-email-help' : undefined}
+        />
+        <label htmlFor={live ? 'cs-live-email' : undefined}>Email address</label>
+        <span className="csx-field-icon" aria-hidden="true">
+          <AnimatePresence>
+            {status === 'success' && (
+              <motion.span key="ok" initial={{ scale: 0, rotate: -90 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0 }} transition={{ type: 'spring', stiffness: 500, damping: 18 }} style={{ display: 'grid', color: 'var(--cs-success)' }}>
+                <CheckIcon size={18} />
+              </motion.span>
+            )}
+            {status === 'error' && (
+              <motion.span key="err" className="csx-field-err" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} transition={{ type: 'spring', stiffness: 500, damping: 18 }}>!</motion.span>
+            )}
+          </AnimatePresence>
+        </span>
       </div>
-      <span style={{ fontSize: 13, color: disabled ? t.disabledText : t.muted }}>Unlimited experiments</span>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.span
+          key={status === 'error' ? 'e' : 'h'}
+          id={live ? 'cs-live-email-help' : undefined}
+          className="csx-help"
+          initial={{ opacity: 0, y: -4 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 4 }}
+          transition={{ duration: 0.18 }}
+        >
+          {status === 'error' ? 'Add the rest of your email, like name@domain.com' : 'We’ll only use it to send you the palette.'}
+        </motion.span>
+      </AnimatePresence>
     </div>
   );
 }
 
-function StateCell({ name, notes, children, index }) {
+function Toggle({ state, live, checked, onChange, label = 'Notifications' }) {
+  const on = live ? checked : state === 'on' || state === 'pressed-on';
+  return (
+    <span className="csx-toggle-row">
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        aria-label={label}
+        className="csx-toggle"
+        data-state={live ? undefined : state}
+        disabled={state === 'disabled'}
+        tabIndex={live ? 0 : -1}
+        onClick={() => { haptic(); onChange?.(!on); }}
+      >
+        <span className="csx-toggle-thumb">
+          <motion.span initial={false} animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }} style={{ display: 'grid', color: 'var(--cs-accent-text)' }}>
+            <CheckIcon size={12} drawn={on} />
+          </motion.span>
+        </span>
+      </button>
+      <span aria-hidden="true">{label}</span>
+    </span>
+  );
+}
+
+function Checkbox({ state, live, checked, onChange, label = 'Send me new experiments' }) {
+  const indeterminate = state === 'indeterminate';
+  const on = live ? checked : state === 'checked' || indeterminate;
+  return (
+    <span className="csx-check-row">
+      <button
+        type="button"
+        role="checkbox"
+        aria-checked={indeterminate ? 'mixed' : on}
+        aria-label={label}
+        className="csx-check"
+        data-on={on || undefined}
+        data-state={live ? undefined : state}
+        disabled={state === 'disabled'}
+        tabIndex={live ? 0 : -1}
+        onClick={() => { haptic(); onChange?.(!on); }}
+      >
+        {indeterminate ? <span className="csx-check-dash" /> : <CheckIcon size={15} drawn={on} />}
+      </button>
+      <span aria-hidden="true">{label}</span>
+    </span>
+  );
+}
+
+function PlanCard({ state, live, selected, onSelect, name = 'Pro', price = '$12', perks = 'Unlimited experiments' }) {
+  const isSelected = live ? selected : state === 'selected';
+  return (
+    <button
+      type="button"
+      role="radio"
+      aria-checked={isSelected}
+      className="csx-card"
+      data-state={live ? undefined : state}
+      data-selected={isSelected || undefined}
+      disabled={state === 'disabled'}
+      tabIndex={live ? 0 : -1}
+      onClick={() => { haptic(); onSelect?.(); }}
+    >
+      {live && isSelected && <motion.span layoutId="cs-plan-ring" className="csx-card-ring" transition={{ type: 'spring', stiffness: 420, damping: 34 }} />}
+      <span className="csx-card-top">
+        <span className="csx-card-name">{name}</span>
+        <span className="csx-radio"><motion.span initial={false} animate={{ scale: isSelected ? 1 : 0 }} transition={{ type: 'spring', stiffness: 600, damping: 20 }} /></span>
+      </span>
+      <span className="csx-card-price">{price}<small>/mo</small></span>
+      <span className="csx-card-perks">{perks}</span>
+    </button>
+  );
+}
+
+/* ---------------------------------------------------------------------------
+   State matrix definitions + WCAG notes per state
+   ------------------------------------------------------------------------- */
+
+const MATRIX = {
+  button: {
+    states: ['default', 'hover', 'focus', 'pressed', 'loading', 'success', 'disabled'],
+    render: (st, style) => <Button variant={style} state={st} />,
+    notes: (st, t, style) => {
+      if (st === 'disabled') return [info('Exempt from contrast (1.4.3)')];
+      if (style === 'soft') return [check(t.accentText, t.bg, 4.5, 'Label')];
+      if (st === 'success') return [check(bestTextColor(hexToRgb(t.success)), t.success, 4.5, 'Label'), info('Text + icon')];
+      const bg = st === 'hover' ? t.hover : st === 'pressed' ? t.active : t.accent;
+      const n = [check(t.fg, bg, 4.5, 'Label')];
+      if (st === 'focus') n.push(check(t.ring, t.bg, 3, 'Ring'));
+      if (st === 'default') n.push(check(t.accent, t.bg, 3, 'Shape'));
+      if (st === 'loading') n.push(info('aria-busy + text'));
+      return n;
+    },
+  },
+  input: {
+    states: ['default', 'hover', 'focus', 'filled', 'error', 'success', 'disabled'],
+    render: st => <Field state={st} />,
+    notes: (st, t) => {
+      if (st === 'disabled') return [info('Exempt from contrast')];
+      if (st === 'error') return [check(t.error, t.bg, 4.5, 'Message'), info('Icon + text')];
+      if (st === 'focus') return [check(t.ring, t.bg, 3, 'Focus border')];
+      if (st === 'success') return [check(t.success, t.bg, 3, 'Border')];
+      return [check(t.borderStrong, t.bg, 3, 'Border'), check(t.muted, t.field, 4.5, 'Label')];
+    },
+  },
+  toggle: {
+    states: ['off', 'on', 'hover', 'focus', 'pressed-on', 'disabled'],
+    render: st => <Toggle state={st} />,
+    notes: (st, t) => {
+      if (st === 'disabled') return [info('Exempt from contrast')];
+      if (st === 'off') return [check(t.borderStrong, t.bg, 3, 'Track')];
+      if (st === 'focus') return [check(t.ring, t.bg, 3, 'Ring')];
+      return [check(t.accent, t.bg, 3, 'Track'), info('Check on thumb')];
+    },
+  },
+  checkbox: {
+    states: ['unchecked', 'checked', 'hover', 'focus', 'indeterminate', 'disabled'],
+    render: st => <Checkbox state={st} />,
+    notes: (st, t) => {
+      if (st === 'disabled') return [info('Exempt from contrast')];
+      if (st === 'checked' || st === 'indeterminate') return [check(t.fg, t.accent, 3, 'Mark'), check(t.accent, t.bg, 3, 'Box')];
+      if (st === 'focus') return [check(t.ring, t.bg, 3, 'Ring')];
+      return [check(t.borderStrong, t.bg, 3, 'Border')];
+    },
+  },
+  card: {
+    states: ['default', 'hover', 'focus', 'selected', 'disabled'],
+    render: st => <PlanCard state={st} />,
+    notes: (st, t) => {
+      if (st === 'disabled') return [info('Exempt from contrast')];
+      if (st === 'focus') return [check(t.ring, t.bg, 3, 'Ring')];
+      if (st === 'selected') return [check(t.accentText, t.bg, 3, 'Border'), info('Radio dot, not color alone')];
+      return [check(t.muted, t.bg, 4.5, 'Meta text')];
+    },
+  },
+};
+
+function StateCell({ name, notes, index, children }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      className="csx-cell"
+      initial={{ opacity: 0, y: 20, scale: 0.97 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
       viewport={REVEAL_VIEWPORT}
-      transition={{ duration: 0.45, ease: EASE, delay: index * 0.04 }}
-      style={{ display: 'grid', gap: 10, alignContent: 'start' }}
+      transition={{ duration: 0.5, ease: EASE, delay: index * 0.045 }}
     >
-      <div className="cs-stage">{children}</div>
-      <div>
-        <div style={{ fontFamily: 'var(--font-label)', fontWeight: 600, fontSize: 14, textTransform: 'capitalize' }}>{name}</div>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 6 }}>
+      <div className="csx-stage" aria-hidden="true">{children}</div>
+      <div className="csx-cell-meta">
+        <span className="csx-state-name">{name.replace('-', ' ')}</span>
+        <div className="csx-notes">
           {notes.map(n => (
             <span key={n.label} className={'badge ' + (n.pass === undefined ? 'badge-neutral' : n.pass ? 'badge-pass' : 'badge-fail')} title={n.target ? `Needs ${n.target}:1` : undefined}>
               {n.pass === undefined ? '' : n.pass ? '✓ ' : '✕ '}{n.label}{n.text ? ` ${n.text}` : ''}
@@ -163,85 +333,91 @@ function StateCell({ name, notes, children, index }) {
   );
 }
 
+/* ---------------------------------------------------------------------------
+   Page
+   ------------------------------------------------------------------------- */
+
 export default function ComponentStates() {
   const [accent, setAccent] = useState('#8B6CF0');
   const [surface, setSurface] = useState('light');
   const [size, setSize] = useState('md');
   const [radius, setRadius] = useState(14);
+  const [style, setStyle] = useState('solid');
   const [component, setComponent] = useState('button');
   const [copied, copy] = useCopy();
 
+  // Live playground state
+  const [btnState, setBtnState] = useState('default');
+  const [email, setEmail] = useState('');
+  const [emailStatus, setEmailStatus] = useState(undefined);
+  const [toggle, setToggle] = useState(true);
+  const [checked, setChecked] = useState(false);
+  const [plan, setPlan] = useState('pro');
+
   const t = useMemo(() => deriveTokens(accent, surface), [accent, surface]);
+  const sz = SIZES[size];
 
-  const buttonNotes = state => {
-    if (state === 'disabled') return [{ label: 'Contrast exempt (WCAG 1.4.3)' }];
-    const bg = state === 'hover' ? t.hover : state === 'pressed' ? t.active : t.accent;
-    const notes = [ratioBadge(t.fg, bg, 4.5, 'Label')];
-    if (state === 'focus') notes.push(ratioBadge(t.ring, t.bg, 3, 'Ring'));
-    if (state === 'default') notes.push(ratioBadge(t.accent, t.bg, 3, 'Shape'));
-    return notes;
-  };
-  const inputNotes = state => {
-    if (state === 'disabled') return [{ label: 'Contrast exempt' }];
-    if (state === 'error') return [ratioBadge(t.error, t.bg, 4.5, 'Message'), { label: 'Icon + text, not color alone' }];
-    if (state === 'focus') return [ratioBadge(t.ring, t.bg, 3, 'Focus border')];
-    if (state === 'hover') return [ratioBadge(t.text, t.bg, 3, 'Border')];
-    return [ratioBadge(t.border, t.bg, 3, 'Border'), ratioBadge(t.muted, t.field, 4.5, 'Placeholder')];
-  };
-  const cardNotes = state => {
-    if (state === 'disabled') return [{ label: 'Contrast exempt' }];
-    if (state === 'focus') return [ratioBadge(t.ring, t.bg, 3, 'Ring')];
-    if (state === 'selected') return [ratioBadge(t.outline, t.bg, 3, 'Border'), { label: 'Checkmark, not color alone' }];
-    return [ratioBadge(t.muted, t.bg, 4.5, 'Meta text')];
+  const vars = {
+    '--cs-accent': t.accent, '--cs-accent-2': t.accent2, '--cs-hover': t.hover, '--cs-active': t.active,
+    '--cs-on-accent': t.fg, '--cs-accent-text': t.accentText, '--cs-ring': t.ring,
+    '--cs-surface': t.bg, '--cs-text': t.text, '--cs-muted': t.muted, '--cs-border': t.border, '--cs-border-strong': t.borderStrong,
+    '--cs-field': t.field, '--cs-track': t.track, '--cs-dis-bg': t.disabledBg, '--cs-dis-text': t.disabledText,
+    '--cs-error': t.error, '--cs-success': t.success, '--cs-on-success': bestTextColor(hexToRgb(t.success)),
+    '--cs-r': `${radius}px`, '--cs-h': `${sz.h}px`, '--cs-fs': `${sz.fs}px`, '--cs-padx': `${sz.padx}px`,
   };
 
-  const states = component === 'button' ? BUTTON_STATES : component === 'input' ? INPUT_STATES : CARD_STATES;
+  function runButton() {
+    if (btnState !== 'default') return;
+    setBtnState('loading');
+    setTimeout(() => { setBtnState('success'); haptic(20); }, 1300);
+    setTimeout(() => setBtnState('default'), 2900);
+  }
+
+  function validateEmail() {
+    if (!email) { setEmailStatus(undefined); return; }
+    setEmailStatus(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? 'success' : 'error');
+  }
 
   const css = `:root {
   --color-accent: ${t.accent};
   --color-accent-hover: ${t.hover};
   --color-accent-pressed: ${t.active};
+  --color-accent-gradient: linear-gradient(135deg, ${t.accent}, ${t.accent2});
   --color-on-accent: ${t.fg};
-  --color-accent-text: ${t.outline};
+  --color-accent-text: ${t.accentText};
   --color-focus-ring: ${t.ring};
-  --color-border: ${t.border};
+  --color-border: ${t.borderStrong};
   --color-error: ${t.error};
+  --color-success: ${t.success};
   --color-disabled-bg: ${t.disabledBg};
   --color-disabled-text: ${t.disabledText};
   --radius-control: ${radius}px;
+  --control-height: ${sz.h}px;
+  --ease-spring: cubic-bezier(.3, 1.4, .5, 1);
 }`;
 
+  const def = MATRIX[component];
+
   return (
-    <ToolPage id="component-states" intro="One accent color in, every interactive state out. Hover, pressed, focus and disabled are derived for you, and each state is checked against WCAG (text 4.5:1, focus rings and borders 3:1). The bottom row is live — hover, click and tab through it.">
-      <style>{`
-        .cs-stage { min-height: 130px; border-radius: 20px; display: grid; place-items: center; padding: 22px 18px; background: ${t.bg}; box-shadow: inset 0 0 0 1px var(--border); transition: background-color .35s ease; }
-        .cs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 1.5px solid transparent; font-family: var(--font-body); font-weight: 600; letter-spacing: -0.01em; transition: background-color .18s ease, box-shadow .18s ease, transform .12s ease; }
-        .cs-btn:disabled { cursor: not-allowed; }
-        .cs-live.cs-btn { background: var(--b-bg); }
-        .cs-live.cs-btn:hover { background: var(--b-hover); }
-        .cs-live.cs-btn:active { background: var(--b-active); transform: scale(0.97); }
-        .cs-live.cs-btn:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--b-surface), 0 0 0 4px var(--b-ring); }
-        .cs-input { width: 100%; padding: 0 14px; border: 1.5px solid var(--i-border, transparent); font-family: var(--font-body); transition: border-color .18s ease, box-shadow .18s ease; }
-        .cs-input::placeholder { color: var(--i-placeholder); }
-        .cs-input:disabled { cursor: not-allowed; }
-        .cs-live.cs-input:hover { border-color: var(--i-hover); }
-        .cs-live.cs-input:focus { outline: none; border-color: var(--i-ring); box-shadow: 0 0 0 3px color-mix(in srgb, var(--i-ring) 30%, transparent); }
-        .cs-card { width: 100%; max-width: 240px; display: grid; gap: 4px; padding: 16px 18px; border: 1px solid; text-align: left; font-family: var(--font-body); transition: transform .25s var(--ease-out), box-shadow .25s ease, border-color .2s ease; }
-        .cs-live.cs-card { cursor: pointer; }
-        .cs-live.cs-card:hover { transform: translateY(-3px); box-shadow: 0 18px 30px -18px rgba(0,0,0,.5); }
-        .cs-live.cs-card:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--c-surface), 0 0 0 4px var(--c-ring); }
-      `}</style>
+    <ToolPage id="component-states" intro="One accent in, a full set of interactive states out — with the micro-interactions that make them feel alive. Play with the live components, then inspect every state side by side with its WCAG checks (text 4.5:1; focus rings, borders and tracks 3:1).">
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
             <h2 className="eyebrow">Tokens in</h2>
             <div className="stack" style={{ gap: 16 }}>
               <ColorField label="Accent" value={accent} onChange={setAccent} />
-              <div style={{ display: 'flex', gap: 8 }}>
-                {['#8B6CF0', '#CD57FF', '#FFCE1F', '#1A73E8', '#11804A', '#111011'].map(c => (
-                  <motion.button key={c} type="button" aria-label={`Use ${c}`} onClick={() => setAccent(c)} whileHover={{ y: -3 }} whileTap={{ scale: 0.85 }}
-                    style={{ width: 30, height: 30, borderRadius: 10, border: 'none', background: c, boxShadow: accent === c ? '0 0 0 2px var(--surface), 0 0 0 4px var(--focus)' : 'inset 0 0 0 1px rgba(127,127,127,.3)' }} />
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                {['#8B6CF0', '#CD57FF', '#FF7AB6', '#FFCE1F', '#1A73E8', '#11804A', '#111011'].map(c => (
+                  <motion.button
+                    key={c} type="button" aria-label={`Use ${c}`} aria-pressed={accent === c}
+                    onClick={() => setAccent(c)} whileHover={{ y: -3, rotate: -6 }} whileTap={{ scale: 0.85 }}
+                    style={{ width: 30, height: 30, borderRadius: 10, border: 'none', background: c, boxShadow: accent === c ? '0 0 0 2px var(--surface), 0 0 0 4px var(--focus)' : 'inset 0 0 0 1px rgba(127,127,127,.3)', transition: 'box-shadow .2s ease' }}
+                  />
                 ))}
+              </div>
+              <div className="field">
+                <span className="field-label">Button style</span>
+                <Segmented full label="Button style" value={style} onChange={setStyle} options={STYLES} />
               </div>
               <div className="field">
                 <span className="field-label">Preview surface</span>
@@ -251,7 +427,7 @@ export default function ComponentStates() {
                 <span className="field-label">Size</span>
                 <Segmented full label="Size" value={size} onChange={setSize} options={[{ value: 'sm', label: 'S' }, { value: 'md', label: 'M' }, { value: 'lg', label: 'L' }]} />
               </div>
-              <RangeField label="Corner radius" value={radius} min={0} max={32} onChange={setRadius} format={v => `${v}px`} />
+              <RangeField label="Corner radius" value={radius} min={0} max={28} onChange={setRadius} format={v => `${v}px`} />
             </div>
           </Reveal>
           <Reveal className="card" delay={0.05}>
@@ -259,58 +435,68 @@ export default function ComponentStates() {
               Tokens out
               <CopyButton copied={copied === 'css'} onClick={() => copy(css, 'css', { name: 'Copy', props: { tool: 'component-states' } })}>Copy</CopyButton>
             </h2>
-            <pre className="code-block" style={{ maxHeight: 260 }}>{css}</pre>
+            <pre className="code-block" data-lenis-prevent style={{ maxHeight: 280 }}>{css}</pre>
           </Reveal>
         </div>
 
         <div className="stack">
           <Reveal className="card">
-            <h2 className="eyebrow">
-              Component
-              <Segmented label="Component" value={component} onChange={setComponent} options={[{ value: 'button', label: 'Button' }, { value: 'input', label: 'Input' }, { value: 'card', label: 'Card' }]} />
-            </h2>
-            <motion.div key={component + surface} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
-              {component === 'button' && ['primary', 'secondary'].map(variant => (
-                <div key={variant} style={{ marginBottom: 24 }}>
-                  <div className="field-label" style={{ marginBottom: 10, textTransform: 'capitalize' }}>{variant}</div>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 190px), 1fr))', gap: 14 }}>
-                    {states.map((st, i) => (
-                      <StateCell key={st} name={st} index={i} notes={variant === 'primary' ? buttonNotes(st) : st === 'disabled' ? [{ label: 'Contrast exempt' }] : [ratioBadge(t.outline, t.bg, 4.5, 'Label')]}>
-                        <ButtonPreview t={t} variant={variant} state={st} size={size} radius={radius} />
-                      </StateCell>
-                    ))}
-                  </div>
+            <h2 className="eyebrow">Playground — click, type, tab through</h2>
+            <div className="csx-root csx-playground" style={vars}>
+              <div className="csx-play-col">
+                <div className="csx-play-row">
+                  <Button live variant={style} state={btnState} onClick={runButton} label="Save changes" />
+                  <Button live variant="outline" state="default" label="Cancel" />
                 </div>
-              ))}
-              {component === 'input' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 230px), 1fr))', gap: 14 }}>
-                  {states.map((st, i) => (
-                    <StateCell key={st} name={st} index={i} notes={inputNotes(st)}>
-                      <InputPreview t={t} state={st} size={size} radius={radius} />
-                    </StateCell>
-                  ))}
+                <Field
+                  live
+                  value={email}
+                  valid={emailStatus}
+                  onChange={e => { setEmail(e.target.value); if (emailStatus) setEmailStatus(undefined); }}
+                  onBlur={validateEmail}
+                />
+                <div className="csx-play-row" style={{ gap: 24 }}>
+                  <Toggle live checked={toggle} onChange={setToggle} />
+                  <Checkbox live checked={checked} onChange={setChecked} label="Remember me" />
                 </div>
-              )}
-              {component === 'card' && (
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 230px), 1fr))', gap: 14 }}>
-                  {states.map((st, i) => (
-                    <StateCell key={st} name={st} index={i} notes={cardNotes(st)}>
-                      <CardPreview t={t} state={st} radius={radius} />
-                    </StateCell>
-                  ))}
-                </div>
-              )}
-            </motion.div>
+              </div>
+              <div className="csx-play-col" role="radiogroup" aria-label="Plan">
+                <PlanCard live selected={plan === 'starter'} onSelect={() => setPlan('starter')} name="Starter" price="$0" perks="3 experiments a month" />
+                <PlanCard live selected={plan === 'pro'} onSelect={() => setPlan('pro')} name="Pro" price="$12" perks="Unlimited experiments" />
+              </div>
+            </div>
           </Reveal>
 
           <Reveal className="card" delay={0.05}>
-            <h2 className="eyebrow">Live — try it with mouse and keyboard</h2>
-            <div className="cs-stage" style={{ display: 'flex', flexWrap: 'wrap', gap: 16, justifyContent: 'center', alignItems: 'center', minHeight: 180 }}>
-              <ButtonPreview t={t} variant="primary" state="default" size={size} radius={radius} interactive />
-              <ButtonPreview t={t} variant="secondary" state="default" size={size} radius={radius} interactive />
-              <div style={{ width: 260 }}><InputPreview t={t} state="default" size={size} radius={radius} interactive /></div>
-              <CardPreview t={t} state="default" radius={radius} interactive />
-            </div>
+            <h2 className="eyebrow">
+              Every state
+              <Segmented
+                label="Component"
+                value={component}
+                onChange={setComponent}
+                options={[
+                  { value: 'button', label: 'Button' }, { value: 'input', label: 'Input' }, { value: 'toggle', label: 'Toggle' },
+                  { value: 'checkbox', label: 'Checkbox' }, { value: 'card', label: 'Card' },
+                ]}
+              />
+            </h2>
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={component + surface + style}
+                className="csx-root csx-matrix"
+                style={vars}
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: 0.25, ease: EASE }}
+              >
+                {def.states.map((st, i) => (
+                  <StateCell key={st} name={st} index={i} notes={def.notes(st, t, style)}>
+                    {def.render(st, style)}
+                  </StateCell>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </Reveal>
         </div>
       </div>

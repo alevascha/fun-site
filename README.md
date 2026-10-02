@@ -1,4 +1,4 @@
-# The Fun Lab — fun.alevasquez.dev
+# Ale's Fun Lab — fun.alevasquez.dev
 
 A playground of small design-engineering tools by Alejandro Vasquez. React 19 + Vite + Framer Motion, styled after [alevasquez.dev](https://www.alevasquez.dev/), deployed on Netlify.
 

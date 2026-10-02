@@ -13,7 +13,7 @@ import SplitText from './motion/SplitText';
 export default function ToolPage({ id, intro, children }) {
   const exp = getExperiment(id);
   usePageMeta(getPageMeta(exp));
-  useEffect(() => { markOpened(id); window.scrollTo(0, 0); }, [id]);
+  useEffect(() => { markOpened(id); }, [id]);
 
   const others = experiments.filter(e => e.active && e.id !== id);
 

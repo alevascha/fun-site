@@ -232,7 +232,7 @@ export default function ImagePalette() {
               <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.1 }}>
                 <h2 className="eyebrow">Contrast matrix</h2>
                 <p className="small muted" style={{ marginTop: -6 }}>Every color against every other. Green ≥ 4.5:1 is safe for normal text; grey ≥ 3:1 works for large text and UI.</p>
-                <div className="table-scroll">
+                <div className="table-scroll" data-lenis-prevent>
                   <div className="matrix" style={{ gridTemplateColumns: `44px repeat(${colors.length}, minmax(44px, 1fr))`, minWidth: 44 * (colors.length + 1) + 4 * colors.length }}>
                     <span />
                     {colors.map((c, i) => <span key={i} className="matrix-cell" style={{ background: c.hex }} aria-hidden="true" />)}

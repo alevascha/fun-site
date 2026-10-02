@@ -279,7 +279,7 @@ export default function GradientGenerator() {
                 CSS
                 <CopyButton className="btn btn-primary btn-sm" copied={copied === 'css'} onClick={() => copy(cssText, 'css', { name: 'Copy', props: { tool: 'gradient-generator', mode } })}>Copy CSS</CopyButton>
               </h2>
-              <pre className="code-block">{cssText}</pre>
+              <pre className="code-block" data-lenis-prevent>{cssText}</pre>
             </Reveal>
           </div>
         </div>

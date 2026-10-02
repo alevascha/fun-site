@@ -8,7 +8,7 @@
 // Omit `path` (or set active:false) for a "coming soon" placeholder card.
 
 export const SITE = {
-  name: 'The Fun Lab',
+  name: "Ale's Fun Lab",
   url: 'https://fun.alevasquez.dev',
   description: 'A playground of fun side experiments by Alejandro Vasquez — color, type and design-system tools built for fun.',
   author: 'Alejandro Vasquez',

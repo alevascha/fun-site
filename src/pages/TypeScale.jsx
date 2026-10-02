@@ -229,7 +229,7 @@ export default function TypeScale() {
                 <CopyButton copied={copied === 'out'} onClick={() => copy(output, 'out', { name: 'Copy', props: { tool: 'type-scale', format } })}>Copy</CopyButton>
               </span>
             </h2>
-            <pre className="code-block">{output}</pre>
+            <pre className="code-block" data-lenis-prevent>{output}</pre>
           </Reveal>
         </div>
       </div>
