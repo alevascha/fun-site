@@ -19,6 +19,8 @@
 
 const SITE_KEY = 'flab_6aec59d0853784ae037c26e0';
 const SITE_URL = 'https://fun.alevasquez.dev';
+// Where subscriber replies go. Switch to hi@alevasquez.dev once that inbox exists.
+const REPLY_TO = 'aledvascha@gmail.com';
 const HEADERS = ['Fecha', 'Email', 'Lista', 'Idioma', 'Origen', 'Estado', 'Confirmado el', 'Token'];
 const LISTS = ['newsletter', 'waitlist'];
 const MIN_FILL_MS = 2500;
@@ -133,7 +135,7 @@ function sendConfirmation_(email, list, lang, token) {
     '<p style="font-size:13px;color:#6b6866;line-height:1.6">' +
     (es ? 'Si no fuiste tú, ignora este correo y no recibirás nada más. ' : 'If this wasn’t you, ignore this email and you won’t hear from us again. ') +
     '<a href="' + unsub + '" style="color:#6b6866">' + (es ? 'Darme de baja' : 'Unsubscribe') + '</a></p></div>';
-  MailApp.sendEmail({ to: email, subject: subject, htmlBody: html, name: "Ale's Fun Lab" });
+  MailApp.sendEmail({ to: email, subject: subject, htmlBody: html, name: "Ale's Fun Lab", replyTo: REPLY_TO });
 }
 
 function page_(title, message, lang) {
