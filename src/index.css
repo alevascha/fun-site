@@ -1450,3 +1450,6 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .timeline::before { content: ''; position: absolute; left: 6px; top: 6px; bottom: 6px; width: 2px; border-radius: 2px; background: linear-gradient(var(--accent-a), var(--accent-b)); opacity: 0.6; }
 .timeline-item { position: relative; }
 .timeline-dot { position: absolute; left: -28px; top: 4px; width: 14px; height: 14px; border-radius: 50%; background: var(--accent-grad); box-shadow: 0 0 0 4px var(--bg); }
+
+/* Newsletter honeypot: off-screen rather than display:none (some bots skip hidden fields). */
+.hp-field { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }

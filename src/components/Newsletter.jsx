@@ -1,4 +1,4 @@
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { SITE } from '../experiments';
 import { useLang } from '../i18n';
@@ -17,6 +17,9 @@ export default function Newsletter({ source, waitlist = false, compact = false }
   const id = useId();
   const [email, setEmail] = useState('');
   const [state, setState] = useState('idle'); // idle | sending | done | error
+  const [honeypot, setHoneypot] = useState('');
+  const shownAt = useRef(0); // bots submit instantly; people don't
+  useEffect(() => { shownAt.current = performance.now(); }, []);
   const { provider } = SITE.newsletter;
   const target = waitlist ? SITE.newsletter.waitlist || SITE.newsletter.newsletter : SITE.newsletter.newsletter;
   const action = provider && target;
@@ -28,7 +31,12 @@ export default function Newsletter({ source, waitlist = false, compact = false }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) { setState('error'); return; }
     setState('sending');
     try {
-      if (action) await subscribe({ provider, target, email, lang, list: waitlist ? 'waitlist' : 'newsletter' });
+      if (action) {
+        await subscribe({
+          provider, target, email, lang, list: waitlist ? 'waitlist' : 'newsletter', source: source || 'unknown',
+          key: SITE.newsletter.key, honeypot, elapsed: performance.now() - shownAt.current,
+        });
+      }
       setState('done');
       haptic(20);
       track(waitlist ? 'Waitlist signup' : 'Newsletter signup', { source: source || 'unknown', lang });
@@ -57,6 +65,11 @@ export default function Newsletter({ source, waitlist = false, compact = false }
           </motion.p>
         ) : (
           <motion.form key="form" className="newsletter-form" onSubmit={submit} noValidate initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.25, ease: EASE }}>
+            {/* Honeypot: invisible to people (and skipped by screen readers), bots fill it. */}
+            <div className="hp-field" aria-hidden="true">
+              <label htmlFor={`${id}-website`}>Website</label>
+              <input id={`${id}-website`} name="website" tabIndex={-1} autoComplete="off" value={honeypot} onChange={e => setHoneypot(e.target.value)} />
+            </div>
             <label htmlFor={`${id}-email`} className="sr-only">{t('Email address', 'Correo electrónico')}</label>
             <input
               id={`${id}-email`}

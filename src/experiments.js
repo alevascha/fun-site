@@ -29,7 +29,8 @@ export const SITE = {
   // `waitlist` for each. Empty `newsletter` = signup hidden in production
   // (still visible in dev so it can be styled). `waitlist` falls back to
   // `newsletter` when empty.
-  newsletter: { provider: '', newsletter: '', waitlist: '' },
+  // `key` must match SITE_KEY in scripts/apps-script/Code.gs (sheets only).
+  newsletter: { provider: 'sheets', newsletter: '', waitlist: '', key: 'flab_6aec59d0853784ae037c26e0' },
   adSlots: { hub: '', tool: '' },
 };
 
