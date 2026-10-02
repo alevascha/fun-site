@@ -6,6 +6,7 @@ import { EASE } from './lib/motion';
 import { scrollToTop, startSmoothScroll } from './lib/smoothScroll';
 import Home from './pages/Home';
 import CommandPalette from './components/CommandPalette';
+import { BootDone, RouteLoader } from './components/RouteLoader';
 import { experiments } from './experiments';
 import { ES, PAGE_PATHS } from './seo-es';
 import LangProvider from './components/LangProvider';
@@ -79,7 +80,8 @@ export default function App() {
           style={{ transformOrigin: 'top' }}
         />
       )}
-      <Suspense fallback={<div className="page" />}>
+      <Suspense fallback={<RouteLoader />}>
+        <BootDone />
         <Routes location={location} key={location.pathname}>
           {['en', 'es'].map(l => {
             const p = path => (l === 'es' ? PAGE_PATHS[path] : path);

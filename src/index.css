@@ -1453,3 +1453,14 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 
 /* Newsletter honeypot: off-screen rather than display:none (some bots skip hidden fields). */
 .hp-field { position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+
+/* Route loader: reuses the boot loader's orbit/logo styles from index.html. */
+.route-loader {
+  min-height: 70vh;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  animation: route-loader-in 0.3s ease 0.2s forwards;
+}
+.route-loader-orbit { transform: scale(0.8); }
+@keyframes route-loader-in { to { opacity: 1; } }

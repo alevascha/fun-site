@@ -34,11 +34,72 @@
       html[data-theme='light'] { background: #f7f4f2; }
       .js .ssr-shell { visibility: hidden; animation: ssr-reveal 0s 4s forwards; }
       @keyframes ssr-reveal { to { visibility: visible; } }
+      /* ---- Boot loader (pure CSS so it paints before any JS) ---- */
+      #boot-loader {
+        position: fixed; inset: 0; z-index: 9999;
+        display: grid; place-items: center;
+        background: #272625; color: #f7f7f7;
+        font-family: 'Crimson Pro', Georgia, serif;
+        opacity: 0;
+        animation: bl-in 0.35s ease 0.15s forwards; /* fast loads never show it */
+        transition: opacity 0.45s ease, visibility 0.45s ease;
+      }
+      html[data-theme='light'] #boot-loader { background: #f7f4f2; color: #111011; }
+      #boot-loader.done { opacity: 0 !important; visibility: hidden; animation: none; }
+      #boot-loader::before {
+        content: ''; position: absolute; width: 60vmin; height: 60vmin; border-radius: 50%;
+        background: radial-gradient(circle at 30% 30%, rgba(205,87,255,.35), rgba(139,108,240,.18) 45%, rgba(255,206,31,.12) 70%, transparent 72%);
+        filter: blur(40px); animation: bl-breathe 3.2s ease-in-out infinite alternate;
+      }
+      .bl-stack { position: relative; display: grid; justify-items: center; gap: 22px; }
+      .bl-orbit { position: relative; width: 120px; height: 120px; display: grid; place-items: center; }
+      .bl-logo {
+        width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center;
+        background: radial-gradient(100% 100% at 25% 100%, #cd57ff 0%, #ffce1f 100%);
+        color: #111011; font-style: italic; font-size: 38px; line-height: 1;
+        box-shadow: 0 14px 40px -10px rgba(205,87,255,.7);
+        animation: bl-float 2.4s cubic-bezier(.45,0,.55,1) infinite;
+      }
+      .bl-ring { position: absolute; inset: 0; border-radius: 50%; animation: bl-spin 2.6s linear infinite; }
+      .bl-ring:nth-child(2) { inset: 12px; animation-duration: 1.8s; animation-direction: reverse; }
+      .bl-ring:nth-child(3) { inset: -10px; animation-duration: 3.6s; }
+      .bl-ring::before { content: ''; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; }
+      .bl-ring:nth-child(1)::before { background: #cd57ff; box-shadow: 0 0 14px #cd57ff; }
+      .bl-ring:nth-child(2)::before { background: #ffce1f; box-shadow: 0 0 14px #ffce1f; width: 8px; height: 8px; }
+      .bl-ring:nth-child(3)::before { background: #8b6cf0; box-shadow: 0 0 14px #8b6cf0; width: 6px; height: 6px; }
+      .bl-name { display: flex; font-weight: 300; font-size: 26px; letter-spacing: -0.02em; }
+      .bl-name span { display: inline-block; animation: bl-wave 1.6s ease-in-out infinite; animation-delay: calc(var(--i) * 70ms); }
+      .bl-bar { position: relative; width: 140px; height: 3px; border-radius: 3px; overflow: hidden; background: rgba(127,127,127,.25); }
+      .bl-bar::after {
+        content: ''; position: absolute; inset: 0; width: 45%; border-radius: 3px;
+        background: linear-gradient(90deg, #cd57ff, #8b6cf0, #ffce1f);
+        animation: bl-sweep 1.2s cubic-bezier(.65,0,.35,1) infinite;
+      }
+      @keyframes bl-in { to { opacity: 1; } }
+      @keyframes bl-spin { to { transform: rotate(360deg); } }
+      @keyframes bl-float { 0%,100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(4deg); } }
+      @keyframes bl-wave { 0%,60%,100% { transform: translateY(0); opacity: .75; } 30% { transform: translateY(-6px); opacity: 1; } }
+      @keyframes bl-sweep { from { transform: translateX(-110%); } to { transform: translateX(230%); } }
+      @keyframes bl-breathe { from { transform: scale(.9); opacity: .8; } to { transform: scale(1.08); opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) {
+        #boot-loader *, #boot-loader::before { animation: none !important; }
+      }
     </style>
     <!-- analytics -->
     <!-- adsense -->
   </head>
   <body>
+    <div id="boot-loader" role="status" aria-label="Loading Ale's Fun Lab">
+      <div class="bl-stack">
+        <div class="bl-orbit">
+          <span class="bl-ring"></span><span class="bl-ring"></span><span class="bl-ring"></span>
+          <div class="bl-logo" aria-hidden="true">f</div>
+        </div>
+        <div class="bl-name" aria-hidden="true"><span style="--i:0">A</span><span style="--i:1">l</span><span style="--i:2">e</span><span style="--i:3">’</span><span style="--i:4">s</span><span style="--i:5">&nbsp;</span><span style="--i:6">F</span><span style="--i:7">u</span><span style="--i:8">n</span><span style="--i:9">&nbsp;</span><span style="--i:10">L</span><span style="--i:11">a</span><span style="--i:12">b</span></div>
+        <div class="bl-bar" aria-hidden="true"></div>
+      </div>
+    </div>
+    <noscript><style>#boot-loader { display: none; }</style></noscript>
     <div id="root"><!-- body:start --><!-- body:end --></div>
     <!-- ld:start --><!-- ld:end -->
     <script type="module" src="/src/main.jsx"></script>
