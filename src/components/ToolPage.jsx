@@ -9,6 +9,8 @@ import { markOpened } from '../lib/seen';
 import { Reveal } from './ui';
 import { EASE } from '../lib/motion';
 import SplitText from './motion/SplitText';
+import SiteFooter from './SiteFooter';
+import AdSlot from './AdSlot';
 
 export default function ToolPage({ id, intro, children }) {
   const exp = getExperiment(id);
@@ -91,6 +93,8 @@ export default function ToolPage({ id, intro, children }) {
           </Reveal>
         )}
 
+        <AdSlot slot="tool" />
+
         <Reveal as="section" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="more-title">
           <h2 id="more-title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 20px' }}>More experiments</h2>
           <div className="more-grid">
@@ -106,12 +110,11 @@ export default function ToolPage({ id, intro, children }) {
           </div>
         </Reveal>
 
-        <footer className="site-footer">
-          <span>Built for fun by Alejandro Vasquez</span>
+        <SiteFooter>
           <a href="https://www.alevasquez.dev/" target="_blank" rel="noopener noreferrer" className="btn btn-chip btn-sm">
             Work with me <span className="arrow" aria-hidden="true">→</span>
           </a>
-        </footer>
+        </SiteFooter>
       </div>
     </div>
   );

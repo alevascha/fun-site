@@ -13,6 +13,8 @@ import ParticleField from '../components/motion/ParticleField';
 import Magnetic from '../components/motion/Magnetic';
 import SplitText from '../components/motion/SplitText';
 import Marquee from '../components/motion/Marquee';
+import SiteFooter from '../components/SiteFooter';
+import AdSlot from '../components/AdSlot';
 
 const MotionLink = motion.create(Link);
 
@@ -213,6 +215,8 @@ export default function Home() {
           </motion.div>
         </section>
 
+        <AdSlot slot="hub" />
+
         <Reveal as="section" className="hub-cta">
           <div className="hub-hero-orb" aria-hidden="true" style={{ opacity: 0.3 }} />
           <SplitText as="h2" text="Do you want to work with me?" inView stagger={0.018} />
@@ -234,10 +238,7 @@ export default function Home() {
           </Magnetic>
         </Reveal>
 
-        <footer className="site-footer">
-          <span>Built for fun by Alejandro Vasquez</span>
-          <span>New experiments added over time</span>
-        </footer>
+        <SiteFooter />
       </div>
     </div>
   );

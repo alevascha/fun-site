@@ -19,6 +19,11 @@ export const SITE = {
   // Umami Cloud (free Hobby plan, cookieless). Paste the Website ID from
   // cloud.umami.is → Settings → Websites. Empty = no analytics script.
   umamiWebsiteId: 'edf8df86-dccd-4aa7-9d8c-04e63ea232ab',
+  // Google AdSense. After approval, paste your publisher id ("ca-pub-…") and
+  // the ad unit slot ids from AdSense → Ads → By ad unit. Empty = no ads,
+  // no AdSense script, no ads.txt.
+  adsenseClient: '',
+  adSlots: { hub: '', tool: '' },
 };
 
 export const experiments = [

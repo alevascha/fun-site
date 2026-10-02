@@ -1,7 +1,12 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { experiments, getPageMeta, getSeo, HOME_META, SITE } from '../src/experiments.js';
-import { homeBody, homeJsonLd, injectBody, injectMeta, notFoundBody, toolBody, toolJsonLd } from './meta.js';
+import { homeBody, homeJsonLd, injectBody, injectMeta, notFoundBody, staticBody, toolBody, toolJsonLd } from './meta.js';
+import { STATIC_PAGES } from '../src/pages-content.js';
+
+const adsenseHead = () => (SITE.adsenseClient
+  ? `<meta name="google-adsense-account" content="${SITE.adsenseClient}" />\n    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${SITE.adsenseClient}" crossorigin="anonymous"></script>`
+  : '');
 
 /* Build-time SEO:
    - index.html gets the home page's meta tags, JSON-LD and a static body
@@ -15,7 +20,7 @@ export default function pagesPlugin() {
     configResolved(config) { outDir = path.resolve(config.root, config.build.outDir); },
     transformIndexHtml: {
       order: 'pre',
-      handler: html => injectBody(injectMeta(html, HOME_META), homeBody(), homeJsonLd()).replace(
+      handler: html => injectBody(injectMeta(html, HOME_META), homeBody(), homeJsonLd()).replace('<!-- adsense -->', adsenseHead()).replace(
         '<!-- analytics -->',
         SITE.umamiWebsiteId
           ? `<script defer src="https://cloud.umami.is/script.js" data-website-id="${SITE.umamiWebsiteId}" data-domains="fun.alevasquez.dev"></script>`
@@ -35,6 +40,16 @@ export default function pagesPlugin() {
         await fs.writeFile(path.join(outDir, `${exp.path.replace(/^\//, '')}.html`), page);
       }
 
+      for (const page of STATIC_PAGES) {
+        const out = injectBody(injectMeta(html, { title: page.metaTitle, description: page.description, path: page.path, image: '/og/home.png' }), staticBody(page));
+        await fs.writeFile(path.join(outDir, `${page.id}.html`), out);
+      }
+
+      // ads.txt authorizes Google to sell ads on this domain (required by AdSense).
+      if (SITE.adsenseClient) {
+        await fs.writeFile(path.join(outDir, 'ads.txt'), `google.com, ${SITE.adsenseClient.replace(/^ca-/, '')}, DIRECT, f08c47fec0942fa0\n`);
+      }
+
       const notFound = injectBody(
         injectMeta(html, { title: `Page not found — ${SITE.name}`, description: SITE.description, path: '/404', image: '/og/home.png' }, { noindex: true }),
         notFoundBody(),
@@ -42,7 +57,11 @@ export default function pagesPlugin() {
       await fs.writeFile(path.join(outDir, '404.html'), notFound);
 
       const today = new Date().toISOString().slice(0, 10);
-      const urls = [{ path: '/', lastmod: today, priority: '1.0' }, ...active.map(e => ({ path: e.path, lastmod: e.addedAt, priority: '0.8' }))];
+      const urls = [
+        { path: '/', lastmod: today, priority: '1.0' },
+        ...active.map(e => ({ path: e.path, lastmod: e.addedAt, priority: '0.8' })),
+        ...STATIC_PAGES.map(p => ({ path: p.path, lastmod: p.updated, priority: '0.3' })),
+      ];
       const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls
         .map(u => `  <url><loc>${SITE.url}${u.path}</loc><lastmod>${u.lastmod}</lastmod><priority>${u.priority}</priority></url>`)
         .join('\n')}\n</urlset>\n`;

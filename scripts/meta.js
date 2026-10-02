@@ -1,4 +1,5 @@
 import { experiments, getPageMeta, getSeo, HOME_META, SITE } from '../src/experiments.js';
+import { STATIC_PAGES } from '../src/pages-content.js';
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -108,7 +109,7 @@ const nav = `<nav class="site-nav" aria-label="Main"><a class="site-nav-brand" h
 
 const toolLinks = (exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${e.path}">${esc(e.title)}</a> — ${esc(e.description)}</li>`).join('')}</ul>`;
 
-const footer = `<footer class="site-footer"><span>Built by <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, UX Engineer &amp; Design Systems Engineer.</span></footer>`;
+const footer = `<footer class="site-footer"><span>Built by <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, UX Engineer &amp; Design Systems Engineer.</span><nav class="footer-links" aria-label="Footer">${STATIC_PAGES.map(p => `<a href="${p.path}">${esc(p.title)}</a>`).join('')}</nav></footer>`;
 
 export function homeBody() {
   return `<div class="page"><div class="page-inner">${nav}<header class="hub-hero"><p class="hub-kicker">${esc(SITE.author)} · code playground</p><h1 class="hub-title">${esc(SITE.name)}</h1><p class="hub-sub">Free design and accessibility tools: color palettes, a WCAG contrast checker, design token conversion, type scales, easing curves, image trimming and more. Everything runs in your browser.</p></header><main><h2 class="hub-section-title">Experiments</h2>${toolLinks(null)}</main>${footer}</div></div>`;
@@ -119,6 +120,12 @@ export function toolBody(exp) {
   const features = seo.features?.length ? `<h2>What it does</h2><ul>${seo.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : '';
   const faq = seo.faq?.length ? `<h2>FAQ</h2>${seo.faq.map(f => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}` : '';
   return `<div class="page"><div class="page-inner">${nav}<header class="tool-header"><a class="back-link" href="/">← Back to the lab</a><h1 class="tool-title">${esc(exp.title)}</h1><p class="tool-desc">${esc(seo.description || exp.description)}</p></header><main class="seo-static">${features}${faq}<h2>More free tools</h2>${toolLinks(exp.id)}</main>${footer}</div></div>`;
+}
+
+export function staticBody(page) {
+  const sections = page.sections.map(sec => `<h2>${esc(sec.heading)}</h2>${sec.body.map(p => `<p>${esc(p)}</p>`).join('')}${
+    sec.links ? `<ul>${sec.links.map(l => `<li><a href="${esc(l.href)}">${esc(l.label)}</a></li>`).join('')}</ul>` : ''}`).join('');
+  return `<div class="page"><div class="page-inner">${nav}<header class="tool-header"><a class="back-link" href="/">← Back to the lab</a><h1 class="tool-title">${esc(page.title)}</h1><p class="tool-desc">${esc(page.description)}</p><p>Last updated ${esc(page.updated)}</p></header><main class="seo-static">${sections}</main>${footer}</div></div>`;
 }
 
 export function notFoundBody() {
