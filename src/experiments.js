@@ -30,7 +30,7 @@ export const SITE = {
   // (still visible in dev so it can be styled). `waitlist` falls back to
   // `newsletter` when empty.
   // `key` must match SITE_KEY in scripts/apps-script/Code.gs (sheets only).
-  newsletter: { provider: 'sheets', newsletter: '', waitlist: '', key: 'flab_6aec59d0853784ae037c26e0' },
+  newsletter: { provider: 'sheets', newsletter: 'https://script.google.com/macros/s/AKfycbwLyDZdElT5WIIDstqlLCGoOkspqWIYfgUJjsDdu-UjERwazPvda4YF6MTDSIxZDGon/exec', waitlist: '', key: 'flab_6aec59d0853784ae037c26e0' },
   adSlots: { hub: '', tool: '' },
 };
 
