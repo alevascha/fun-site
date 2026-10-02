@@ -1,0 +1,76 @@
+/* The sample UI is styled two ways: .tx-fragile uses the fixed widths and
+   nowrap that break under translation; .tx-resilient shows the fixes. */
+.tx-frame {
+  position: relative;
+  margin: 0 auto;
+  border-radius: 22px;
+  background: #ffffff;
+  color: #1d1c1b;
+  box-shadow: inset 0 0 0 1px rgba(17, 16, 17, 0.1), 0 30px 60px -40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+  transition: width 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-body);
+  font-size: 14px;
+  letter-spacing: -0.005em;
+}
+.tx-ui { display: grid; gap: 18px; padding: 18px; }
+.tx-nav { display: flex; align-items: center; gap: 6px; padding-bottom: 14px; border-bottom: 1px solid #ece8e4; }
+.tx-brand { font-family: var(--font-display); font-size: 22px; margin-right: auto; }
+.tx-nav a { color: #46423f; text-decoration: none; padding: 6px 10px; border-radius: 999px; background: #f4f1ee; font-weight: 500; font-size: 13px; }
+.tx-title { font-family: var(--font-display); font-weight: 300; font-size: 30px; line-height: 1.1; margin: 0; letter-spacing: -0.02em; }
+.tx-tabs { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: #f4f1ee; width: fit-content; max-width: 100%; }
+.tx-tabs span { padding: 7px 12px; border-radius: 999px; font-weight: 600; font-size: 13px; color: #6b6866; text-align: center; }
+.tx-tabs span:first-child { background: #fff; color: #111; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08); }
+.tx-field { display: grid; gap: 6px; }
+.tx-field-row { display: flex; gap: 12px; align-items: center; }
+.tx-label { font-weight: 600; font-size: 13px; }
+.tx-input { flex: 1; min-width: 0; height: 40px; border-radius: 12px; border: 1.5px solid #c9c5c0; padding: 0 12px; font: inherit; background: #fbfaf8; color: #111; }
+.tx-help { font-size: 12px; color: #6b6866; }
+.tx-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.tx-btn { height: 40px; padding: 0 16px; border-radius: 12px; border: none; font: 600 14px/1 var(--font-body); background: #8b6cf0; color: #111; }
+.tx-btn.ghost { background: transparent; box-shadow: inset 0 0 0 1.5px #c9c5c0; color: #1d1c1b; }
+.tx-card { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: linear-gradient(135deg, #f5efff, #fff8de); }
+.tx-card-icon { width: 40px; height: 40px; border-radius: 12px; background: #8b6cf0; display: grid; place-items: center; color: #fff; font-size: 18px; }
+.tx-card-title { font-weight: 700; font-size: 15px; display: flex; gap: 8px; align-items: center; }
+.tx-card-body { font-size: 13px; color: #46423f; }
+.tx-badge { font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 999px; background: #111; color: #fff; text-align: center; }
+.tx-table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+.tx-table th { text-align: left; font-size: 12px; color: #6b6866; font-weight: 600; padding: 8px 6px; border-bottom: 1px solid #ece8e4; }
+.tx-table td { padding: 10px 6px; border-bottom: 1px solid #f2efec; }
+.tx-toast { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: 14px; background: #1d1c1b; color: #f7f7f7; font-size: 13px; }
+.tx-toast-action { color: #ffce1f; font-weight: 700; }
+
+/* ---- Fragile: what usually ships ---- */
+.tx-fragile .tx-nav a { width: 76px; white-space: nowrap; overflow: hidden; text-align: center; }
+.tx-fragile .tx-tabs span { width: 88px; white-space: nowrap; overflow: hidden; }
+.tx-fragile .tx-label { width: 104px; white-space: nowrap; overflow: hidden; }
+.tx-fragile .tx-btn { width: 128px; white-space: nowrap; overflow: hidden; }
+.tx-fragile .tx-card-title > span:first-child { white-space: nowrap; overflow: hidden; max-width: 150px; }
+.tx-fragile .tx-badge { width: 44px; overflow: hidden; white-space: nowrap; }
+.tx-fragile .tx-table th > span, .tx-fragile .tx-table td > span { display: block; white-space: nowrap; overflow: hidden; }
+.tx-fragile .tx-toast-action { width: 56px; white-space: nowrap; overflow: hidden; }
+.tx-fragile .tx-card { grid-template-columns: auto 1fr 120px; }
+.tx-fragile .tx-card .tx-btn { width: 120px; }
+
+/* ---- Resilient: the fixes ---- */
+.tx-resilient { overflow-wrap: anywhere; hyphens: auto; }
+.tx-resilient .tx-nav { flex-wrap: wrap; }
+.tx-resilient .tx-tabs { overflow-x: auto; scrollbar-width: none; }
+.tx-resilient .tx-tabs span { white-space: nowrap; flex: none; }
+.tx-resilient .tx-field-row { flex-wrap: wrap; }
+.tx-resilient .tx-btn { min-width: 96px; height: auto; min-height: 40px; padding: 10px 16px; line-height: 1.2; }
+.tx-resilient .tx-card { grid-template-columns: auto minmax(0, 1fr); }
+.tx-resilient .tx-card .tx-btn { grid-column: 1 / -1; justify-self: start; }
+.tx-resilient .tx-card-title { flex-wrap: wrap; }
+.tx-resilient .tx-table { table-layout: auto; }
+.tx-resilient .tx-toast { flex-wrap: wrap; }
+.tx-resilient .tx-toast-action { margin-left: auto; }
+
+/* Broken element marker */
+[data-broken='true'] {
+  outline: 2px solid #e5484d !important;
+  outline-offset: 2px;
+  animation: tx-pulse 1.4s ease-in-out infinite;
+}
+@keyframes tx-pulse { 50% { outline-color: rgba(229, 72, 77, 0.35); } }
+@media (prefers-reduced-motion: reduce) { [data-broken='true'] { animation: none; } }

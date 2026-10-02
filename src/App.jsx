@@ -13,6 +13,12 @@ const ColorBlindness = lazy(() => import('./pages/ColorBlindness'));
 const TypeScale = lazy(() => import('./pages/TypeScale'));
 const GradientGenerator = lazy(() => import('./pages/GradientGenerator'));
 const ComponentStates = lazy(() => import('./pages/ComponentStates'));
+const TokenConverter = lazy(() => import('./pages/TokenConverter'));
+const MotionPlayground = lazy(() => import('./pages/MotionPlayground'));
+const AutoTrim = lazy(() => import('./pages/AutoTrim'));
+const TextExpansion = lazy(() => import('./pages/TextExpansion'));
+const A11yAudit = lazy(() => import('./pages/A11yAudit'));
+const MultiSize = lazy(() => import('./pages/MultiSize'));
 
 export default function App() {
   const location = useLocation();
@@ -53,6 +59,12 @@ export default function App() {
           <Route path="/type-scale" element={<TypeScale />} />
           <Route path="/gradient-generator" element={<GradientGenerator />} />
           <Route path="/component-states" element={<ComponentStates />} />
+          <Route path="/token-converter" element={<TokenConverter />} />
+          <Route path="/motion-playground" element={<MotionPlayground />} />
+          <Route path="/auto-trim" element={<AutoTrim />} />
+          <Route path="/text-expansion" element={<TextExpansion />} />
+          <Route path="/a11y-audit" element={<A11yAudit />} />
+          <Route path="/multi-size" element={<MultiSize />} />
           <Route path="*" element={<Home />} />
         </Routes>
       </Suspense>

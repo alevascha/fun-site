@@ -153,8 +153,9 @@ export default function GradientGenerator() {
             ref={boxRef}
             style={{
               position: 'relative',
-              aspectRatio: '16 / 8',
-              minHeight: 260,
+              width: '100%',
+              // Height, not aspect-ratio + min-height (that combo widened the box past small screens).
+              height: 'clamp(260px, 48vw, 600px)',
               borderRadius: 'calc(var(--radius-lg) - 8px)',
               background: bg.replace(/\n\s*/g, ' '),
               backgroundSize: animate ? '160% 160%' : undefined,

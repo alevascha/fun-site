@@ -724,15 +724,19 @@ input[type='range']:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   margin: 0 auto 20px;
   max-width: 14ch;
 }
-.hub-title em {
-  font-style: italic;
-  background: var(--accent-grad-linear);
-  background-size: 200% 100%;
+.hub-title em { font-style: italic; padding-right: 0.08em; }
+/* Each letter paints its own slice of one gradient. Clipping the gradient on
+   the parent fails (renders invisible on iOS/Android) once letters are
+   transformed, which the hover lift and the mobile wave both do. */
+.grad-char {
+  background-image: var(--accent-grad-linear);
+  background-size: calc(var(--n, 1) * 100%) 100%;
+  background-position: calc(var(--i, 0) / max(var(--n, 1) - 1, 1) * 100%) 50%;
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: grad-slide 8s ease-in-out infinite alternate;
-  padding-right: 0.08em;
+  padding-right: 0.04em;
 }
 @keyframes grad-slide { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
 .hub-sub {
@@ -1240,4 +1244,47 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 @keyframes touch-ripple {
   from { transform: scale(1); opacity: 1; }
   to { transform: scale(7); opacity: 0; }
+}
+
+/* Multi-line code/text input */
+.textarea {
+  width: 100%;
+  min-height: 360px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  background: var(--field-bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  letter-spacing: 0;
+  resize: vertical;
+  tab-size: 2;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.textarea:focus { outline: none; border-color: var(--focus); box-shadow: 0 0 0 4px rgba(205, 87, 255, 0.2); }
+.textarea[aria-invalid='true'] { border-color: var(--fail); box-shadow: 0 0 0 4px var(--fail-bg); }
+
+.chip-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.status-line { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
+
+/* Generic checkerboard for transparency */
+.checker {
+  background-color: #fff;
+  background-image:
+    linear-gradient(45deg, #e6e3df 25%, transparent 25%),
+    linear-gradient(-45deg, #e6e3df 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #e6e3df 75%),
+    linear-gradient(-45deg, transparent 75%, #e6e3df 75%);
+  background-size: 16px 16px;
+  background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+}
+:root[data-theme='dark'] .checker {
+  background-color: #2a2928;
+  background-image:
+    linear-gradient(45deg, #333230 25%, transparent 25%),
+    linear-gradient(-45deg, #333230 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #333230 75%),
+    linear-gradient(-45deg, transparent 75%, #333230 75%);
 }

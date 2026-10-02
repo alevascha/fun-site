@@ -12,7 +12,13 @@ A playground of small design-engineering tools by Alejandro Vasquez. React 19 + 
 | `/color-blindness` | Palette under protan/deutan/tritan/achromat simulation (Machado 2009), flags colors that collapse |
 | `/type-scale` | Modular type scale, static or fluid `clamp()`, CSS / design-token export |
 | `/gradient-generator` | Linear, radial, conic and draggable mesh gradients with CSS export |
-| `/component-states` | Button / input / card in every state, derived from one accent, with WCAG checks |
+| `/component-states` | Button / input / toggle / checkbox / card in every state, derived from one accent, with WCAG checks |
+| `/token-converter` | W3C / Tokens Studio / Figma Variables JSON → CSS, SCSS, Tailwind v4, SwiftUI, flat JSON (aliases resolved or kept) |
+| `/motion-playground` | Cubic-bezier editor + spring simulator, racing preview, export as CSS `linear()`, tokens, Framer Motion, SwiftUI |
+| `/auto-trim` | Bulk-trim transparent (or solid) edges from images in the browser, download as ZIP |
+| `/text-expansion` | Sample UI in English / German / Spanish / pseudo-loc, fragile vs resilient CSS, detects clipped text |
+| `/a11y-audit` | Paste HTML → sandboxed render → alt text, labels, names, headings, tap targets, contrast |
+| `/multi-size` | One creative across social + IAB ad sizes with safe zones, focal point, PNG/ZIP export |
 
 ## Adding an experiment
 

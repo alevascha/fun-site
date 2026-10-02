@@ -152,7 +152,7 @@ export default function Home() {
           </motion.div>
           <h1 className="hub-title" aria-label="Ale's Fun Lab">
             <SplitText text="Ale's Fun" delay={0.15} stagger={0.04} reactive />{' '}
-            <SplitText text="Lab" as="em" delay={0.45} stagger={0.06} reactive />
+            <SplitText text="Lab" as="em" delay={0.45} stagger={0.06} reactive charClassName="grad-char" />
           </h1>
           <motion.p
             className="hub-sub"

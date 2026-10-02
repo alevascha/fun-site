@@ -57,6 +57,7 @@ export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.02
   useReactiveLetters(ref, reactive);
   let i = 0;
   const words = text.split(' ');
+  const total = text.replace(/ /g, '').length;
   const trigger = inView
     ? { initial: 'hidden', whileInView: 'show', viewport: REVEAL_VIEWPORT }
     : { initial: 'hidden', animate: 'show' };
@@ -70,7 +71,7 @@ export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.02
               <span key={idx} data-char style={{ display: 'inline-block', overflow: 'hidden', verticalAlign: 'top', paddingBottom: '0.12em', marginBottom: '-0.12em', transition: 'transform 0.35s cubic-bezier(.16,1,.3,1)' }}>
                 <motion.span
                   className={charClassName}
-                  style={{ display: 'inline-block' }}
+                  style={{ display: 'inline-block', '--i': idx, '--n': total }}
                   variants={{
                     hidden: { y: '110%', rotate: 8 },
                     show: { y: '0%', rotate: 0, transition: { duration: 0.8, ease: EASE, delay: delay + idx * stagger } },
