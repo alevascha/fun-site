@@ -25,6 +25,7 @@ const AutoTrim = lazy(() => import('./pages/AutoTrim'));
 const TextExpansion = lazy(() => import('./pages/TextExpansion'));
 const A11yAudit = lazy(() => import('./pages/A11yAudit'));
 const MultiSize = lazy(() => import('./pages/MultiSize'));
+const MobilePreview = lazy(() => import('./pages/MobilePreview'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const ProPage = lazy(() => import('./pages/ProPage'));
@@ -47,6 +48,7 @@ const TOOLS = {
   'text-expansion': TextExpansion,
   'a11y-audit': A11yAudit,
   'multi-size': MultiSize,
+  'mobile-preview': MobilePreview,
 };
 
 export default function App() {

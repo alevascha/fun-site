@@ -186,4 +186,19 @@ export const SEO = {
       { q: 'What are the most common display ad sizes?', a: 'Medium rectangle (300×250), leaderboard (728×90), half page (300×600), wide skyscraper (160×600), billboard (970×250) and mobile banner (320×50).' },
     ],
   },
+  'mobile-preview': {
+    title: 'Mobile Website Preview — Test Any Site on iPhone, Android & iPad',
+    description: 'See any website inside iPhone 16, iPhone SE, Pixel, Galaxy and iPad frames at real viewport sizes. Rotate to landscape or compare four devices side by side. Free.',
+    features: [
+      '7 devices at their real CSS viewport sizes, from iPhone SE to iPad Air',
+      'Portrait and landscape, with status bars, notches and home indicators',
+      'Compare four devices side by side at true relative scale',
+      'Shareable links: the address, device and orientation live in the URL',
+    ],
+    faq: [
+      { q: 'What is the viewport size of an iPhone 16 Pro?', a: '402×874 CSS pixels (1206×2622 physical pixels at 3x). The iPhone 16 Pro Max is 440×956, and the iPhone SE is 375×667.' },
+      { q: 'Why does a site show up blank?', a: 'Many large sites send X-Frame-Options or a CSP frame-ancestors header that forbids being shown inside another page. Open them in a new tab and use your browser’s device mode instead.' },
+      { q: 'Is this the same as testing on a real phone?', a: 'It shows the real responsive layout, since the page gets the device’s width. Touch behavior, browser UI and sites that detect phones by user agent still need a real device or your browser’s device mode.' },
+    ],
+  },
 };

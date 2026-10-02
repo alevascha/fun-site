@@ -237,6 +237,25 @@ export const ES = {
       { q: '¿Cuáles son los tamaños de anuncios display más comunes?', a: 'Rectángulo mediano (300×250), leaderboard (728×90), media página (300×600), rascacielos ancho (160×600), billboard (970×250) y banner móvil (320×50).' },
     ],
   },
+  'mobile-preview': {
+    slug: 'vista-previa-movil',
+    name: 'Vista previa móvil',
+    card: 'Abre cualquier sitio web dentro de marcos de iPhone, Pixel, Galaxy y iPad a su tamaño real. Gíralo o compara cuatro dispositivos a la vez.',
+    title: 'Vista previa móvil: prueba cualquier sitio en iPhone, Android y iPad',
+    description: 'Mira cualquier sitio web dentro de marcos de iPhone 16, iPhone SE, Pixel, Galaxy y iPad a su tamaño real de viewport. Gira a horizontal o compara cuatro dispositivos lado a lado. Gratis.',
+    intro: 'Escribe cualquier dirección y mírala dentro de marcos reales de teléfonos y tablets, con el tamaño exacto de viewport de cada dispositivo. Gira a horizontal o compara cuatro dispositivos lado a lado.',
+    features: [
+      '7 dispositivos con su tamaño real de viewport CSS, del iPhone SE al iPad Air',
+      'Vertical y horizontal, con barra de estado, notch e indicador de inicio',
+      'Compara cuatro dispositivos lado a lado a escala real entre sí',
+      'Enlaces para compartir: la dirección, el dispositivo y la orientación quedan en la URL',
+    ],
+    faq: [
+      { q: '¿Cuál es el tamaño de viewport de un iPhone 16 Pro?', a: '402×874 píxeles CSS (1206×2622 píxeles físicos a 3x). El iPhone 16 Pro Max mide 440×956 y el iPhone SE 375×667.' },
+      { q: '¿Por qué un sitio aparece en blanco?', a: 'Muchos sitios grandes envían X-Frame-Options o una regla CSP frame-ancestors que prohíbe mostrarlos dentro de otra página. Ábrelos en otra pestaña y usa el modo dispositivo de tu navegador.' },
+      { q: '¿Es lo mismo que probar en un teléfono real?', a: 'Muestra el diseño responsive real, porque la página recibe el ancho del dispositivo. El comportamiento táctil, la interfaz del navegador y los sitios que detectan teléfonos por user agent siguen necesitando un dispositivo real o el modo dispositivo del navegador.' },
+    ],
+  },
 };
 
 // Non-tool pages: English path → Spanish path.

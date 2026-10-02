@@ -178,6 +178,17 @@ export const experiments = [
     addedAt: '2026-10-02',
     active: true,
   },
+  {
+    id: 'mobile-preview',
+    category: 'UI',
+    path: '/mobile-preview',
+    emoji: '📱',
+    accent: '#6ee7d2',
+    title: 'Mobile Preview',
+    description: 'Open any website inside iPhone, Pixel, Galaxy and iPad frames at their real viewport sizes. Rotate it or compare four devices at once.',
+    addedAt: '2026-10-02',
+    active: true,
+  },
 ];
 
 export function getExperiment(id) {

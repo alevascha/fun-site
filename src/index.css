@@ -1616,3 +1616,57 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
   .segmented-scroll[data-fade='left'] { -webkit-mask-image: linear-gradient(270deg, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(270deg, #000 calc(100% - 44px), transparent); }
   .segmented-scroll[data-fade='left right'] { -webkit-mask-image: linear-gradient(90deg, transparent, #000 44px, #000 calc(100% - 44px), transparent); mask-image: linear-gradient(90deg, transparent, #000 44px, #000 calc(100% - 44px), transparent); }
 }
+
+/* ===== Mobile preview ===== */
+.mp-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
+.mp-url { display: flex; align-items: center; gap: 8px; position: relative; }
+.mp-url .input { flex: 1; min-width: 0; padding-left: 38px; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 13.5px; }
+.mp-url-lock { position: absolute; left: 14px; font-size: 13px; opacity: 0.6; pointer-events: none; }
+.mp-controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.mp-chip {
+  border: none; padding: 7px 14px; border-radius: 999px; font-size: 13px; font-weight: 600;
+  background: var(--surface-2); color: var(--muted); box-shadow: inset 0 0 0 1px var(--border);
+  transition: color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+.mp-chip:hover { color: var(--text); transform: translateY(-1px); }
+.mp-chip.is-active { background: var(--chip-bg); color: var(--chip-text); }
+.mp-stage {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-end; gap: var(--gap);
+  padding: clamp(20px, 4vw, 48px) 4px; border-radius: var(--radius-lg);
+  background: radial-gradient(60% 50% at 50% 100%, var(--orb-1), transparent 70%), var(--surface-2);
+  box-shadow: inset 0 0 0 1px var(--border); overflow: hidden;
+}
+.mp-device { margin: 0; position: relative; display: flex; flex-direction: column; align-items: center; }
+.mp-frame {
+  position: absolute; top: 0; left: 0; transform-origin: 0 0; box-sizing: border-box;
+  background: linear-gradient(145deg, #3a3a3e, #0d0d0f 40%, #1b1b1e);
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.12), inset 0 0 0 6px #050505, 0 50px 90px -40px rgba(0,0,0,0.75), 0 0 0 1px rgba(0,0,0,0.6);
+}
+.mp-tablet { background: linear-gradient(145deg, #c9c9cf, #8d8d94 50%, #b5b5bb); box-shadow: inset 0 0 0 7px #0b0b0c, 0 50px 90px -40px rgba(0,0,0,0.7); }
+.mp-screen { position: relative; width: 100%; height: 100%; overflow: hidden; background: #fff; }
+.mp-view { position: absolute; left: 0; right: 0; bottom: 0; }
+.mp-view iframe { display: block; border: 0; width: 100%; height: 100%; background: #fff; }
+.mp-bar {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 7% 0 9%; transition: background 0.4s ease, color 0.4s ease; font-family: Inter, system-ui, sans-serif; font-weight: 600;
+}
+.mp-bar-icons { display: flex; gap: 5px; align-items: center; }
+.mp-bar-icons svg { fill: currentColor; color: inherit; }
+.mp-island { position: absolute; z-index: 3; top: 11px; left: 50%; width: 124px; height: 36px; margin-left: -62px; border-radius: 20px; background: #000; }
+.mp-hole { position: absolute; z-index: 3; left: 50%; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #000; }
+.mp-indicator { position: absolute; z-index: 3; bottom: 8px; left: 50%; width: 134px; height: 5px; margin-left: -67px; border-radius: 3px; background: rgba(0,0,0,0.75); pointer-events: none; }
+.mp-speaker { position: absolute; top: 30px; left: 50%; width: 60px; height: 6px; margin-left: -30px; border-radius: 3px; background: #2a2a2d; }
+.mp-home { position: absolute; bottom: 8px; left: 50%; width: 48px; height: 48px; margin-left: -24px; border-radius: 50%; box-shadow: inset 0 0 0 2px #3a3a3e; }
+.mp-home-side { bottom: auto; top: 50%; left: auto; right: 8px; margin: -24px 0 0; }
+.mp-overlay {
+  position: absolute; inset: 0; z-index: 1; display: grid; place-content: center; justify-items: center; gap: 12px;
+  padding: 24px; text-align: center; background: var(--surface); color: var(--text);
+}
+.mp-spinner { width: 34px; height: 34px; border-radius: 50%; border: 3px solid var(--border-strong); border-top-color: var(--accent-a); animation: mp-spin 0.8s linear infinite; }
+@keyframes mp-spin { to { transform: rotate(360deg); } }
+.mp-caption { position: absolute; bottom: 0; left: 0; right: 0; display: flex; gap: 8px; justify-content: center; align-items: baseline; font-size: 14px; white-space: nowrap; }
+@media (max-width: 720px) {
+  .mp-url { flex-wrap: wrap; }
+  .mp-url .input { flex-basis: 100%; }
+  .mp-url-lock { top: 13px; }
+}

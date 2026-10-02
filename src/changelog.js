@@ -2,6 +2,12 @@
 export const CHANGELOG = [
   {
     date: '2026-10-02',
+    id: 'mobile-preview',
+    en: { title: 'New: Mobile Preview', body: 'See any website inside iPhone, Pixel, Galaxy and iPad frames at their real viewport sizes, rotate it, or compare four devices side by side.' },
+    es: { title: 'Nuevo: Vista previa móvil', body: 'Mira cualquier sitio web dentro de marcos de iPhone, Pixel, Galaxy y iPad a su tamaño real, gíralo o compara cuatro dispositivos lado a lado.' },
+  },
+  {
+    date: '2026-10-02',
     id: 'spanish-guides-pro',
     en: { title: 'Spanish version, guides and Lab Pro waitlist', body: 'The whole lab is now available in Spanish, with a language switch in the header. New guides explain the ideas behind the tools, there is a ⌘K command palette to jump anywhere, and you can join the waitlist for the upcoming Figma plugins.' },
     es: { title: 'Versión en español, guías y lista de espera de Lab Pro', body: 'Todo el lab ya está disponible en español, con un selector de idioma en el encabezado. Nuevas guías explican las ideas detrás de las herramientas, hay una paleta de comandos ⌘K para ir a cualquier lugar y puedes unirte a la lista de espera de los próximos plugins de Figma.' },
