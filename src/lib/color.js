@@ -125,3 +125,62 @@ export const AA_THRESHOLDS = {
   AA: { normal: 4.5, large: 3 },
   AAA: { normal: 7, large: 4.5 },
 };
+
+/* Accepts "#abc", "abc", "#aabbcc" (any case, surrounding spaces) and
+   returns "#AABBCC", or null when it isn't a hex color. */
+export function normalizeHex(value) {
+  const rgb = hexToRgb(value);
+  return rgb ? rgbToHex(rgb.r, rgb.g, rgb.b) : null;
+}
+
+export function srgbToLinear(c) {
+  c /= 255;
+  return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+}
+
+export function linearToSrgb(v) {
+  v = clamp(v, 0, 1);
+  const c = v <= 0.0031308 ? v * 12.92 : 1.055 * Math.pow(v, 1 / 2.4) - 0.055;
+  return Math.round(c * 255);
+}
+
+// CIE L*a*b* (D65) — used for perceptual distance between colors.
+export function rgbToLab(rgb) {
+  const r = srgbToLinear(rgb.r), g = srgbToLinear(rgb.g), b = srgbToLinear(rgb.b);
+  const x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;
+  const y = (r * 0.2126 + g * 0.7152 + b * 0.0722);
+  const z = (r * 0.0193 + g * 0.1192 + b * 0.9505) / 1.08883;
+  const f = t => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+  const fx = f(x), fy = f(y), fz = f(z);
+  return { l: 116 * fy - 16, a: 500 * (fx - fy), b: 200 * (fy - fz) };
+}
+
+export function deltaE(rgb1, rgb2) {
+  const a = rgbToLab(rgb1), b = rgbToLab(rgb2);
+  return Math.hypot(a.l - b.l, a.a - b.a, a.b - b.b);
+}
+
+export function hslToHex(h, s, l) {
+  const rgb = hslToRgb(h, s, l);
+  return rgbToHex(rgb.r, rgb.g, rgb.b);
+}
+
+export function hexToHsl(hex) {
+  const rgb = hexToRgb(hex);
+  return rgb ? rgbToHsl(rgb.r, rgb.g, rgb.b) : null;
+}
+
+/* Every WCAG check for a text/background pair. */
+export function wcagChecks(ratio) {
+  return [
+    { id: 'aa-normal', level: 'AA', label: 'AA · Normal text', target: 4.5, pass: ratio >= 4.5 },
+    { id: 'aa-large', level: 'AA', label: 'AA · Large text', target: 3, pass: ratio >= 3 },
+    { id: 'aaa-normal', level: 'AAA', label: 'AAA · Normal text', target: 7, pass: ratio >= 7 },
+    { id: 'aaa-large', level: 'AAA', label: 'AAA · Large text', target: 4.5, pass: ratio >= 4.5 },
+    { id: 'ui', level: 'AA', label: 'UI components & icons', target: 3, pass: ratio >= 3 },
+  ];
+}
+
+export function formatRatio(ratio) {
+  return (Math.floor(ratio * 100) / 100).toFixed(2);
+}

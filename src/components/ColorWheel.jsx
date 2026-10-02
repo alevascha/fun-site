@@ -116,8 +116,7 @@ export default function ColorWheel({ baseHsl, onChange, size = 280 }) {
                   className="wheel-dot"
                   cx={d.cx} cy={d.cy} r={d.dotR}
                   fill={d.hex}
-                  stroke={isSelectedSpoke && d === closest ? '#fff' : 'none'}
-                  strokeWidth={isSelectedSpoke && d === closest ? 2.5 : 0}
+                  style={isSelectedSpoke && d === closest ? { stroke: 'var(--text)', strokeWidth: 4 } : undefined}
                   onClick={(e) => { e.stopPropagation(); onChange({ h: spoke.hue, s: d.s, l: d.l }); }}
                 />
               ))}

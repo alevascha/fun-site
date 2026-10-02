@@ -1,39 +1,118 @@
+// Single source of truth for the hub cards, per-page <title>/meta tags,
+// the prerendered route HTML, the sitemap and the OG images (see
+// scripts/vite-plugin-pages.js and scripts/og.mjs).
+//
 // Add a new entry here each time a new experiment is built.
-// `path` must match a <Route> in App.jsx. Omit `path` (or set active:false)
-// for a "coming soon" placeholder card.
+// `path` must match a <Route> in App.jsx. Set `addedAt` (YYYY-MM-DD) so the
+// hub can flag it as "New" for visitors who haven't opened it yet.
+// Omit `path` (or set active:false) for a "coming soon" placeholder card.
+
+export const SITE = {
+  name: 'The Fun Lab',
+  url: 'https://fun.alevasquez.dev',
+  description: 'A playground of fun side experiments by Alejandro Vasquez — color, type and design-system tools built for fun.',
+  author: 'Alejandro Vasquez',
+  // Umami Cloud (free Hobby plan, cookieless). Paste the Website ID from
+  // cloud.umami.is → Settings → Websites. Empty = no analytics script.
+  umamiWebsiteId: '',
+};
+
 export const experiments = [
   {
     id: 'palette-generator',
+    category: 'Color',
     path: '/palette-generator',
     emoji: '🎨',
     accent: '#ff8a8a',
     title: 'Palette Generator',
     description: 'Pick a hue, choose a color harmony, and get a full accessible palette with live AA/AAA contrast checking.',
-    tag: 'New',
+    addedAt: '2026-09-30',
     active: true,
   },
   {
-    id: 'placeholder-1',
-    emoji: '🧪',
-    accent: '#7cc4ff',
-    title: 'Coming soon',
-    description: "Something else fun is brewing here.",
-    active: false,
-  },
-  {
-    id: 'placeholder-2',
-    emoji: '🛸',
+    id: 'contrast-checker',
+    category: 'Accessibility',
+    path: '/contrast-checker',
+    emoji: '🌗',
     accent: '#ffd56e',
-    title: 'Coming soon',
-    description: 'Another experiment, not quite ready yet.',
-    active: false,
+    title: 'Contrast Checker',
+    description: 'Paste two colors, see the WCAG ratio, and fix a failing pair with a single click.',
+    addedAt: '2026-10-01',
+    active: true,
   },
   {
-    id: 'placeholder-3',
-    emoji: '🌀',
+    id: 'image-palette',
+    category: 'Color',
+    path: '/image-palette',
+    emoji: '🖼️',
+    accent: '#7cc4ff',
+    title: 'Image → Palette',
+    description: 'Drop in an image, pull out its dominant colors, and see which pairs are safe to use together.',
+    addedAt: '2026-10-01',
+    active: true,
+  },
+  {
+    id: 'color-blindness',
+    category: 'Accessibility',
+    path: '/color-blindness',
+    emoji: '👁️',
     accent: '#c792ff',
-    title: 'Coming soon',
-    description: 'This slot is reserved for the next idea.',
-    active: false,
+    title: 'Color Blindness Simulator',
+    description: 'See a palette through protanopia, deuteranopia, tritanopia and achromatopsia — and catch colors that collapse.',
+    addedAt: '2026-10-01',
+    active: true,
+  },
+  {
+    id: 'type-scale',
+    category: 'Typography',
+    path: '/type-scale',
+    emoji: '🔠',
+    accent: '#8af0c4',
+    title: 'Type Scale Generator',
+    description: 'Pick a base size and a ratio, get a full type scale with live preview, fluid clamp() and tokens to copy.',
+    addedAt: '2026-10-01',
+    active: true,
+  },
+  {
+    id: 'gradient-generator',
+    category: 'Color',
+    path: '/gradient-generator',
+    emoji: '🌈',
+    accent: '#ff9ad5',
+    title: 'Gradient & Mesh Generator',
+    description: 'Linear, radial, conic or blobby mesh gradients — drag the points, shuffle the colors, copy the CSS.',
+    addedAt: '2026-10-01',
+    active: true,
+  },
+  {
+    id: 'component-states',
+    category: 'Components',
+    path: '/component-states',
+    emoji: '🧩',
+    accent: '#ffb072',
+    title: 'Component States Explorer',
+    description: 'Buttons, inputs and cards in every state — hover, focus, pressed, disabled, error — side by side with contrast checks.',
+    addedAt: '2026-10-01',
+    active: true,
   },
 ];
+
+export function getExperiment(id) {
+  return experiments.find(e => e.id === id);
+}
+
+export const HOME_META = {
+  title: `${SITE.name} — fun.alevasquez.dev`,
+  description: SITE.description,
+  path: '/',
+  image: '/og/home.png',
+};
+
+export function getPageMeta(exp) {
+  return {
+    title: `${exp.title} — ${SITE.name}`,
+    description: exp.description,
+    path: exp.path,
+    image: `/og/${exp.id}.png`,
+  };
+}

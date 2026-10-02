@@ -1,22 +1,29 @@
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
-import { experiments } from '../experiments';
+import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
+import { useMemo, useRef, useState } from 'react';
+import { experiments, HOME_META } from '../experiments';
+import Background from '../components/Background';
 import SiteNav from '../components/SiteNav';
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.07, delayChildren: 0.1 } },
-};
-const item = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
-};
+import usePageMeta from '../hooks/usePageMeta';
+import { isNew } from '../lib/seen';
+import { Reveal, Segmented } from '../components/ui';
+import { EASE } from '../lib/motion';
+import ParticleField from '../components/motion/ParticleField';
+import Magnetic from '../components/motion/Magnetic';
+import SplitText from '../components/motion/SplitText';
+import Marquee from '../components/motion/Marquee';
 
 const MotionLink = motion.create(Link);
 
-function ExpCard({ exp }) {
+function ExpCard({ exp, fresh, index }) {
   const ref = useRef(null);
+  // 3D tilt: pointer position → spring-smoothed rotateX/rotateY.
+  const px = useMotionValue(0.5), py = useMotionValue(0.5);
+  const spring = { stiffness: 200, damping: 18, mass: 0.5 };
+  const rotateX = useSpring(useTransform(py, [0, 1], [9, -9]), spring);
+  const rotateY = useSpring(useTransform(px, [0, 1], [-11, 11]), spring);
+  const emojiX = useSpring(useTransform(px, [0, 1], [-10, 10]), spring);
+  const emojiY = useSpring(useTransform(py, [0, 1], [-10, 10]), spring);
 
   function handleMouseMove(e) {
     const el = ref.current;
@@ -24,95 +31,199 @@ function ExpCard({ exp }) {
     const rect = el.getBoundingClientRect();
     el.style.setProperty('--mx', `${e.clientX - rect.left}px`);
     el.style.setProperty('--my', `${e.clientY - rect.top}px`);
+    px.set((e.clientX - rect.left) / rect.width);
+    py.set((e.clientY - rect.top) / rect.height);
   }
+  function handleMouseLeave() { px.set(0.5); py.set(0.5); }
 
-  const content = (
-    <>
-      <div className="exp-card-glow" />
-      <div className="exp-card-sheen" />
-      {exp.tag && <span className="exp-card-tag">{exp.tag}</span>}
-      <motion.div className="exp-card-emoji" whileHover={exp.active ? { rotate: [0, -8, 8, -4, 0], scale: 1.15 } : {}} transition={{ duration: 0.5 }}>
-        {exp.emoji}
-      </motion.div>
-      <div>
-        <div className="exp-card-title">{exp.title}</div>
-        <p className="exp-card-desc">{exp.description}</p>
-      </div>
-    </>
-  );
-  const style = { '--card-accent': exp.accent };
+  // Scroll parallax: columns travel at different speeds.
+  const wrapRef = useRef(null);
+  const { scrollYProgress } = useScroll({ target: wrapRef, offset: ['start end', 'end start'] });
+  const depth = [40, -10, 70][index % 3];
+  const parallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [depth, -depth]), { stiffness: 120, damping: 24 });
 
-  const motionProps = exp.active
-    ? {
-        whileHover: { y: -8, rotate: -1, transition: { type: 'spring', stiffness: 300, damping: 18 } },
-        whileTap: { scale: 0.97, rotate: 0 },
-      }
-    : {};
-
-  return exp.active ? (
-    <motion.div variants={item}>
+  return (
+    <motion.div
+      ref={wrapRef}
+      layout
+      initial={{ opacity: 0, y: 30, scale: 0.97 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.94, transition: { duration: 0.2 } }}
+      transition={{ duration: 0.6, ease: EASE, delay: 0.05 * index }}
+    >
+      <motion.div style={{ y: parallaxY, height: '100%' }}>
       <MotionLink
         ref={ref}
         to={exp.path}
-        className="exp-card active"
-        style={style}
+        className="exp-card"
+        style={{ '--card-accent': exp.accent, rotateX, rotateY, transformPerspective: 900 }}
         onMouseMove={handleMouseMove}
-        {...motionProps}
+        onMouseLeave={handleMouseLeave}
+        data-cursor="Open"
+        whileHover={{ y: -8, transition: { type: 'spring', stiffness: 300, damping: 20 } }}
+        whileTap={{ scale: 0.98 }}
       >
-        {content}
+        <div className="exp-card-glow" />
+        <div className="exp-card-sheen" />
+        <div className="exp-card-top">
+          <motion.div
+            className="exp-card-emoji"
+            style={{ x: emojiX, y: emojiY, translateZ: 40 }}
+            whileHover={{ rotate: [0, -10, 10, -5, 0], scale: 1.12 }}
+            transition={{ duration: 0.5 }}
+            aria-hidden="true"
+          >
+            {exp.emoji}
+          </motion.div>
+          {fresh && <span className="new-badge">New</span>}
+        </div>
+        <div>
+          <h3 className="exp-card-title">{exp.title}</h3>
+          <p className="exp-card-desc">{exp.description}</p>
+        </div>
+        <div className="exp-card-foot">
+          <span>{exp.category}</span>
+          <span className="exp-card-go" aria-hidden="true">→</span>
+        </div>
       </MotionLink>
-    </motion.div>
-  ) : (
-    <motion.div variants={item} className="exp-card placeholder" style={style}>
-      {content}
+      </motion.div>
     </motion.div>
   );
 }
 
 export default function Home() {
+  usePageMeta(HOME_META);
+  const [filter, setFilter] = useState('All');
+  // Computed once per visit, so badges don't vanish mid-session.
+  const [freshIds] = useState(() => new Set(experiments.filter(e => isNew(e)).map(e => e.id)));
+
+  const active = experiments.filter(e => e.active);
+  const categories = useMemo(() => ['All', ...new Set(active.map(e => e.category))], [active]);
+  const shown = filter === 'All' ? active : active.filter(e => e.category === filter);
+
+  // Framer-style scroll choreography: the hero card shrinks and fades as it
+  // leaves, while its orb rises; the section title drifts in from the side.
+  const heroRef = useRef(null);
+  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroScale = useTransform(heroProgress, [0, 1], [1, 0.9]);
+  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0.2]);
+  const heroContentY = useTransform(heroProgress, [0, 1], [0, 120]);
+  const orbY = useTransform(heroProgress, [0, 1], ['0%', '-60%']);
+  const orbScale = useTransform(heroProgress, [0, 1], [1, 1.5]);
+
+  const sectionRef = useRef(null);
+  const { scrollYProgress: sectionProgress } = useScroll({ target: sectionRef, offset: ['start end', 'start center'] });
+  const titleX = useTransform(sectionProgress, [0, 1], [80, 0]);
+
+  // The grid leans with scroll velocity, then settles.
+  const { scrollY } = useScroll();
+  const gridSkew = useSpring(useTransform(useVelocity(scrollY), [-2500, 0, 2500], [2.5, 0, -2.5]), { stiffness: 300, damping: 40 });
+
   return (
-    <div className="hub">
-      <div className="hub-glow-orb" />
-      <div className="hub-inner">
+    <div className="page">
+      <Background />
+      <div className="page-inner">
         <SiteNav />
-        <motion.header
-          className="hub-header"
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="hub-kicker">fun.alevasquez.dev</span>
-          <h1 className="hub-title">The Fun Lab</h1>
-          <p className="hub-sub">
-            A small playground of side experiments — things built for fun, to learn something,
-            or just because. Pick a card to try one.
-          </p>
+
+        <motion.header ref={heroRef} className="hub-hero" style={{ scale: heroScale, opacity: heroOpacity }}>
+          <ParticleField className="hero-canvas" />
+          <motion.div className="hub-hero-orb" aria-hidden="true" style={{ y: orbY, scale: orbScale }} />
+          <motion.div style={{ y: heroContentY }}>
+          <motion.div
+            className="hub-kicker"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE }}
+          >
+            <span className="gradient-dot" /> Alejandro Vasquez · code playground
+          </motion.div>
+          <h1 className="hub-title" aria-label="The Fun Lab">
+            <SplitText text="The Fun" delay={0.15} stagger={0.04} reactive />{' '}
+            <SplitText text="Lab" as="em" delay={0.45} stagger={0.06} reactive />
+          </h1>
+          <motion.p
+            className="hub-sub"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
+          >
+            Small, fun tools I build on the side — color, type and design-system experiments with
+            accessibility baked in. Pick one and play.
+          </motion.p>
+          <motion.div
+            className="hub-hero-actions"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: EASE, delay: 0.45 }}
+          >
+            <Magnetic>
+            <motion.a href="#experiments" className="btn btn-chip" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+              <span className="gradient-dot" /> Explore {active.length} experiments
+              {freshIds.size > 0 && <span className="muted" style={{ color: 'inherit', opacity: 0.6 }}>· {freshIds.size} new</span>}
+            </motion.a>
+            </Magnetic>
+            <Magnetic>
+            <motion.a
+              href="https://www.alevasquez.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+            >
+              See my work <span className="arrow" aria-hidden="true">›</span>
+            </motion.a>
+            </Magnetic>
+          </motion.div>
+          </motion.div>
         </motion.header>
 
-        <motion.div className="card-grid" variants={container} initial="hidden" animate="show">
-          {experiments.map(exp => <ExpCard key={exp.id} exp={exp} />)}
-        </motion.div>
+        <Marquee items={['Color', 'Accessibility', 'Typography', 'Design tokens', 'WCAG 2.2', 'React', 'Canvas', 'Motion']} />
 
-        <motion.div
-          className="hub-cta"
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <motion.a
-            href="https://www.alevasquez.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hub-cta-pill"
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
-          >
-            Do you want to work with me? <span aria-hidden="true">→</span>
-          </motion.a>
-        </motion.div>
+        <section id="experiments" ref={sectionRef} style={{ scrollMarginTop: 96 }}>
+          <Reveal className="hub-section-head">
+            <motion.div style={{ x: titleX }}>
+              <SplitText as="h2" className="hub-section-title" text="Experiments" inView stagger={0.03} />
+            </motion.div>
+            <Segmented
+              label="Filter experiments"
+              options={categories.map(c => ({ value: c, label: c }))}
+              value={filter}
+              onChange={setFilter}
+            />
+          </Reveal>
 
-        <footer className="hub-footer">
-          Built by Alejandro Vasquez · more experiments added over time
+          <motion.div layout className="card-grid" style={{ skewY: gridSkew }}>
+            <AnimatePresence mode="popLayout">
+              {shown.map((exp, i) => <ExpCard key={exp.id} exp={exp} index={i} fresh={freshIds.has(exp.id)} />)}
+            </AnimatePresence>
+          </motion.div>
+        </section>
+
+        <Reveal as="section" className="hub-cta">
+          <div className="hub-hero-orb" aria-hidden="true" style={{ opacity: 0.3 }} />
+          <SplitText as="h2" text="Do you want to work with me?" inView stagger={0.018} />
+          <p className="hub-sub" style={{ marginBottom: 28 }}>
+            I build design systems and the tools around them. These experiments are the fun side of that.
+          </p>
+          <Magnetic strength={0.5}>
+            <motion.a
+              href="https://www.alevasquez.dev/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-chip"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.96 }}
+              data-cursor="Hi! 👋"
+            >
+              <span className="gradient-dot" /> Connect with me <span className="arrow" aria-hidden="true">→</span>
+            </motion.a>
+          </Magnetic>
+        </Reveal>
+
+        <footer className="site-footer">
+          <span>Built for fun by Alejandro Vasquez</span>
+          <span>New experiments added over time</span>
         </footer>
       </div>
     </div>
