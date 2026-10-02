@@ -140,13 +140,15 @@ function sendConfirmation_(email, list, lang, token) {
   const waitlist = list === 'waitlist';
   const what = waitlist ? t('the Lab Pro waitlist', 'la lista de espera de Lab Pro') : t("the Ale's Fun Lab newsletter", "la newsletter de Ale's Fun Lab");
   const subject = t('Confirm your subscription \u2726', 'Confirma tu suscripci\u00F3n \u2726');
+  // Emojis as HTML entities: GmailApp garbles characters outside the BMP
+  // (surrogate pairs) in htmlBody, entities survive every mail client.
   const perks = waitlist
-    ? [['\uD83D\uDE80', t('Be first to know when Lab Pro launches', 'Ent\u00E9rate primero cuando lance Lab Pro')],
-       ['\uD83E\uDDE9', t('Early access to the Figma plugins', 'Acceso anticipado a los plugins de Figma')],
-       ['\uD83D\uDCAC', t('Your feedback shapes what gets built', 'Tu opini\u00F3n define lo que se construye')]]
-    : [['\uD83E\uDDEA', t('New free tools as soon as they ship', 'Herramientas gratis nuevas apenas salen')],
-       ['\uD83D\uDCD8', t('Practical guides on design systems, accessibility and front-end', 'Gu\u00EDas pr\u00E1cticas de design systems, accesibilidad y front-end')],
-       ['\u2726', t('Early access to Lab Pro and the Figma plugins', 'Acceso anticipado a Lab Pro y los plugins de Figma')]];
+    ? [['&#x1F680;', t('Be first to know when Lab Pro launches', 'Ent\u00E9rate primero cuando lance Lab Pro')],
+       ['&#x1F9E9;', t('Early access to the Figma plugins', 'Acceso anticipado a los plugins de Figma')],
+       ['&#x1F4AC;', t('Your feedback shapes what gets built', 'Tu opini\u00F3n define lo que se construye')]]
+    : [['&#x1F9EA;', t('New free tools as soon as they ship', 'Herramientas gratis nuevas apenas salen')],
+       ['&#x1F4D8;', t('Practical guides on design systems, accessibility and front-end', 'Gu\u00EDas pr\u00E1cticas de design systems, accesibilidad y front-end')],
+       ['&#x2726;', t('Early access to Lab Pro and the Figma plugins', 'Acceso anticipado a Lab Pro y los plugins de Figma')]];
   const font = "'Helvetica Neue',Helvetica,Arial,sans-serif";
   const perkRows = perks.map(([icon, label]) =>
     '<tr><td style="padding:6px 0;vertical-align:top;width:44px">' +
