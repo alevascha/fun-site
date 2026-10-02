@@ -7,11 +7,15 @@
 // hub can flag it as "New" for visitors who haven't opened it yet.
 // Omit `path` (or set active:false) for a "coming soon" placeholder card.
 
+import { SEO } from './seo.js';
+
 export const SITE = {
   name: "Ale's Fun Lab",
   url: 'https://fun.alevasquez.dev',
-  description: 'A playground of fun side experiments by Alejandro Vasquez — color, type and design-system tools built for fun.',
+  description: 'Free design and accessibility tools by Alejandro Vasquez: color palettes, WCAG contrast checker, design token converter, type scales, easing curves and more.',
   author: 'Alejandro Vasquez',
+  authorUrl: 'https://www.alevasquez.dev/',
+  sameAs: ['https://www.alevasquez.dev/', 'https://www.linkedin.com/in/aledvascha/'],
   // Umami Cloud (free Hobby plan, cookieless). Paste the Website ID from
   // cloud.umami.is → Settings → Websites. Empty = no analytics script.
   umamiWebsiteId: 'edf8df86-dccd-4aa7-9d8c-04e63ea232ab',
@@ -168,16 +172,21 @@ export function getExperiment(id) {
 }
 
 export const HOME_META = {
-  title: `${SITE.name} — fun.alevasquez.dev`,
+  title: `Free Design & Accessibility Tools — ${SITE.name}`,
   description: SITE.description,
   path: '/',
   image: '/og/home.png',
 };
 
+export function getSeo(id) {
+  return SEO[id] || {};
+}
+
 export function getPageMeta(exp) {
+  const seo = getSeo(exp.id);
   return {
-    title: `${exp.title} — ${SITE.name}`,
-    description: exp.description,
+    title: `${seo.title || exp.title} — ${SITE.name}`,
+    description: seo.description || exp.description,
     path: exp.path,
     image: `/og/${exp.id}.png`,
   };

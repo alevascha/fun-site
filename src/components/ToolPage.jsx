@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import SiteNav from './SiteNav';
 import Background from './Background';
-import { experiments, getExperiment, getPageMeta } from '../experiments';
+import { experiments, getExperiment, getPageMeta, getSeo } from '../experiments';
 import usePageMeta from '../hooks/usePageMeta';
 import { markOpened } from '../lib/seen';
 import { Reveal } from './ui';
@@ -16,6 +16,7 @@ export default function ToolPage({ id, intro, children }) {
   useEffect(() => { markOpened(id); }, [id]);
 
   const others = experiments.filter(e => e.active && e.id !== id);
+  const seo = getSeo(id);
 
   // The header drifts up and fades as the tool scrolls into focus.
   const headerRef = useRef(null);
@@ -63,6 +64,32 @@ export default function ToolPage({ id, intro, children }) {
         </motion.header>
 
         <main>{children}</main>
+
+        {(seo.features?.length > 0 || seo.faq?.length > 0) && (
+          <Reveal as="section" className="grid-2" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-label="About this tool">
+            {seo.features?.length > 0 && (
+              <div className="card">
+                <h2 className="card-title">What it does</h2>
+                <ul className="muted" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
+                  {seo.features.map(f => <li key={f}>{f}</li>)}
+                </ul>
+              </div>
+            )}
+            {seo.faq?.length > 0 && (
+              <div className="card">
+                <h2 className="card-title">FAQ</h2>
+                <div className="stack" style={{ gap: 8 }}>
+                  {seo.faq.map(f => (
+                    <details key={f.q} className="faq">
+                      <summary>{f.q}</summary>
+                      <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            )}
+          </Reveal>
+        )}
 
         <Reveal as="section" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="more-title">
           <h2 id="more-title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 20px' }}>More experiments</h2>

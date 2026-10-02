@@ -63,4 +63,15 @@ for (const page of pages) {
   const png = new Resvg(svg(page), { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Hanken Grotesk' } }).render().asPng();
   await fs.writeFile(path.join(outDir, `${page.id}.png`), png);
 }
-console.log(`og: rendered ${pages.length} images → public/og/`);
+// App icons (apple-touch-icon, PWA manifest) from the same brand mark.
+const iconSvg = size => `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 64 64">
+  <defs><radialGradient id="g" cx="25%" cy="100%" r="100%"><stop offset="0" stop-color="#CD57FF"/><stop offset="1" stop-color="#FFCE1F"/></radialGradient></defs>
+  <rect width="64" height="64" fill="url(#g)"/>
+  <text x="32" y="46" text-anchor="middle" font-family="Crimson Pro" font-size="44" fill="#111011">f</text>
+</svg>`;
+const publicDir = path.join(root, '..', 'public');
+for (const [file, size] of [['apple-touch-icon.png', 180], ['icon-192.png', 192], ['icon-512.png', 512]]) {
+  const png = new Resvg(iconSvg(size), { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Crimson Pro' } }).render().asPng();
+  await fs.writeFile(path.join(publicDir, file), png);
+}
+console.log(`og: rendered ${pages.length} images → public/og/ and app icons`);

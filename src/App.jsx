@@ -19,6 +19,7 @@ const AutoTrim = lazy(() => import('./pages/AutoTrim'));
 const TextExpansion = lazy(() => import('./pages/TextExpansion'));
 const A11yAudit = lazy(() => import('./pages/A11yAudit'));
 const MultiSize = lazy(() => import('./pages/MultiSize'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 export default function App() {
   const location = useLocation();
@@ -65,7 +66,7 @@ export default function App() {
           <Route path="/text-expansion" element={<TextExpansion />} />
           <Route path="/a11y-audit" element={<A11yAudit />} />
           <Route path="/multi-size" element={<MultiSize />} />
-          <Route path="*" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
     </MotionConfig>
