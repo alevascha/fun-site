@@ -81,8 +81,11 @@
 
   /* -------------------------------------------------------------- theme */
   // The site's own toggle swaps colors; follow it by reading the page background.
+  let pageRoot = null; // Framer's full-page frame (it paints the page color)
   function syncTheme() {
-    const m = getComputedStyle(document.body).backgroundColor.match(/\d+(\.\d+)?/g);
+    let color = getComputedStyle(pageRoot || document.body).backgroundColor;
+    if (/rgba\(.*, 0\)$/.test(color)) color = getComputedStyle(document.body).backgroundColor;
+    const m = color.match(/\d+(\.\d+)?/g);
     if (!m) return;
     const [r, g, b] = m.map(Number);
     const light = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255 > 0.55;
@@ -441,8 +444,17 @@
   // Runs after Framer hydrates and again whenever it swaps DOM (client-side
   // navigation, breakpoint changes). Every step is idempotent.
   function enhance() {
-    syncTheme();
     const main = document.getElementById('main') || document.body;
+
+    // The page frame paints an opaque color over <body>, so the backdrop
+    // lives inside it as the first child (above its color, below sections).
+    const frameEl = document.elementsFromPoint(4, innerHeight / 2).find(el => main.contains(el) && el !== main
+      && el.offsetWidth >= innerWidth * 0.9 && !/rgba\(.*, 0\)$|transparent/.test(getComputedStyle(el).backgroundColor));
+    if (frameEl && frameEl !== pageRoot) {
+      pageRoot = frameEl;
+      pageRoot.prepend(bg);
+    }
+    syncTheme();
 
     // Hero heading: rise in, react, gradient on the words after "Between".
     main.querySelectorAll('h1').forEach(h => {
