@@ -48,13 +48,12 @@
   .avfx-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:2147483001;pointer-events:none;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#CD57FF,#ff7ab6 50%,#FFCE1F)}
   .avfx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;border-radius:inherit;-webkit-mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%);mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%)}
   .avfx-ring,.avfx-dot{position:fixed;top:0;left:0;z-index:2147483002;pointer-events:none;border-radius:999px;translate:-50% -50%;opacity:0;transition:opacity .25s}
-  .avfx-ring{width:34px;height:34px;display:grid;place-items:center;border:1.5px solid rgba(205,87,255,.7);background:rgba(205,87,255,.06);font:600 13px/1 "Hanken Grotesk","Inter",system-ui,sans-serif;color:#111011;transition:width .35s ${EASE},height .35s ${EASE},background-color .25s,border-color .25s,border-radius .25s,opacity .25s,scale .15s}
+  .avfx-ring{width:34px;height:34px;display:grid;place-items:center;border:1.5px solid rgba(205,87,255,.7);background:rgba(205,87,255,.06);font:600 13px/1 "Hanken Grotesk","Inter",system-ui,sans-serif;color:#111011;transition:width .35s ${EASE},height .35s ${EASE},background-color .25s,border-color .25s,border-radius .25s,opacity .25s}
   .avfx-ring span{opacity:0;scale:.6;transition:opacity .2s,scale .3s ${EASE}}
   .avfx-ring[data-mode=hover]{width:54px;height:54px;background:rgba(205,87,255,.14);border-color:rgba(205,87,255,.95)}
   .avfx-ring[data-mode=label]{width:86px;height:86px;border-color:transparent;background:linear-gradient(135deg,#CD57FF,#FFCE1F);box-shadow:0 10px 30px -8px rgba(205,87,255,.6)}
   .avfx-ring[data-mode=label] span{opacity:1;scale:1}
   .avfx-ring[data-mode=text]{width:4px;height:28px;border-radius:3px;background:#CD57FF;border-color:transparent}
-  .avfx-down .avfx-ring{scale:.8}
   .avfx-dot{width:6px;height:6px;background:var(--avfx-ink)}
   .avfx-ring[data-mode=label]+.avfx-dot{opacity:0!important}
   .avfx-ch{display:inline-block;transition:transform .35s ${EASE};will-change:transform}
@@ -158,8 +157,9 @@
     schedule();
   }, { passive: true });
   document.addEventListener('pointerleave', () => { if (!coarse) bg.dataset.active = spot.dataset.active = 'false'; });
+  let pressed = false;
   addEventListener('pointerdown', e => {
-    document.documentElement.classList.add('avfx-down');
+    if (e.pointerType === 'mouse' || e.pointerType === 'pen') pressed = true;
     if (e.pointerType !== 'touch' || reduce) return;
     const dot = document.createElement('span');
     dot.className = 'avfx-ripple';
@@ -168,7 +168,9 @@
     document.body.appendChild(dot);
     dot.addEventListener('animationend', () => dot.remove(), { once: true });
   }, { passive: true });
-  addEventListener('pointerup', () => document.documentElement.classList.remove('avfx-down'));
+  // A long press can become a drag or a context menu with no pointerup, so
+  // release on every way a press can end.
+  for (const n of ['pointerup', 'pointercancel', 'dragstart', 'contextmenu', 'blur', 'resize']) addEventListener(n, () => { pressed = false; }, { passive: true });
 
   // Touch: the light wanders on its own and jumps to your finger.
   if (coarse && !reduce) {
@@ -201,13 +203,16 @@
     dot.className = 'avfx-dot';
     dot.setAttribute('aria-hidden', 'true');
     document.body.append(ring, dot);
-    let rx = ptr.x, ry = ptr.y, vx = 0, vy = 0, shown = false;
+    let rx = ptr.x, ry = ptr.y, vx = 0, vy = 0, sc = 1, shown = false;
     const tick = () => {
       // critically-damped-ish spring toward the pointer
       vx = (vx + (ptr.x - rx) * 0.2) * 0.62;
       vy = (vy + (ptr.y - ry) * 0.2) * 0.62;
       rx += vx; ry += vy;
-      ring.style.transform = `translate3d(${rx}px,${ry}px,0)`;
+      // Press shrink lives in the same transform, after the translate. (A CSS
+      // `scale` would also scale the offset and push the ring off the pointer.)
+      sc += ((pressed ? 0.8 : 1) - sc) * 0.3;
+      ring.style.transform = `translate3d(${rx}px,${ry}px,0) scale(${sc.toFixed(3)})`;
       dot.style.transform = `translate3d(${ptr.x}px,${ptr.y}px,0)`;
       requestAnimationFrame(tick);
     };

@@ -6,6 +6,7 @@ import Magnetic from './motion/Magnetic';
 import { useCounterpart, useLang } from '../i18n';
 import { track } from '../lib/analytics';
 import CommandHint from './CommandHint';
+import { glideToTop } from '../lib/smoothScroll';
 
 /* EN | ES pill that jumps to the same page in the other language. */
 function LangSwitch() {
@@ -52,7 +53,13 @@ export default function SiteNav() {
       animate={{ y: hidden ? -96 : 0, opacity: hidden ? 0 : 1, scale: hidden ? 0.96 : 1 }}
       transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Link to={to('/')} className="site-nav-brand" aria-label={t("Ale's Fun Lab — home", "Ale's Fun Lab — inicio")}>
+      <Link
+        to={to('/')}
+        className="site-nav-brand"
+        aria-label={onHome ? t("Ale's Fun Lab — back to top", "Ale's Fun Lab — volver arriba") : t("Ale's Fun Lab — home", "Ale's Fun Lab — inicio")}
+        // Already home: the logo works as "back to top" instead of a no-op.
+        onClick={e => { if (onHome) { e.preventDefault(); glideToTop(); } }}
+      >
         <motion.span className="site-nav-logo" whileHover={{ rotate: -12, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400, damping: 14 }}>
           f
         </motion.span>

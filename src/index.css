@@ -1149,13 +1149,12 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
   font-size: 13px;
   font-weight: 600;
   color: #111011;
-  transition: background-color 0.25s ease, border-color 0.25s ease, scale 0.15s ease;
+  transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 .cursor-hover { background: rgba(205, 87, 255, 0.14); border-color: rgba(205, 87, 255, 0.9); }
 .cursor-label { background: var(--accent-grad); border-color: transparent; box-shadow: 0 10px 30px -8px rgba(205, 87, 255, 0.6); }
 .cursor-text { border-radius: 3px; background: var(--focus); border-color: transparent; }
 .cursor-dot { width: 6px; height: 6px; background: var(--text); }
-.cursor-down .cursor-ring { scale: 0.8; }
 
 .hero-canvas {
   position: absolute;

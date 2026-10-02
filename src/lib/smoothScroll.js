@@ -22,3 +22,9 @@ export function scrollToTop() {
   if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
   else window.scrollTo(0, 0);
 }
+
+// Animated "back to top" (instant for reduced motion, where Lenis is off).
+export function glideToTop() {
+  if (lenis) lenis.scrollTo(0, { duration: 1.1, force: true });
+  else window.scrollTo({ top: 0, behavior: 'auto' });
+}

@@ -16,6 +16,7 @@ export default function Cursor() {
   const [mode, setMode] = useState('idle'); // idle | hover | label | text | down
   const [label, setLabel] = useState('');
   const [visible, setVisible] = useState(false);
+  const [pressed, setPressed] = useState(false);
 
   useEffect(() => {
     if (!enabled) return;
@@ -28,20 +29,23 @@ export default function Cursor() {
       else if (t.matches('input:not([type=range]):not([type=color]), textarea')) { setMode('text'); setLabel(''); }
       else { setMode('hover'); setLabel(''); }
     };
-    const leave = () => setVisible(false);
-    const down = () => document.documentElement.classList.add('cursor-down');
-    const up = () => document.documentElement.classList.remove('cursor-down');
+    const leave = () => { setVisible(false); setPressed(false); };
+    const down = e => { if (e.pointerType === 'mouse' || e.pointerType === 'pen') setPressed(true); };
+    // A long press can turn into a drag or a context menu, and then no
+    // pointerup arrives, so release on every way a press can end.
+    const up = () => setPressed(false);
+    const ends = ['pointerup', 'pointercancel', 'dragstart', 'contextmenu', 'blur', 'resize'];
     window.addEventListener('pointermove', move, { passive: true });
     window.addEventListener('pointerover', over, { passive: true });
     document.addEventListener('pointerleave', leave);
-    window.addEventListener('pointerdown', down);
-    window.addEventListener('pointerup', up);
+    window.addEventListener('pointerdown', down, { passive: true });
+    ends.forEach(n => window.addEventListener(n, up, { passive: true }));
     return () => {
       window.removeEventListener('pointermove', move);
       window.removeEventListener('pointerover', over);
       document.removeEventListener('pointerleave', leave);
       window.removeEventListener('pointerdown', down);
-      window.removeEventListener('pointerup', up);
+      ends.forEach(n => window.removeEventListener(n, up));
     };
   }, [enabled, x, y]);
 
@@ -55,7 +59,9 @@ export default function Cursor() {
         className={'cursor-ring cursor-' + mode}
         aria-hidden="true"
         style={{ x: rx, y: ry }}
-        animate={{ width: size, height: mode === 'text' ? 28 : size, opacity: visible ? 1 : 0 }}
+        // Scale goes through motion (after x/y), never CSS `scale`, which would
+        // also shrink the position offset and throw the ring off the pointer.
+        animate={{ width: size, height: mode === 'text' ? 28 : size, opacity: visible ? 1 : 0, scale: pressed ? 0.8 : 1 }}
         transition={{ type: 'spring', stiffness: 400, damping: 28 }}
       >
         <AnimatePresence>
