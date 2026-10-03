@@ -814,10 +814,10 @@ export default function DesignSystemShowcase(props) {
                         )}
 
                         {tab === "Guidelines" && (
-                            <Grid min={300}>
+                            <Grid min={440} gap={20}>
                                 {(t.docs.dos || DEFAULT_DOS).map((d, i) => (
                                     <Reveal key={i} i={i}>
-                                        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                                        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 200px), 1fr))", gap: 12, height: "100%" }}>
                                             <DoDont t={t} ok kind={d.kind} text={d.do} />
                                             <DoDont t={t} ok={false} kind={d.kind} text={d.dont} />
                                         </div>
@@ -932,17 +932,17 @@ function DoDont({ t, ok, kind, text }) {
     const c = ok ? t.sem.success : t.sem.error
     let demo = null
     if (kind === "primary") demo = ok
-        ? <div style={{ display: "flex", gap: 8 }}><Button kind="primary" t={t} size="S">{t.s.cta}</Button><Button kind="ghost" t={t} size="S">Later</Button></div>
-        : <div style={{ display: "flex", gap: 8 }}><Button kind="primary" t={t} size="S">{t.s.cta}</Button><Button kind="primary" t={t} size="S">Buy</Button></div>
+        ? <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}><Button kind="primary" t={t} size="S">{t.s.cta}</Button><Button kind="ghost" t={t} size="S">Later</Button></div>
+        : <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 8 }}><Button kind="primary" t={t} size="S">{t.s.cta}</Button><Button kind="primary" t={t} size="S">Buy</Button></div>
     else if (kind === "contrast") demo = <span style={{ font: `500 14px/1.4 ${t.body}`, color: ok ? t.text : alpha(t.text, 0.35) }}>Readable body text</span>
     else if (kind === "radius") demo = <div style={{ display: "flex", gap: 8 }}>{(ok ? [t.r.button, t.r.button, t.r.button] : [2, 18, 999]).map((r, i) => <span key={i} style={{ width: 40, height: 28, borderRadius: Math.min(r, 14), background: alpha(t.focus, 0.25), boxShadow: `inset 0 0 0 1.5px ${t.focus}` }} />)}</div>
     else if (kind === "copy") demo = <Button kind="primary" t={t} size="S">{ok ? t.s.cta : "Click here"}</Button>
     else if (kind === "spacing") demo = <div style={{ display: "flex", gap: ok ? 8 : 2 }}>{[0, 1, 2].map((i) => <span key={i} style={{ width: 28, height: 28, borderRadius: 6, background: alpha(t.focus, 0.3), marginTop: ok ? 0 : i * 5 }} />)}</div>
     else if (kind === "color") demo = <div style={{ display: "flex", gap: 6 }}>{(ok ? [t.accentFill, t.text, t.muted] : ["#FF00AA", "#00E5FF", "#FFD000", "#7CFF00"]).map((x, i) => <span key={i} style={{ width: 22, height: 22, borderRadius: 99, background: x }} />)}</div>
     return (
-        <div style={{ borderRadius: Math.min(t.r.card, 18), background: t.bg, boxShadow: `inset 0 0 0 1px ${t.border}, inset 0 3px 0 ${c}`, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
-            {demo && <div style={{ minHeight: 76, display: "grid", placeItems: "center", padding: 12, background: t.surface }}>{demo}</div>}
-            <div style={{ padding: 12, display: "flex", flexDirection: "column", gap: 6 }}>
+        <div style={{ borderRadius: Math.min(t.r.card, 16), background: t.bg, border: `1px solid ${t.border}`, borderTop: `3px solid ${c}`, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%" }}>
+            {demo && <div style={{ minHeight: 88, display: "flex", flexWrap: "wrap", alignItems: "center", justifyContent: "center", gap: 8, padding: 16, background: t.surface, borderBottom: `1px solid ${t.border}`, overflow: "hidden" }}>{demo}</div>}
+            <div style={{ padding: 14, display: "flex", flexDirection: "column", gap: 6 }}>
                 <span style={{ display: "flex", alignItems: "center", gap: 6, font: `700 12px/1 ${t.body}`, color: c, textTransform: "uppercase", letterSpacing: ".06em" }}>{ok ? Icon.check : Icon.x}{ok ? "Do" : "Don't"}</span>
                 <span style={{ font: `400 13px/1.45 ${t.body}`, color: t.text }}>{text}</span>
             </div>
