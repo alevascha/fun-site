@@ -70,9 +70,13 @@
   [data-avfx-mag]{transition:translate .5s ${EASE},scale .3s ${EASE}}
   [data-avfx-mag]:active{scale:.96}
   [data-avfx-icon]:hover{scale:1.08}
+  [data-avfx-cta]{transition:scale .7s ${EASE},box-shadow .5s ${EASE}}
+  [data-avfx-cta]:hover{scale:1.01;box-shadow:0 40px 90px -40px rgba(205,87,255,.45),0 0 0 1px rgba(205,87,255,.3)}
+  .avfx-cta-glow{position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .5s;background:radial-gradient(640px circle at var(--mx,50%) var(--my,50%),rgba(205,87,255,.22),rgba(255,206,31,.06) 45%,transparent 72%)}
+  [data-avfx-cta]:hover .avfx-cta-glow{opacity:1}
   .avfx-ripple{position:fixed;z-index:2147483002;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;pointer-events:none;border:2px solid rgba(205,87,255,.8);background:radial-gradient(circle,rgba(255,206,31,.35),transparent 70%);animation:avfx-ripple .7s ${EASE} forwards}
   @keyframes avfx-ripple{to{transform:scale(7);opacity:0}}
-  @media (prefers-reduced-motion:reduce){.avfx-orb{animation:none}.avfx-ch>i,.avfx-w>i{translate:0 0;rotate:0deg;transition:none}}
+  @media (prefers-reduced-motion:reduce){[data-avfx-cta]:hover{scale:1}.avfx-orb{animation:none}.avfx-ch>i,.avfx-w>i{translate:0 0;rotate:0deg;transition:none}}
   `;
   const style = document.createElement('style');
   style.id = 'avfx-style';
@@ -537,9 +541,36 @@
       if (el.closest('[data-framer-name="Project Cards"]')) {
         el.dataset.avfxLabel = 'View';
         el.parentElement.style.perspective = '1400px';
+        // The whole card opens the project, not just its "View Project" link.
+        // That link stays the one focusable target for keyboard and screen readers.
+        el.style.cursor = 'pointer';
+        el.addEventListener('click', e => {
+          if (e.defaultPrevented || e.target.closest('a, button')) return;
+          const link = el.querySelector('a[href]');
+          if (!link) return;
+          if (e.metaKey || e.ctrlKey || e.button === 1) window.open(link.href, '_blank', 'noopener');
+          else link.click();
+        });
       } else {
         el.parentElement.style.perspective = '1200px';
       }
+    });
+
+    // Closing "Ready to connect" banner: a glow that follows the pointer and a
+    // slight lift. No tilt; on a shape this wide it reads as wobble.
+    main.querySelectorAll('[data-framer-name="cta+links"] *').forEach(el => {
+      if (el.dataset.avfxCta || el.offsetWidth < 400 || parseFloat(getComputedStyle(el).borderTopLeftRadius) < 100) return;
+      el.dataset.avfxCta = '1';
+      if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
+      const glow = document.createElement('span');
+      glow.className = 'avfx-cta-glow';
+      glow.setAttribute('aria-hidden', 'true');
+      el.prepend(glow);
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+        el.style.setProperty('--my', `${e.clientY - r.top}px`);
+      }, { passive: true });
     });
 
     // Magnetic buttons, nav logo, social links; springy tool icons.
