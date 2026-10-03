@@ -517,6 +517,12 @@
     main.querySelectorAll('a[data-framer-name^="Primary"], a[data-framer-name="Logo"], [data-framer-name="social-media"] a, [data-framer-name="category"]').forEach(el => magnetic(el, 0.3));
     main.querySelectorAll('[data-framer-name="tools"] a').forEach(el => { el.dataset.avfxIcon = '1'; magnetic(el, 0.25); });
 
+    // Framer's Ticker clones its items with aria-hidden to make the loop
+    // seamless; keep links inside those clones out of the tab order too.
+    main.querySelectorAll('[aria-hidden="true"] :is(a[href], button, input, select, textarea, [tabindex])').forEach(el => {
+      if (el.tabIndex >= 0) el.tabIndex = -1;
+    });
+
     // Scroll parallax for large images in clipped frames.
     if (!reduce) main.querySelectorAll('img').forEach(img => {
       if (img.dataset.avfx || img.closest('[data-avfx-card]')) return;
