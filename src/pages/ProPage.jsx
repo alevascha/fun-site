@@ -43,7 +43,7 @@ export default function ProPage() {
   const { lang, t, to } = useLang();
   usePageMeta({
     title: t("Lab Pro for Figma — waitlist — Ale's Fun Lab", "Lab Pro para Figma — lista de espera — Ale's Fun Lab"),
-    description: t('Figma plugins built on the lab’s tools: token sync with Variables, a one-click contrast fixer, palettes to Variables and motion tokens. Join the waitlist.', 'Plugins de Figma basados en las herramientas del lab: sincronización de tokens con Variables, corrector de contraste en un clic, paletas a Variables y tokens de movimiento. Únete a la lista de espera.'),
+    description: t('Figma plugins built on the lab’s tools: token sync with Variables, a one-click contrast fixer, palettes to Variables and motion tokens. Join the waitlist.', 'Plugins de Figma con las herramientas del lab: tokens sincronizados con Variables, contraste corregido en un clic y paletas a Variables. Únete a la lista.'),
     path: to('/pro'),
     image: '/og/home.png',
     alternates: { en: '/pro', es: '/es/pro' },

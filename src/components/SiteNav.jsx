@@ -82,7 +82,7 @@ export default function SiteNav() {
         // Already home: the logo works as "back to top" instead of a no-op.
         onClick={e => { if (onHome) { e.preventDefault(); glideToTop(); } }}
       >
-        <motion.span className="site-nav-logo" whileHover={{ rotate: -12, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400, damping: 14 }}>
+        <motion.span className="site-nav-logo" aria-hidden="true" whileHover={{ rotate: -12, scale: 1.08 }} transition={{ type: 'spring', stiffness: 400, damping: 14 }}>
           f
         </motion.span>
         <span className="site-nav-brand-text">Ale's Fun Lab</span>

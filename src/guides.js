@@ -38,7 +38,7 @@ export const GUIDES = [
     "date": "2026-10-02",
     "minutes": 6,
     "en": {
-      "title": "From Figma Variables to Tailwind v4 (and CSS) without losing aliases",
+      "title": "Figma Variables to Tailwind v4 and CSS, aliases intact",
       "description": "How to export Figma Variables, what the W3C design token format looks like, and how to turn tokens into a Tailwind v4 @theme and CSS variables."
     },
     "es": {

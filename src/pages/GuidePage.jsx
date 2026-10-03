@@ -10,7 +10,7 @@ import usePageMeta from '../hooks/usePageMeta';
 import { GUIDES, getGuide, getGuideByEsSlug } from '../guides';
 import { SECTIONS } from '../guide-sections';
 import { useLang } from '../i18n';
-import { getExperiment } from '../experiments';
+import { getExperiment, withSite } from '../experiments';
 import NotFound from './NotFound';
 
 // `code` in prose → <code>
@@ -36,7 +36,7 @@ export default function GuidePage() {
 
   const content = guide?.[lang];
   usePageMeta({
-    title: content ? `${content.title} — Ale's Fun Lab` : "Ale's Fun Lab",
+    title: content ? withSite(content.title) : "Ale's Fun Lab",
     description: content?.description || '',
     path: guide ? to(`/guides/${guide.slug}`) : '/',
     image: guide ? `/og/${guide.tool}.png` : '/og/home.png',

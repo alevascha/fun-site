@@ -115,7 +115,7 @@ export const ES = {
     slug: 'estados-de-componentes',
     name: 'Explorador de estados de componentes',
     card: 'Botones, campos y tarjetas en todos sus estados (hover, foco, presionado, deshabilitado, error) con verificación de contraste.',
-    title: 'Generador de estados de componentes UI (hover, foco, deshabilitado)',
+    title: 'Estados de componentes UI: hover, foco y deshabilitado',
     description: 'Genera los estados hover, foco, presionado, deshabilitado, error y carga de botones, campos, interruptores y tarjetas desde un solo color, con verificación WCAG.',
     intro: 'Un color de acento entra y salen todos los estados interactivos, con las microinteracciones que les dan vida. Juega con los componentes en vivo y revisa cada estado lado a lado con su verificación WCAG (texto 4.5:1; anillos de foco, bordes y pistas 3:1).',
     features: [
@@ -133,7 +133,7 @@ export const ES = {
     slug: 'convertidor-de-tokens',
     name: 'Convertidor de design tokens',
     card: 'Pega tokens W3C, Tokens Studio o Variables de Figma y obtén CSS, SCSS, Tailwind v4 o SwiftUI, con alias incluidos.',
-    title: 'Convertidor de design tokens: Variables de Figma a CSS, Tailwind y SwiftUI',
+    title: 'Convertidor de design tokens: de Figma a CSS, Tailwind y SwiftUI',
     description: 'Convierte design tokens W3C, Tokens Studio o JSON de Variables de Figma en variables CSS, SCSS, Tailwind v4, SwiftUI o JSON plano. Con alias y modos.',
     intro: 'Pega design tokens W3C, un archivo de Tokens Studio o una exportación de Variables de Figma. Los alias se resuelven (o se mantienen como referencias cuando el formato lo permite), los compuestos como la tipografía se expanden, y obtienes CSS, SCSS, Tailwind v4, SwiftUI o JSON plano, todo en tu navegador.',
     features: [
@@ -241,8 +241,8 @@ export const ES = {
     slug: 'vista-previa-movil',
     name: 'Vista previa móvil',
     card: 'Abre cualquier sitio web dentro de marcos de iPhone, Pixel, Galaxy y iPad a su tamaño real. Gíralo o compara cuatro dispositivos a la vez.',
-    title: 'Vista previa móvil: prueba cualquier sitio en iPhone, Android y iPad',
-    description: 'Mira cualquier sitio web dentro de marcos de iPhone 16, iPhone SE, Pixel, Galaxy y iPad a su tamaño real de viewport. Gira a horizontal o compara cuatro dispositivos lado a lado. Gratis.',
+    title: 'Vista previa móvil: prueba sitios en iPhone, Android y iPad',
+    description: 'Mira cualquier sitio en marcos de iPhone, Pixel, Galaxy y iPad a su tamaño real de viewport. Gíralo o compara cuatro dispositivos a la vez. Gratis.',
     intro: 'Escribe cualquier dirección y mírala dentro de marcos reales de teléfonos y tablets, con el tamaño exacto de viewport de cada dispositivo. Gira a horizontal o compara cuatro dispositivos lado a lado.',
     features: [
       '7 dispositivos con su tamaño real de viewport CSS, del iPhone SE al iPad Air',
@@ -309,7 +309,7 @@ export const PAGE_PATHS = {
 
 export const HOME_ES = {
   title: "Herramientas gratuitas de diseño y accesibilidad — Ale's Fun Lab",
-  description: 'Herramientas gratuitas de diseño y accesibilidad de Alejandro Vasquez: paletas de colores, verificador de contraste WCAG, convertidor de design tokens, escalas tipográficas, curvas de animación y más.',
+  description: 'Herramientas gratis de diseño y accesibilidad: paletas, contraste WCAG, design tokens, escalas tipográficas, curvas de animación y más, por Alejandro Vasquez.',
 };
 
 export const esPath = id => (ES[id] ? `/es/${ES[id].slug}` : null);

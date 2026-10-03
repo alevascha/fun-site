@@ -16,7 +16,7 @@ export default function CommandHint() {
       aria-keyshortcuts={isMac ? 'Meta+K' : 'Control+K'}
     >
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-      <kbd className="hide-sm">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
+      <kbd className="hide-sm" aria-hidden="true">{isMac ? '⌘K' : 'Ctrl K'}</kbd>
     </motion.button>
   );
 }

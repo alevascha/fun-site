@@ -1,4 +1,4 @@
-import { experiments, getPageMeta, getSeo, HOME_META, HOME_META_ES, SITE } from '../src/experiments.js';
+import { experiments, getPageMeta, getSeo, HOME_META, HOME_META_ES, SITE, withSite } from '../src/experiments.js';
 import { STATIC_PAGES, STATIC_PAGES_ES } from '../src/pages-content.js';
 import { ES } from '../src/seo-es.js';
 import { GUIDES } from '../src/guides.js';
@@ -82,7 +82,7 @@ function simpleMeta(enPath, lang, title, description) {
 
 export const PRO_META = lang => simpleMeta('/pro', lang,
   L(lang, "Lab Pro for Figma — waitlist — Ale's Fun Lab", "Lab Pro para Figma — lista de espera — Ale's Fun Lab"),
-  L(lang, 'Figma plugins built on the lab’s tools: token sync with Variables, a one-click contrast fixer, palettes to Variables and motion tokens. Join the waitlist.', 'Plugins de Figma basados en las herramientas del lab: sincronización de tokens con Variables, corrector de contraste en un clic, paletas a Variables y tokens de movimiento. Únete a la lista de espera.'));
+  L(lang, 'Figma plugins built on the lab’s tools: token sync with Variables, a one-click contrast fixer, palettes to Variables and motion tokens. Join the waitlist.', 'Plugins de Figma con las herramientas del lab: tokens sincronizados con Variables, contraste corregido en un clic y paletas a Variables. Únete a la lista.'));
 export const GUIDES_META = lang => simpleMeta('/guides', lang,
   L(lang, "Guides: color, accessibility, type & tokens — Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens — Ale's Fun Lab"),
   L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation — each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
@@ -93,7 +93,7 @@ export const CHANGELOG_META = lang => simpleMeta('/changelog', lang,
   L(lang, "What's new — Ale's Fun Lab", "Novedades — Ale's Fun Lab"),
   L(lang, 'New tools, guides and improvements in Ale’s Fun Lab, newest first.', 'Nuevas herramientas, guías y mejoras en Ale’s Fun Lab, de la más reciente a la más antigua.'));
 export const guideMeta = (g, lang) => ({
-  title: `${g[lang].title} — ${SITE.name}`, description: g[lang].description, path: guidePath(g, lang), image: `/og/${g.tool}.png`,
+  title: withSite(g[lang].title), description: g[lang].description, path: guidePath(g, lang), image: `/og/${g.tool}.png`,
   lang, ogType: 'article', alternates: { en: guidePath(g, 'en'), es: guidePath(g, 'es') },
 });
 export const homeMeta = lang => (lang === 'es' ? HOME_META_ES : HOME_META);

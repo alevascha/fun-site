@@ -119,7 +119,7 @@ export default function HueHunt() {
       <div className="hh">
         <Reveal className="card hh-bar">
           <Segmented label={t('Mode', 'Modo')} value={mode} onChange={v => { setMode(v); track('Hue Hunt mode', { mode: v }); }} options={[{ value: 'daily', label: t('Daily challenge', 'Reto diario') }, { value: 'free', label: t('Free play', 'Juego libre') }]} />
-          <div className="hh-progress" aria-label={t(`Round ${Math.min(round + 1, ROUNDS)} of ${ROUNDS}`, `Ronda ${Math.min(round + 1, ROUNDS)} de ${ROUNDS}`)}>
+          <div className="hh-progress" role="img" aria-label={t(`Round ${Math.min(round + 1, ROUNDS)} of ${ROUNDS}`, `Ronda ${Math.min(round + 1, ROUNDS)} de ${ROUNDS}`)}>
             {Array.from({ length: ROUNDS }, (_, i) => (
               <span key={i} className={'hh-dot' + (i < results.length ? ' is-done' : i === round ? ' is-now' : '')} style={i < results.length ? { background: results[i].target } : undefined}>{i < results.length ? tile(results[i].score) : ''}</span>
             ))}

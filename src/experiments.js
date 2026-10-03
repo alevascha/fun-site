@@ -230,11 +230,15 @@ export function getSeo(id, lang = 'en') {
   return (lang === 'es' ? ES[id] : SEO[id]) || {};
 }
 
+// Search results cut titles off around 60 characters, so the site name is
+// only appended when the whole title still fits.
+export const withSite = title => (`${title} — ${SITE.name}`.length <= 65 ? `${title} — ${SITE.name}` : title);
+
 export function getPageMeta(exp, lang = 'en') {
   const seo = getSeo(exp.id, lang);
   const es = lang === 'es' && ES[exp.id];
   return {
-    title: `${seo.title || exp.title} — ${SITE.name}`,
+    title: withSite(seo.title || exp.title),
     description: seo.description || exp.description,
     path: es ? `/es/${ES[exp.id].slug}` : exp.path,
     image: `/og/${exp.id}.png`,
