@@ -131,7 +131,19 @@ const THEME_CSS =
   '[data-ogsc] .card{background:#1D1C1B!important}[data-ogsc] .ink{color:#F7F7F7!important}' +
   '[data-ogsc] .body{color:#D6D2CE!important}[data-ogsc] .btn{background:#F7F7F7!important;color:#111011!important}';
 
+function avatarBlob_() {
+  try {
+    const res = UrlFetchApp.fetch(SITE_URL + '/email/ale.jpg', { muteHttpExceptions: true });
+    return res.getResponseCode() === 200 ? res.getBlob().setName('ale.jpg') : null;
+  } catch (err) {
+    return null;
+  }
+}
+
 function sendConfirmation_(email, list, lang, token) {
+  // The header photo travels inside the email (cid:ale) instead of as a link:
+  // Gmail's image proxy sometimes fails remote images and shows a broken icon.
+  const avatar = avatarBlob_();
   const es = lang === 'es';
   // Links open pages on the site, which call doGet(?action=...) in the background.
   const confirm = SITE_URL + (es ? '/es/confirmar' : '/confirm') + '?t=' + token;
@@ -171,7 +183,7 @@ function sendConfirmation_(email, list, lang, token) {
     '<tr><td style="padding:0 8px 16px">' +
     '<table role="presentation" cellpadding="0" cellspacing="0"><tr>' +
     '<td style="padding-right:12px;vertical-align:middle">' +
-    '<img src="' + SITE_URL + '/email/ale.jpg" width="48" height="48" alt="Alejandro Vasquez" ' +
+    '<img src="' + (avatar ? 'cid:ale' : SITE_URL + '/email/ale.jpg') + '" width="48" height="48" alt="Alejandro Vasquez" ' +
     'style="display:block;width:48px;height:48px;border-radius:50%;border:2px solid #CD57FF;object-fit:cover"></td>' +
     '<td style="vertical-align:middle">' +
     '<div class="ink" style="font:400 22px/1.1 Georgia,\'Times New Roman\',serif;color:#111011">Ale\u2019s Fun Lab' +
@@ -210,6 +222,7 @@ function sendConfirmation_(email, list, lang, token) {
 
   const text = t('Confirm your subscription: ', 'Confirma tu suscripci\u00F3n: ') + confirm + '\n\n' + t('Unsubscribe: ', 'Darme de baja: ') + unsub;
   const opts = { htmlBody: html, name: "Ale's Fun Lab", replyTo: FROM };
+  if (avatar) opts.inlineImages = { ale: avatar };
   if (GmailApp.getAliases().indexOf(FROM) >= 0) opts.from = FROM;
   GmailApp.sendEmail(email, subject, text, opts);
 }
