@@ -31,8 +31,8 @@
 
   /* ---------------------------------------------------------------- CSS */
   const css = `
-  :root{--avfx-dot:rgba(255,255,255,.07);--avfx-dot-lit:rgba(226,170,255,.75);--avfx-spot:rgba(205,87,255,.16);--avfx-orb1:rgba(205,87,255,.20);--avfx-orb2:rgba(255,206,31,.10);--avfx-orb3:rgba(139,108,240,.16);--avfx-glow:rgba(205,87,255,.16);--avfx-ink:#f7f7f7}
-  html[data-avfx-theme=light]{--avfx-dot:rgba(17,16,17,.08);--avfx-dot-lit:rgba(150,40,210,.55);--avfx-spot:rgba(205,87,255,.10);--avfx-orb1:rgba(205,87,255,.16);--avfx-orb2:rgba(255,206,31,.16);--avfx-orb3:rgba(139,108,240,.12);--avfx-glow:rgba(205,87,255,.10);--avfx-ink:#111011}
+  :root{--avfx-dot:rgba(255,255,255,.07);--avfx-dot-lit:rgba(226,170,255,.75);--avfx-spot:rgba(205,87,255,.16);--avfx-orb1:rgba(205,87,255,.20);--avfx-orb2:rgba(255,206,31,.10);--avfx-orb3:rgba(139,108,240,.16);--avfx-glow:rgba(205,87,255,.16);--avfx-ink:#f7f7f7;--avfx-pill:#1a1919}
+  html[data-avfx-theme=light]{--avfx-dot:rgba(17,16,17,.08);--avfx-dot-lit:rgba(150,40,210,.55);--avfx-spot:rgba(205,87,255,.10);--avfx-orb1:rgba(205,87,255,.16);--avfx-orb2:rgba(255,206,31,.16);--avfx-orb3:rgba(139,108,240,.12);--avfx-glow:rgba(205,87,255,.10);--avfx-ink:#111011;--avfx-pill:#fff}
   .avfx-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;--cx:50vw;--cy:30vh;--px:0;--py:0}
   .avfx-orbs{position:absolute;inset:-10%;transition:translate 1.2s ${EASE}}
   .avfx-orb{position:absolute;border-radius:50%;filter:blur(80px);transition:translate 1.4s ${EASE}}
@@ -63,6 +63,9 @@
   .avfx-w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
   .avfx-w>i{display:inline-block;font-style:inherit;translate:0 105%;rotate:4deg;transition:translate .8s ${EASE},rotate .8s ${EASE};transition-delay:calc(var(--d,0)*1ms)}
   .avfx-grad{background-image:linear-gradient(90deg,#CD57FF,#ff7ab6 55%,#FFCE1F);background-size:calc(var(--n,1)*100%) 100%;background-position:calc(var(--i,0)/max(var(--n,1) - 1,1)*100%) 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;padding-right:.04em}
+  /* Fun Lab in the header menu: a gradient-ringed pill so it stands apart from the page links. */
+  [data-framer-name="Nav"] > a[href*="fun.alevasquez.dev"]{border-radius:999px;border:1px solid transparent;background:linear-gradient(120deg,rgba(205,87,255,.16),rgba(255,206,31,.07)) padding-box,linear-gradient(var(--avfx-pill),var(--avfx-pill)) padding-box,linear-gradient(120deg,#CD57FF,#ff7ab6 55%,#FFCE1F) border-box;box-shadow:0 0 18px -6px rgba(205,87,255,.55);transition:box-shadow .35s,translate .35s ${EASE}}
+  [data-framer-name="Nav"] > a[href*="fun.alevasquez.dev"]:hover{box-shadow:0 0 26px -4px rgba(205,87,255,.85);translate:0 -1px}
   [data-avfx-card]{transition:rotate .5s ${EASE},scale .5s ${EASE},box-shadow .4s}
   [data-avfx-card]:hover{scale:1.012;box-shadow:0 30px 60px -30px rgba(205,87,255,.35),0 0 0 1px rgba(205,87,255,.25)}
   [data-avfx-card] img{transition:scale .9s ${EASE}}
@@ -531,14 +534,24 @@
     if (hero) particles(hero);
 
     // Cards: project cards, testimonials and any big rounded opaque panel.
-    main.querySelectorAll('[data-framer-name="Project Cards"] [data-framer-name], [data-framer-name^="Testimonial-Card"]').forEach(el => {
-      if (el.dataset.avfxCard) return;
+    // The /project page lists the same card component outside a "Project Cards"
+    // frame, so a card is also the panel around any "View Project" link.
+    const isPanel = el => {
       const cs = getComputedStyle(el);
-      if (parseFloat(cs.borderTopLeftRadius) < 12 || cs.backgroundColor === 'rgba(0, 0, 0, 0)' || el.offsetWidth < 240) return;
+      return parseFloat(cs.borderTopLeftRadius) >= 12 && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && el.offsetWidth >= 240;
+    };
+    const viewPanels = [...main.querySelectorAll('a[href*="project/"]')]
+      .filter(a => /view project/i.test(a.textContent))
+      .map(a => { let p = a.parentElement; while (p && p !== main && !isPanel(p)) p = p.parentElement; return p !== main && p; })
+      .filter(Boolean);
+    const projectCards = new Set(viewPanels);
+    [...main.querySelectorAll('[data-framer-name="Project Cards"] [data-framer-name], [data-framer-name^="Testimonial-Card"]'), ...viewPanels].forEach(el => {
+      if (el.dataset.avfxCard) return;
+      if (!isPanel(el)) return;
       if (el.parentElement.closest('[data-avfx-card]')) return;
       el.dataset.avfxCard = '1';
       el.dataset.avfxBg = el.style.backgroundImage || '';
-      if (el.closest('[data-framer-name="Project Cards"]')) {
+      if (projectCards.has(el) || el.closest('[data-framer-name="Project Cards"]')) {
         el.dataset.avfxLabel = 'View';
         el.parentElement.style.perspective = '1400px';
         // The whole card opens the project, not just its "View Project" link.
