@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { EASE, REVEAL_VIEWPORT } from '../../lib/motion';
 
 /* Masked per-character reveal. Words stay unbroken; screen readers get the
-   plain string via aria-label. */
+   plain string from a visually hidden copy (aria-label isn't allowed on
+   plain span/em elements, so it would be ignored there). */
 /* With `reactive`:
    - desktop: letters near the cursor lift, grow and lean away from it;
    - touch: letters ride a sine wave driven by scroll position.
@@ -62,7 +63,8 @@ export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.02
     ? { initial: 'hidden', whileInView: 'show', viewport: REVEAL_VIEWPORT }
     : { initial: 'hidden', animate: 'show' };
   return (
-    <Comp ref={ref} className={className} style={style} aria-label={text} {...trigger}>
+    <Comp ref={ref} className={className} style={style} {...trigger}>
+      <span className="sr-only">{text}</span>
       {words.map((word, wi) => (
         <span key={wi} aria-hidden="true" style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>
           {[...word].map(ch => {
