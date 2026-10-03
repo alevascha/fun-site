@@ -28,3 +28,11 @@ export function glideToTop() {
   if (lenis) lenis.scrollTo(0, { duration: 1.1, force: true });
   else window.scrollTo({ top: 0, behavior: 'auto' });
 }
+
+// Pause page smooth-scrolling (e.g. while the pointer is over an embedded
+// page, so the page's momentum doesn't keep moving underneath it).
+export function holdSmoothScroll(hold) {
+  if (!lenis) return;
+  if (hold) lenis.stop();
+  else lenis.start();
+}

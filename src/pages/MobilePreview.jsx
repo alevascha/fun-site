@@ -4,10 +4,12 @@ import { AnimatePresence, motion } from 'framer-motion';
 import ToolPage from '../components/ToolPage';
 import { Reveal, Segmented } from '../components/ui';
 import useUrlState from '../hooks/useUrlState';
+import useIsTouch from '../hooks/useIsTouch';
 import { EASE } from '../lib/motion';
 import { useLang } from '../i18n';
 import { track } from '../lib/analytics';
 import { haptic } from '../lib/haptics';
+import { holdSmoothScroll } from '../lib/smoothScroll';
 
 /* Shows any page inside device frames at real CSS viewport sizes. The iframe
    is laid out at the device's width (so media queries fire as on the phone)
@@ -55,18 +57,38 @@ function normalize(raw) {
   }
 }
 
+// Width of a classic (non-overlay) scrollbar. The iframe is made that much
+// wider and clipped, so the framed page gets the device's exact width and
+// no desktop scrollbar shows inside the phone.
+let sbw = null;
+function scrollbarWidth() {
+  if (sbw != null) return sbw;
+  const el = document.createElement('div');
+  el.style.cssText = 'position:absolute;top:-9999px;width:100px;height:100px;overflow:scroll';
+  document.body.appendChild(el);
+  sbw = el.offsetWidth - el.clientWidth;
+  el.remove();
+  return sbw;
+}
+
 const hostOf = url => { try { return new URL(url).hostname.replace(/^www\./, ''); } catch { return ''; } };
 
 // Text color for a status bar drawn over `bg` (any CSS color).
 function inkFor(bg) {
-  const m = String(bg).match(/\d+(\.\d+)?/g);
-  if (!m || m.length < 3) return '#111';
-  const [r, g, b] = m.map(Number);
+  let rgb = String(bg).match(/\d+(\.\d+)?/g)?.map(Number);
+  const hex = String(bg).match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+  if (hex) {
+    const h = hex[1].length === 3 ? hex[1].replace(/./g, c => c + c) : hex[1];
+    rgb = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16));
+  }
+  if (!rgb || rgb.length < 3) return '#111';
+  const [r, g, b] = rgb;
   return 0.299 * r + 0.587 * g + 0.114 * b > 150 ? '#111' : '#fff';
 }
 
 /* The page's own top color, so the status bar blends in like Safari does.
-   Only readable for same-origin pages (this site); others keep white. */
+   Only readable for same-origin pages (this site); for other sites the
+   browser hides it, so the bar falls back to the chosen light/dark style. */
 function readTint(frame) {
   try {
     const doc = frame.contentDocument;
@@ -80,7 +102,7 @@ function readTint(frame) {
 }
 
 function StatusBar({ device, tint }) {
-  const bg = tint || '#fff';
+  const bg = tint || '#000';
   return (
     <div className="mp-bar" style={{ height: device.bar, background: bg, color: inkFor(bg) }} aria-hidden="true">
       <span className="mp-bar-time" style={{ fontSize: device.bar > 40 ? 16 : 12 }}>9:41</span>
@@ -93,10 +115,14 @@ function StatusBar({ device, tint }) {
   );
 }
 
-function Device({ device, landscape, url, scale, reload, index }) {
+function Device({ device, landscape, url, scale, reload, index, barStyle, touch }) {
   const { t } = useLang();
   const [loaded, setLoaded] = useState(false);
   const [tint, setTint] = useState(null);
+  // Touch screens: the frame ignores touches until tapped, so swiping over it
+  // still scrolls this page instead of trapping you inside the preview.
+  const [active, setActive] = useState(false);
+  const [sb] = useState(() => (typeof document === 'undefined' ? 0 : scrollbarWidth()));
   const w = landscape ? device.h : device.w;
   const h = landscape ? device.w : device.h;
   // Phones hide the status bar in landscape; tablets keep it.
@@ -124,22 +150,37 @@ function Device({ device, landscape, url, scale, reload, index }) {
         {classic && !landscape && <><span className="mp-speaker" /><span className="mp-home" /></>}
         {classic && landscape && <span className="mp-home mp-home-side" />}
         <div className="mp-screen" style={{ borderRadius: classic ? 4 : device.radius - device.bezel }}>
-          {bar > 0 && <StatusBar device={device} tint={tint} />}
+          {bar > 0 && <StatusBar device={device} tint={barStyle === 'auto' ? tint : barStyle === 'light' ? '#fff' : '#000'} />}
           {!landscape && device.cutout === 'island' && <span className="mp-island" />}
           {!landscape && device.cutout === 'hole' && <span className="mp-hole" style={{ top: bar / 2 - 6 }} />}
-          <div className="mp-view" style={{ top: bar }}>
+          <div
+            className="mp-view"
+            style={{ top: bar }}
+            onPointerEnter={e => { if (e.pointerType === 'mouse') holdSmoothScroll(true); }}
+            onPointerLeave={e => { if (e.pointerType === 'mouse') holdSmoothScroll(false); }}
+          >
             {!blocked && (
               <iframe
                 key={url + reload}
                 src={url}
                 title={t(`${url} on ${device.name}`, `${url} en ${device.name}`)}
-                width={w}
+                width={w + sb}
                 height={h - bar}
+                style={{ width: w + sb, pointerEvents: touch && !active ? 'none' : undefined }}
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
                 onLoad={e => { setLoaded(true); setTint(readTint(e.currentTarget)); }}
               />
+            )}
+            {touch && loaded && !blocked && (
+              active ? (
+                <button type="button" className="mp-touch-done" onClick={() => setActive(false)}>{t('Done', 'Listo')}</button>
+              ) : (
+                <button type="button" className="mp-touch" onClick={() => { setActive(true); haptic(8); }}>
+                  <span>{t('Tap to scroll the page', 'Toca para desplazarte')}</span>
+                </button>
+              )
             )}
             <AnimatePresence>
               {(blocked || !loaded) && (
@@ -177,12 +218,15 @@ export default function MobilePreview() {
   const [deviceId, setDeviceId] = useState(() => (DEVICES.some(d => d.id === params.get('d')) ? params.get('d') : 'iphone-16-pro'));
   const [landscape, setLandscape] = useState(() => params.get('o') === 'landscape');
   const [mode, setMode] = useState(() => (params.get('m') === 'compare' ? 'compare' : 'single'));
+  const [barStyle, setBarStyle] = useState(() => (['light', 'dark'].includes(params.get('bar')) ? params.get('bar') : 'auto'));
+  const touch = useIsTouch();
+  useEffect(() => () => holdSmoothScroll(false), []);
   const [reload, setReload] = useState(0);
   const [invalid, setInvalid] = useState(false);
   const [box, setBox] = useState({ w: 900, h: 760 });
   const stageRef = useRef(null);
 
-  useUrlState(() => ({ url: url === HOME ? '' : url, d: deviceId === 'iphone-16-pro' ? '' : deviceId, o: landscape ? 'landscape' : '', m: mode === 'compare' ? 'compare' : '' }), [url, deviceId, landscape, mode]);
+  useUrlState(() => ({ url: url === HOME ? '' : url, d: deviceId === 'iphone-16-pro' ? '' : deviceId, o: landscape ? 'landscape' : '', m: mode === 'compare' ? 'compare' : '', bar: barStyle === 'auto' ? '' : barStyle }), [url, deviceId, landscape, mode, barStyle]);
 
   // Room available for the frames: stage width, and most of the window height.
   useEffect(() => {
@@ -260,6 +304,7 @@ export default function MobilePreview() {
           </div>
           <div className="mp-controls">
             <Segmented label={t('Layout', 'Diseño')} value={mode} onChange={v => { setMode(v); track('Mobile preview mode', { mode: v }); }} options={[{ value: 'single', label: t('One device', 'Un dispositivo') }, { value: 'compare', label: t('Compare 4', 'Comparar 4') }]} />
+            <Segmented label={t('Status bar', 'Barra de estado')} value={barStyle} onChange={setBarStyle} options={[{ value: 'auto', label: t('Bar: auto', 'Barra: auto') }, { value: 'light', label: t('Light', 'Clara') }, { value: 'dark', label: t('Dark', 'Oscura') }]} />
             <motion.button type="button" className="btn btn-ghost btn-sm" whileTap={{ rotate: 90, scale: 0.94 }} onClick={() => setLandscape(l => !l)} aria-pressed={landscape}>
               <span aria-hidden="true">⟳</span> {landscape ? t('Landscape', 'Horizontal') : t('Portrait', 'Vertical')}
             </motion.button>
@@ -274,7 +319,7 @@ export default function MobilePreview() {
         </Reveal>
 
         <div ref={stageRef} className="mp-stage" style={{ '--gap': '28px' }}>
-          {shown.map((d, i) => <Device key={d.id} device={d} landscape={landscape} url={url} scale={scale} reload={reload} index={i} />)}
+          {shown.map((d, i) => <Device key={d.id} device={d} landscape={landscape} url={url} scale={scale} reload={reload} index={i} barStyle={barStyle} touch={touch} />)}
         </div>
 
         <p className="small muted" style={{ textAlign: 'center', margin: 0 }}>
