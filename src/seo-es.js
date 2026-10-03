@@ -300,6 +300,7 @@ export const PAGE_PATHS = {
   '/about': '/es/acerca-de',
   '/privacy': '/es/privacidad',
   '/pro': '/es/pro',
+  '/games': '/es/juegos',
   '/guides': '/es/guias',
   '/changelog': '/es/novedades',
   '/confirm': '/es/confirmar',

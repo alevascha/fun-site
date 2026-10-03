@@ -70,6 +70,9 @@ export default function SiteNav() {
           {onHome && <motion.span layoutId="nav-pill" className="site-nav-link-bg" transition={{ type: 'spring', stiffness: 380, damping: 30 }} />}
           {t('Experiments', 'Experimentos')}
         </Link>
+        <Link to={to('/games')} className="site-nav-link site-nav-link--hide-sm" aria-current={pathname.includes('/games') || pathname.includes('/juegos') ? 'page' : undefined}>
+          {t('Games', 'Juegos')}
+        </Link>
         <Link to={to('/guides')} className="site-nav-link site-nav-link--hide-sm" aria-current={pathname.includes('/guides') || pathname.includes('/guias') ? 'page' : undefined}>
           {t('Guides', 'Guías')}
         </Link>

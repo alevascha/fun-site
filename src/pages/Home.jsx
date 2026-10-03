@@ -23,7 +23,7 @@ const MotionLink = motion.create(Link);
 
 const CATEGORY_ES = { All: 'Todos', Color: 'Color', Accessibility: 'Accesibilidad', Typography: 'Tipografía', UI: 'UI', 'Design systems': 'Design systems', Motion: 'Movimiento', Assets: 'Recursos', Games: 'Juegos' };
 
-function ExpCard({ exp, fresh, index }) {
+export function ExpCard({ exp, fresh, index }) {
   const ref = useRef(null);
   const { lang, t, to, name, blurb } = useLang();
   // 3D tilt: pointer position → spring-smoothed rotateX/rotateY.

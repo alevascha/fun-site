@@ -32,6 +32,7 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const ProPage = lazy(() => import('./pages/ProPage'));
 const GuidesIndex = lazy(() => import('./pages/GuidesIndex'));
+const GamesIndex = lazy(() => import('./pages/GamesIndex'));
 const GuidePage = lazy(() => import('./pages/GuidePage'));
 const Changelog = lazy(() => import('./pages/Changelog'));
 const Subscription = lazy(() => import('./pages/Subscription'));
@@ -104,6 +105,7 @@ export default function App() {
               <Route key={`${l}-about`} path={p('/about')} element={<StaticPage id="about" />} />,
               <Route key={`${l}-privacy`} path={p('/privacy')} element={<StaticPage id="privacy" />} />,
               <Route key={`${l}-pro`} path={p('/pro')} element={<ProPage />} />,
+              <Route key={`${l}-games`} path={p('/games')} element={<GamesIndex />} />,
               <Route key={`${l}-guides`} path={p('/guides')} element={<GuidesIndex />} />,
               <Route key={`${l}-guide`} path={`${p('/guides')}/:slug`} element={<GuidePage />} />,
               <Route key={`${l}-changelog`} path={p('/changelog')} element={<Changelog />} />,

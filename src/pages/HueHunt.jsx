@@ -41,11 +41,11 @@ const scoreFor = d => Math.max(0, Math.round(100 - d * 2));
 const tile = s => (s >= 90 ? '🟩' : s >= 75 ? '🟨' : s >= 55 ? '🟧' : '🟥');
 const verdict = (s, t) => (s >= 95 ? t('Perfect eye!', '¡Ojo perfecto!') : s >= 85 ? t('So close', 'Casi exacto') : s >= 70 ? t('Nice', 'Bien') : s >= 50 ? t('In the family', 'De la misma familia') : t('Not quite', 'No tanto'));
 
-function Slider({ label, value, min, max, onChange, track: bg, suffix = '' }) {
+function Slider({ label, value, min, max, onChange, track: bg, thumb, suffix = '' }) {
   return (
     <label className="hh-slider">
       <span className="hh-slider-head"><span>{label}</span><span className="mono">{value}{suffix}</span></span>
-      <input type="range" min={min} max={max} value={value} onChange={e => onChange(+e.target.value)} style={{ '--track': bg }} />
+      <input type="range" min={min} max={max} value={value} onChange={e => onChange(+e.target.value)} style={{ '--track': bg, '--thumb': thumb }} />
     </label>
   );
 }
@@ -149,11 +149,11 @@ export default function HueHunt() {
 
             <Reveal className="card hh-controls">
               <Slider label={t('Hue', 'Tono')} value={guess.h} min={0} max={359} suffix="°" onChange={h => !revealed && setGuess(g => ({ ...g, h }))}
-                track="linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)" />
+                track="linear-gradient(90deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)" thumb={hslToHex(guess.h, 100, 50)} />
               <Slider label={t('Saturation', 'Saturación')} value={guess.s} min={0} max={100} suffix="%" onChange={s => !revealed && setGuess(g => ({ ...g, s }))}
-                track={`linear-gradient(90deg,${hslToHex(guess.h, 0, guess.l)},${hslToHex(guess.h, 100, guess.l)})`} />
+                track={`linear-gradient(90deg,${hslToHex(guess.h, 0, guess.l)},${hslToHex(guess.h, 100, guess.l)})`} thumb={guessHex} />
               <Slider label={t('Lightness', 'Luminosidad')} value={guess.l} min={0} max={100} suffix="%" onChange={l => !revealed && setGuess(g => ({ ...g, l }))}
-                track={`linear-gradient(90deg,#000,${hslToHex(guess.h, guess.s, 50)},#fff)`} />
+                track={`linear-gradient(90deg,#000,${hslToHex(guess.h, guess.s, 50)},#fff)`} thumb={guessHex} />
               {revealed ? (
                 <motion.button type="button" className="btn btn-primary hh-cta" whileTap={{ scale: 0.96 }} onClick={next} autoFocus>
                   {results.length >= ROUNDS ? t('See results', 'Ver resultados') : t('Next color →', 'Siguiente color →')}
