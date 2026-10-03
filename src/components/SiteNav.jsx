@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
+import { AnimatePresence, motion, useMotionValueEvent, useScroll } from 'framer-motion';
 import ThemeToggle from './ThemeToggle';
 import Magnetic from './motion/Magnetic';
 import { useCounterpart, useLang } from '../i18n';
@@ -40,13 +40,35 @@ export default function SiteNav() {
   // Hides while scrolling down, slides back the moment you scroll up.
   const { scrollY } = useScroll();
   const [hidden, setHidden] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navRef = useRef(null);
+  const menuBtnRef = useRef(null);
   useMotionValueEvent(scrollY, 'change', y => {
     const prev = scrollY.getPrevious() ?? 0;
-    setHidden(y > prev && y > 240);
+    setHidden(!menuOpen && y > prev && y > 240);
   });
+
+  // Phone menu: closes on navigation, Escape (focus back to the button) and outside taps.
+  useEffect(() => { setMenuOpen(false); }, [pathname]); // eslint-disable-line react-hooks/set-state-in-effect
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = e => { if (e.key === 'Escape') { setMenuOpen(false); menuBtnRef.current?.focus(); } };
+    const onDown = e => { if (!navRef.current?.contains(e.target)) setMenuOpen(false); };
+    addEventListener('keydown', onKey);
+    addEventListener('pointerdown', onDown);
+    return () => { removeEventListener('keydown', onKey); removeEventListener('pointerdown', onDown); };
+  }, [menuOpen]);
+
+  const links = [
+    { to: '/', label: t('Experiments', 'Experimentos'), current: onHome },
+    { to: '/games', label: t('Games', 'Juegos'), current: pathname.includes('/games') || pathname.includes('/juegos') },
+    { to: '/guides', label: t('Guides', 'Guías'), current: pathname.includes('/guides') || pathname.includes('/guias') },
+    { to: '/pro', label: 'Pro', current: /\/pro$/.test(pathname) },
+  ];
 
   return (
     <motion.nav
+      ref={navRef}
       className="site-nav"
       aria-label={t('Main', 'Principal')}
       initial={{ y: -24, opacity: 0 }}
@@ -87,7 +109,43 @@ export default function SiteNav() {
           </a>
         </Magnetic>
         <Magnetic strength={0.4}><ThemeToggle /></Magnetic>
+        <button
+          ref={menuBtnRef}
+          type="button"
+          className="site-nav-menu-btn"
+          aria-expanded={menuOpen}
+          aria-controls="site-nav-menu"
+          aria-label={menuOpen ? t('Close menu', 'Cerrar menú') : t('Open menu', 'Abrir menú')}
+          onClick={() => setMenuOpen(o => !o)}
+        >
+          <span className={'menu-icon' + (menuOpen ? ' is-open' : '')} aria-hidden="true"><i /><i /></span>
+        </button>
       </div>
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            id="site-nav-menu"
+            className="site-nav-menu"
+            initial={{ opacity: 0, y: -8, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <ul>
+              {links.map((l, i) => (
+                <motion.li key={l.to} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i }}>
+                  <Link to={to(l.to)} aria-current={l.current ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
+                    {l.label} <span className="arrow" aria-hidden="true">→</span>
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
+            <a href="https://www.alevasquez.dev/" target="_blank" rel="noopener noreferrer" className="btn btn-primary site-nav-menu-cta">
+              alevasquez.dev <span className="arrow arrow-ne" aria-hidden="true">↗</span>
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }
