@@ -189,6 +189,28 @@ export const experiments = [
     addedAt: '2026-10-02',
     active: true,
   },
+  {
+    id: 'hue-hunt',
+    category: 'Games',
+    path: '/hue-hunt',
+    emoji: '🎯',
+    accent: '#ff8ad8',
+    title: 'Hue Hunt',
+    description: 'Match five colors by eye with hue, saturation and lightness. Scored by perceptual distance, with a daily challenge to share.',
+    addedAt: '2026-10-03',
+    active: true,
+  },
+  {
+    id: 'pass-or-fail',
+    category: 'Games',
+    path: '/pass-or-fail',
+    emoji: '⚖️',
+    accent: '#7ed957',
+    title: 'Pass or Fail',
+    description: 'Twenty quick rounds: does this text pass WCAG AA contrast? Trust your eye, then see the real ratios.',
+    addedAt: '2026-10-03',
+    active: true,
+  },
 ];
 
 export function getExperiment(id) {

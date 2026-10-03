@@ -1672,3 +1672,68 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
   .mp-url .input { flex-basis: 100%; }
   .mp-url-lock { top: 13px; }
 }
+
+/* ===== Games: Hue Hunt ===== */
+.hh { display: grid; gap: 16px; max-width: 880px; margin: 0 auto; width: 100%; }
+.hh-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+.hh-progress { display: flex; gap: 6px; }
+.hh-dot { width: 30px; height: 30px; border-radius: 10px; display: grid; place-items: center; font-size: 13px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border); transition: transform .3s ease; }
+.hh-dot.is-now { box-shadow: inset 0 0 0 2px var(--accent-a); transform: scale(1.08); }
+.hh-score { font-size: 20px; font-weight: 600; }
+.hh-swatches { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.hh-swatch { position: relative; aspect-ratio: 1 / 1; max-height: 360px; width: 100%; border-radius: var(--radius-lg); box-shadow: 0 30px 60px -30px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.08); overflow: hidden; transition: background-color .15s linear; }
+.hh-tag { position: absolute; left: 12px; top: 12px; padding: 6px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; color: #fff; background: rgba(17,16,17,.55); backdrop-filter: blur(8px); }
+.hh-result { position: absolute; inset: auto 12px 12px; display: grid; justify-items: center; gap: 2px; padding: 14px; border-radius: 18px; background: rgba(17,16,17,.7); backdrop-filter: blur(10px); color: #fff; text-align: center; }
+.hh-result strong { font-size: 40px; line-height: 1; font-family: var(--font-display); }
+.hh-controls { display: grid; gap: 18px; }
+.hh-slider { display: grid; gap: 8px; }
+.hh-slider-head { display: flex; justify-content: space-between; font-size: 14px; font-weight: 600; }
+.hh-slider input[type=range] { -webkit-appearance: none; appearance: none; width: 100%; height: 22px; border-radius: 999px; background: var(--track); outline: none; box-shadow: inset 0 0 0 1px rgba(0,0,0,.15); touch-action: pan-y; }
+.hh-slider input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; width: 32px; height: 32px; border-radius: 50%; background: #fff; border: 3px solid #111011; box-shadow: 0 4px 12px rgba(0,0,0,.35); cursor: grab; }
+.hh-slider input[type=range]::-moz-range-thumb { width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 3px solid #111011; cursor: grab; }
+.hh-slider input[type=range]:focus-visible { box-shadow: 0 0 0 3px var(--bg), 0 0 0 5px var(--focus); }
+.hh-cta { justify-self: stretch; min-height: 52px; font-size: 16px; }
+.hh-final, .pf-over { display: grid; gap: 14px; justify-items: center; text-align: center; padding: clamp(24px, 5vw, 44px); }
+.hh-total { font-family: var(--font-display); font-size: clamp(64px, 14vw, 112px); line-height: 1; font-weight: 300; }
+.hh-grad { background: var(--accent-grad-linear); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.hh-pairs { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.hh-pair { display: grid; grid-template-columns: 34px 34px; gap: 0; border-radius: 12px; overflow: hidden; position: relative; box-shadow: inset 0 0 0 1px var(--border); }
+.hh-pair span { height: 44px; }
+.hh-pair b { grid-column: 1 / -1; padding: 4px; font-size: 12px; background: var(--surface-2); }
+@media (max-width: 560px) {
+  .hh-swatches { grid-template-columns: 1fr 1fr; }
+  .hh-swatch { aspect-ratio: 3 / 4; }
+  .hh-result strong { font-size: 30px; }
+}
+
+/* ===== Games: Pass or Fail ===== */
+.pf-intro { display: grid; gap: 16px; justify-items: center; text-align: center; max-width: 640px; margin: 0 auto; padding: clamp(24px, 5vw, 44px); }
+.pf-demo { display: flex; gap: 10px; }
+.pf-demo span { padding: 14px 16px; border-radius: 14px; font-weight: 600; box-shadow: inset 0 0 0 1px var(--border); }
+.pf-h { font-family: var(--font-display); font-weight: 300; font-size: clamp(28px, 5vw, 40px); margin: 0; }
+.pf-rules { margin: 0; padding-left: 18px; text-align: left; color: var(--muted); line-height: 1.7; }
+.pf-start { min-height: 52px; padding: 0 28px; font-size: 16px; }
+.pf-play { display: grid; gap: 14px; max-width: 640px; margin: 0 auto; width: 100%; }
+.pf-hud { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: center; font-weight: 600; }
+.pf-timer { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; box-shadow: inset 0 0 0 1px var(--border); }
+.pf-timer span { display: block; height: 100%; border-radius: 99px; transition: width .1s linear; }
+.pf-card { position: relative; min-height: clamp(220px, 42vh, 320px); border-radius: var(--radius-lg); display: grid; align-content: center; justify-items: center; gap: 14px; padding: 28px; text-align: center; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.06); overflow: hidden; }
+.pf-kind { padding: 5px 12px; border: 1.5px solid; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .04em; opacity: .9; }
+.pf-sample { margin: 0; line-height: 1.35; max-width: 22ch; }
+.pf-feedback { position: absolute; inset: auto 16px 16px; display: grid; gap: 4px; padding: 12px; border-radius: 16px; color: #fff; backdrop-filter: blur(10px); }
+.pf-feedback strong { font-size: 22px; }
+.pf-feedback.is-ok { background: rgba(18, 140, 80, .85); }
+.pf-feedback.is-bad { background: rgba(200, 40, 40, .85); }
+.pf-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.pf-btn { min-height: 64px; border: 0; border-radius: 20px; font: 600 18px/1 var(--font-label, Inter, sans-serif); cursor: pointer; color: #fff; touch-action: manipulation; }
+.pf-btn:disabled { opacity: .55; cursor: default; }
+.pf-fail { background: linear-gradient(180deg, #e5484d, #b4232a); }
+.pf-pass { background: linear-gradient(180deg, #2fbf71, #178a4c); }
+.pf-btn:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.pf-strip { display: flex; gap: 4px; flex-wrap: wrap; justify-content: center; }
+.pf-strip span { width: 14px; height: 14px; border-radius: 4px; }
+.pf-strip .is-ok { background: var(--pass); }
+.pf-strip .is-bad { background: var(--fail); }
+.pf-misses { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.pf-miss { display: grid; gap: 6px; padding: 14px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--border); }
+.pf-miss-note { font-size: 12px; font-weight: 600; opacity: .9; }

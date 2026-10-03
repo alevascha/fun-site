@@ -201,4 +201,32 @@ export const SEO = {
       { q: 'Is this the same as testing on a real phone?', a: 'It shows the real responsive layout, since the page gets the device’s width. Touch behavior, browser UI and sites that detect phones by user agent still need a real device or your browser’s device mode.' },
     ],
   },
+  'hue-hunt': {
+    title: 'Hue Hunt — Color Matching Game for Designers',
+    description: 'A free daily color game: match five colors by eye with hue, saturation and lightness sliders, scored by perceptual distance (ΔE). Share your result.',
+    features: [
+      'Daily challenge with the same five colors for everyone',
+      'Scored by CIE ΔE, the perceptual distance designers use',
+      'Big touch-friendly sliders that work great on phones',
+      'Shareable emoji result, plus unlimited free play',
+    ],
+    faq: [
+      { q: 'How is Hue Hunt scored?', a: 'Each guess is compared to the target in CIE Lab color space. A ΔE around 2 is barely noticeable and scores about 96; every point of ΔE costs two points.' },
+      { q: 'Any tips for a better score?', a: 'Match lightness first, then hue, then saturation. Our eyes are most sensitive to lightness differences.' },
+    ],
+  },
+  'pass-or-fail': {
+    title: 'Pass or Fail — WCAG Contrast Game',
+    description: 'Test your eye for accessible color contrast: twenty timed rounds deciding whether text passes WCAG AA (4.5:1 normal, 3:1 large). Free, with explanations.',
+    features: [
+      'Pairs generated near the AA thresholds, never right on the line',
+      'Normal and large text rounds, like real interfaces',
+      'Real ratios revealed after every call',
+      'Keyboard controls (← / →) and big touch buttons',
+    ],
+    faq: [
+      { q: 'What contrast does WCAG AA require?', a: '4.5:1 for normal text and 3:1 for large text (24px, or 18.66px bold) and for UI components.' },
+      { q: 'Why is contrast hard to judge by eye?', a: 'Perceived contrast depends on hue, size and surroundings, so two pairs with the same ratio can look very different. That is why it is measured.' },
+    ],
+  },
 };

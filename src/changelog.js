@@ -1,6 +1,12 @@
 // "What's new" entries (newest first). Also published as /rss.xml.
 export const CHANGELOG = [
   {
+    date: '2026-10-03',
+    id: 'games',
+    en: { title: 'New: two games', body: 'Hue Hunt, a daily color-matching challenge scored by perceptual distance, and Pass or Fail, a quick-fire WCAG contrast game.' },
+    es: { title: 'Nuevo: dos juegos', body: 'Caza de color, un reto diario para igualar colores puntuado por distancia perceptual, y Pasa o falla, un juego rápido de contraste WCAG.' },
+  },
+  {
     date: '2026-10-02',
     id: 'mobile-preview',
     en: { title: 'New: Mobile Preview', body: 'See any website inside iPhone, Pixel, Galaxy and iPad frames at their real viewport sizes, rotate it, or compare four devices side by side.' },

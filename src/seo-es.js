@@ -256,6 +256,42 @@ export const ES = {
       { q: '¿Es lo mismo que probar en un teléfono real?', a: 'Muestra el diseño responsive real, porque la página recibe el ancho del dispositivo. El comportamiento táctil, la interfaz del navegador y los sitios que detectan teléfonos por user agent siguen necesitando un dispositivo real o el modo dispositivo del navegador.' },
     ],
   },
+  'hue-hunt': {
+    slug: 'caza-de-color',
+    name: 'Caza de color',
+    card: 'Iguala cinco colores a ojo con tono, saturación y luminosidad. Puntaje por distancia perceptual y un reto diario para compartir.',
+    title: 'Caza de color: juego para igualar colores',
+    description: 'Un juego diario y gratis: iguala cinco colores a ojo con tono, saturación y luminosidad, con puntaje por distancia perceptual (ΔE). Comparte tu resultado.',
+    intro: 'Iguala cinco colores a ojo con tono, saturación y luminosidad. Cada intento se puntúa por distancia perceptual (ΔE) y el reto diario es el mismo para todos.',
+    features: [
+      'Reto diario con los mismos cinco colores para todos',
+      'Puntaje por ΔE CIE, la distancia perceptual que usan los diseñadores',
+      'Controles grandes y cómodos en el teléfono',
+      'Resultado con emojis para compartir y juego libre ilimitado',
+    ],
+    faq: [
+      { q: '¿Cómo se calcula el puntaje?', a: 'Cada intento se compara con el objetivo en el espacio de color CIE Lab. Un ΔE cercano a 2 apenas se nota y vale unos 96 puntos; cada punto de ΔE resta dos.' },
+      { q: '¿Algún consejo?', a: 'Iguala primero la luminosidad, luego el tono y al final la saturación. El ojo es más sensible a la luminosidad.' },
+    ],
+  },
+  'pass-or-fail': {
+    slug: 'pasa-o-falla',
+    name: 'Pasa o falla',
+    card: 'Veinte rondas rápidas: ¿este texto pasa el contraste WCAG AA? Confía en tu ojo y luego mira las proporciones reales.',
+    title: 'Pasa o falla: juego de contraste WCAG',
+    description: 'Pon a prueba tu ojo para el contraste accesible: veinte rondas cronometradas para decidir si el texto pasa WCAG AA (4.5:1 normal, 3:1 grande). Gratis y con explicaciones.',
+    intro: 'Veinte rondas rápidas: ¿este texto pasa el contraste WCAG AA o no? Confía en tu ojo y luego mira las proporciones reales. El texto normal necesita 4.5:1 y el grande 3:1.',
+    features: [
+      'Pares generados cerca del límite AA, nunca justo en la línea',
+      'Rondas con texto normal y grande, como en interfaces reales',
+      'La proporción real aparece después de cada respuesta',
+      'Controles de teclado (← / →) y botones táctiles grandes',
+    ],
+    faq: [
+      { q: '¿Qué contraste exige WCAG AA?', a: '4.5:1 para texto normal y 3:1 para texto grande (24px, o 18,66px en negrita) y para componentes de interfaz.' },
+      { q: '¿Por qué cuesta juzgar el contraste a ojo?', a: 'El contraste percibido depende del tono, el tamaño y el entorno, así que dos pares con la misma proporción pueden verse muy distintos. Por eso se mide.' },
+    ],
+  },
 };
 
 // Non-tool pages: English path → Spanish path.
