@@ -231,6 +231,34 @@
     }, { passive: true });
   }
 
+  /* ------------------------------------------------------ header hide */
+  // Same as the Fun Lab nav: hides while scrolling down, slides back the
+  // moment you scroll up. Stays put while it has focus or the pointer.
+  let header = null, lastY = scrollY, navHidden = false;
+  function findHeader() {
+    const nav = document.querySelector('[data-framer-name="Nav"]');
+    let el = nav;
+    while (el && el !== document.body && getComputedStyle(el).position !== 'fixed') el = el.parentElement;
+    if (!el || el === document.body || el === header) return;
+    header = el;
+    header.style.transition = `translate .45s ${EASE}, scale .45s ${EASE}, opacity .45s ${EASE}`;
+    header.addEventListener('focusin', () => setNavHidden(false));
+  }
+  function setNavHidden(h) {
+    if (!header || h === navHidden) return;
+    navHidden = h;
+    header.style.translate = h ? '0 -96px' : '';
+    header.style.scale = h ? '.96' : '';
+    header.style.opacity = h ? '0' : '';
+    header.style.pointerEvents = h ? 'none' : '';
+  }
+  addEventListener('scroll', () => {
+    const y = scrollY;
+    const busy = header && (header.matches(':hover') || header.contains(document.activeElement));
+    if (y !== lastY) setNavHidden(!busy && y > lastY && y > 240);
+    lastY = y;
+  }, { passive: true });
+
   /* -------------------------------------------------------- magnetic */
   function magnetic(el, strength) {
     if (el.dataset.avfxMag || reduce || !fine) return;
@@ -461,6 +489,7 @@
       pageRoot.prepend(bg);
     }
     syncTheme();
+    findHeader();
 
     // Hero heading (an h1 on desktop, an h2 in Framer's phone layout): rise
     // in, react, gradient on "Design & Engineering".
