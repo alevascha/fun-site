@@ -59,6 +59,248 @@
       "PR"
     ],
     "placeholder": "coach@yourgym.com",
-    "cardCta": "Assign"
+    "cardCta": "Assign",
+    "table": [
+      [
+        "Hypertrophy Block",
+        "Active",
+        "12 wk"
+      ],
+      [
+        "Peaking Phase",
+        "Draft",
+        "6 wk"
+      ],
+      [
+        "Off-season Base",
+        "Completed",
+        "8 wk"
+      ]
+    ],
+    "tableHead": [
+      "Program",
+      "Status",
+      "Length"
+    ],
+    "nav": [
+      "Dashboard",
+      "Programs",
+      "Athletes",
+      "Analytics"
+    ],
+    "steps": [
+      "Program",
+      "Athletes",
+      "Publish"
+    ],
+    "select": [
+      "Powerlifting",
+      "Weightlifting",
+      "Hybrid"
+    ],
+    "selectLabel": "Sport",
+    "radios": [
+      "Per week",
+      "Per block",
+      "Custom"
+    ],
+    "switch1": "Auto-progression",
+    "switch2": "Show RPE",
+    "check1": "Notify athletes",
+    "check2": "Lock past sessions",
+    "progress": "Block completion",
+    "progressValue": 72,
+    "people": [
+      "Mia Lopez",
+      "Theo Ward",
+      "Sam Okafor"
+    ],
+    "modalTitle": "Archive program?",
+    "modalBody": "Athletes keep their history, but the program leaves their calendar.",
+    "modalCta": "Archive",
+    "alertOk": "Program assigned",
+    "alertOkBody": "12 athletes will see it in their calendar.",
+    "alertWarn": "3 sessions missed",
+    "alertWarnBody": "Check in with Theo before next block.",
+    "alertErr": "Sync failed",
+    "alertErrBody": "Reconnect the wearable to import today's sets.",
+    "tabs": [
+      "Overview",
+      "Sessions",
+      "PRs"
+    ],
+    "typeSample": "Programs that adapt to every athlete"
+  },
+  "summary": "White-label fitness coaching platform: one token set themes the coach dashboard, the athlete app and partner brands like Thor's Training.",
+  "semantic": {
+    "success": "#37CA37",
+    "warning": "#F5A524",
+    "error": "#E5484D",
+    "info": "#188BF6"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    48,
+    64,
+    96
+  ],
+  "shadows": {
+    "sm": "0 1px 3px rgba(26,30,37,0.08)",
+    "md": "0 10px 40px rgba(26,30,37,0.08)",
+    "lg": "0 24px 60px -12px rgba(26,30,37,0.22)"
+  },
+  "motion": {
+    "fast": 150,
+    "base": 250,
+    "slow": 450,
+    "easing": "cubic-bezier(.16,1,.3,1)"
+  },
+  "typeScale": [
+    {
+      "name": "Display",
+      "size": 64,
+      "lh": 1.1,
+      "weight": 550,
+      "tracking": "-0.02em",
+      "font": "heading",
+      "sample": "Grow your {fitness} business"
+    },
+    {
+      "name": "H1",
+      "size": 56,
+      "lh": 1.2,
+      "weight": 600,
+      "tracking": "-0.03em",
+      "font": "heading"
+    },
+    {
+      "name": "H2",
+      "size": 40,
+      "lh": 1.2,
+      "weight": 600,
+      "tracking": "-0.03em",
+      "font": "heading"
+    },
+    {
+      "name": "H3",
+      "size": 26,
+      "lh": 1.3,
+      "weight": 600,
+      "tracking": "-0.02em",
+      "font": "heading"
+    },
+    {
+      "name": "H4",
+      "size": 20,
+      "lh": 1.35,
+      "weight": 600,
+      "font": "heading"
+    },
+    {
+      "name": "Body L",
+      "size": 18,
+      "lh": 1.55,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Body",
+      "size": 16,
+      "lh": 1.4,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Small",
+      "size": 14,
+      "lh": 1.45,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Eyebrow",
+      "size": 14,
+      "lh": 1.2,
+      "weight": 700,
+      "tracking": "0.07em",
+      "font": "body",
+      "sample": "COACHING PLATFORM"
+    },
+    {
+      "name": "Data",
+      "size": 13,
+      "lh": 1.3,
+      "weight": 500,
+      "font": "mono",
+      "sample": "SQUAT · 5×5 · RPE 8 · 142.5 KG"
+    }
+  ],
+  "docs": {
+    "facts": [
+      {
+        "label": "user retention",
+        "value": "+25%"
+      },
+      {
+        "label": "app downloads",
+        "value": "5,000+"
+      },
+      {
+        "label": "social engagement",
+        "value": "+40%"
+      },
+      {
+        "label": "white-label brands themed",
+        "value": "1 token set"
+      }
+    ],
+    "principles": [
+      {
+        "title": "Data first, chrome last",
+        "body": "Coaches live in tables and charts. Surfaces stay quiet so numbers like load, RPE and volume carry the hierarchy."
+      },
+      {
+        "title": "Themeable by design",
+        "body": "Partner brands swap the gradient, logo and two accent tokens; spacing, type and components stay identical."
+      },
+      {
+        "title": "Motion that confirms",
+        "body": "Short, eased transitions confirm saves and logged sets. Nothing decorative runs while an athlete trains."
+      }
+    ],
+    "dos": [
+      {
+        "kind": "primary",
+        "do": "Use the teal→green gradient for the single most important action on a screen.",
+        "dont": "Put the gradient on every button; it stops meaning “next step”."
+      },
+      {
+        "kind": "contrast",
+        "do": "Keep set and rep numbers in Ink on white for gym lighting and glare.",
+        "dont": "Show training data in Slate on Mist; it washes out on a phone at the rack."
+      },
+      {
+        "kind": "radius",
+        "do": "Keep buttons and chips as pills and cards at 20px.",
+        "dont": "Mix square and pill buttons in the same flow."
+      },
+      {
+        "kind": "copy",
+        "do": "Label actions with the coach's verb: “Assign program”, “Log set”.",
+        "dont": "Use generic labels like “OK” or “Submit”."
+      }
+    ],
+    "a11y": [
+      "White on the gradient only reaches 3.5:1 on teal and 1.8:1 on green, so gradient buttons use 18px bold labels kept on the teal half, and small text never sits on the green end.",
+      "Every chart has a table view and labelled values, so data isn't locked inside color.",
+      "Rest timer and set completion are announced with aria-live, not just animated.",
+      "Inputs for weight and reps use numeric keyboards and 44px minimum targets.",
+      "Focus ring uses Teal #0097B2 with a 2px offset on every interactive element."
+    ]
   }
 }

@@ -59,6 +59,244 @@
       "Deal"
     ],
     "placeholder": "you@email.com",
-    "cardCta": "Clip"
+    "cardCta": "Clip",
+    "table": [
+      [
+        "Weekly ad",
+        "Active",
+        "Sun–Sat"
+      ],
+      [
+        "Digital coupons",
+        "Draft",
+        "30 days"
+      ],
+      [
+        "Holiday hub",
+        "Completed",
+        "Q4"
+      ]
+    ],
+    "tableHead": [
+      "Campaign",
+      "Status",
+      "Runs"
+    ],
+    "nav": [
+      "Home",
+      "Deals",
+      "Coupons",
+      "Weekly Ad"
+    ],
+    "steps": [
+      "Cart",
+      "Pickup",
+      "Pay"
+    ],
+    "select": [
+      "Pickup today",
+      "Same Day Delivery",
+      "Ship to home"
+    ],
+    "selectLabel": "Fulfillment",
+    "radios": [
+      "Store pickup",
+      "Delivery",
+      "Ship"
+    ],
+    "switch1": "Text me deals",
+    "switch2": "Save card",
+    "check1": "Clip all coupons",
+    "check2": "Use DG Cash",
+    "progress": "Spend $25 for $5 off",
+    "progressValue": 64,
+    "people": [
+      "Dana Hill",
+      "Luis Ortiz",
+      "Kim Tran"
+    ],
+    "modalTitle": "Remove coupon?",
+    "modalBody": "You can clip it again until it expires.",
+    "modalCta": "Remove",
+    "alertOk": "Coupon clipped",
+    "alertOkBody": "It applies automatically at checkout.",
+    "alertWarn": "Store closes at 10 PM",
+    "alertWarnBody": "Pickup orders after 9 PM ship tomorrow.",
+    "alertErr": "Item unavailable",
+    "alertErrBody": "We swapped it for a similar item.",
+    "tabs": [
+      "Deals",
+      "Coupons",
+      "Weekly Ad"
+    ],
+    "typeSample": "Save more every day"
+  },
+  "summary": "Global design system for a Fortune 500 retailer, built so authors ship campaigns in AEM without new code: tokens, components and Figma-to-code parity.",
+  "semantic": {
+    "success": "#336619",
+    "warning": "#B25E00",
+    "error": "#C62828",
+    "info": "#2A77BD"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    20,
+    24,
+    32,
+    40,
+    64
+  ],
+  "shadows": {
+    "sm": "0 1px 2px rgba(0,0,0,0.10)",
+    "md": "0 0 6px rgba(0,0,0,0.08)",
+    "lg": "0 12px 32px rgba(0,0,0,0.18)"
+  },
+  "motion": {
+    "fast": 120,
+    "base": 200,
+    "slow": 320,
+    "easing": "cubic-bezier(.2,.8,.2,1)"
+  },
+  "typeScale": [
+    {
+      "name": "Display",
+      "size": 48,
+      "lh": 1.15,
+      "weight": 700,
+      "font": "heading",
+      "sample": "Same Day Delivery {is here!}"
+    },
+    {
+      "name": "H1",
+      "size": 40,
+      "lh": 1.2,
+      "weight": 700,
+      "font": "heading"
+    },
+    {
+      "name": "H2",
+      "size": 32,
+      "lh": 1.25,
+      "weight": 600,
+      "font": "heading"
+    },
+    {
+      "name": "H3",
+      "size": 24,
+      "lh": 1.3,
+      "weight": 600,
+      "font": "heading"
+    },
+    {
+      "name": "H4",
+      "size": 20,
+      "lh": 1.3,
+      "weight": 600,
+      "font": "heading"
+    },
+    {
+      "name": "Body",
+      "size": 16,
+      "lh": 1.25,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Button",
+      "size": 14,
+      "lh": 1.43,
+      "weight": 500,
+      "font": "body",
+      "sample": "Add to cart"
+    },
+    {
+      "name": "Price",
+      "size": 28,
+      "lh": 1.1,
+      "weight": 700,
+      "font": "heading",
+      "sample": "$4.95  2/$7"
+    },
+    {
+      "name": "Small",
+      "size": 12,
+      "lh": 1.4,
+      "weight": 500,
+      "font": "body"
+    },
+    {
+      "name": "Legal",
+      "size": 10,
+      "lh": 1.6,
+      "weight": 500,
+      "font": "body",
+      "sample": "Offer valid in-store and online through 10/31. Limit 1 per household."
+    }
+  ],
+  "docs": {
+    "facts": [
+      {
+        "label": "faster development",
+        "value": "−50%"
+      },
+      {
+        "label": "Figma-to-code fidelity",
+        "value": "100%"
+      },
+      {
+        "label": "content authoring time",
+        "value": "−50%"
+      },
+      {
+        "label": "AEM Cloud migration",
+        "value": "Done"
+      }
+    ],
+    "principles": [
+      {
+        "title": "Value is the message",
+        "body": "Prices, deals and coupons get the strongest type and the yellow marker. Everything else steps back."
+      },
+      {
+        "title": "Authorable, not custom",
+        "body": "Every component maps 1:1 to an AEM component with the same props, so campaigns ship without engineering tickets."
+      },
+      {
+        "title": "Fast on every phone",
+        "body": "Flat surfaces, system shadows and one web font keep pages light for customers on older devices."
+      }
+    ],
+    "dos": [
+      {
+        "kind": "color",
+        "do": "Use DG Yellow as a highlight behind text or as a badge, paired with black.",
+        "dont": "Set white or yellow text on yellow; it fails contrast immediately."
+      },
+      {
+        "kind": "primary",
+        "do": "One black primary button per module, like “Start Shopping”.",
+        "dont": "Two primary buttons in a promo tile."
+      },
+      {
+        "kind": "radius",
+        "do": "Keep the 4px corner on buttons and inputs for the utilitarian retail feel.",
+        "dont": "Round buttons into pills on some modules and not others."
+      },
+      {
+        "kind": "copy",
+        "do": "Lead with the value: “$5 off $25”, then the action.",
+        "dont": "Bury the price in body copy below the button."
+      }
+    ],
+    "a11y": [
+      "Yellow #FFF200 is never a text color: it's a background for black text (17.9:1).",
+      "Link blue #2A77BD passes AA on white for body text and gets an underline on hover and focus.",
+      "Prices are real text with screen-reader friendly formats (“2 for $7”), not images.",
+      "AEM authors pick from approved color pairs only, so pages can't ship failing contrast.",
+      "Coupons expose clip state with aria-pressed and an icon, not only a color change."
+    ]
   }
 }

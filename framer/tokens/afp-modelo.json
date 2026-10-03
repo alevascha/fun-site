@@ -58,10 +58,249 @@
       "En trámite",
       "Nuevo"
     ],
-    "placeholder": "tu@correo.cl",
+    "placeholder": "tu@correo.pe",
     "helper": "Nunca compartimos tus datos.",
     "invalid": "Ingresa un correo válido",
     "valid": "Correo válido ✓",
-    "cardCta": "Descargar"
+    "cardCta": "Descargar",
+    "table": [
+      [
+        "Fondo 1 · Conservador",
+        "Active",
+        "4.2%"
+      ],
+      [
+        "Fondo 2 · Mixto",
+        "Active",
+        "6.8%"
+      ],
+      [
+        "Fondo 3 · Crecimiento",
+        "Draft",
+        "9.1%"
+      ]
+    ],
+    "tableHead": [
+      "Fondo",
+      "Estado",
+      "Rentab."
+    ],
+    "nav": [
+      "Inicio",
+      "Mi cuenta",
+      "Simulador",
+      "Ayuda"
+    ],
+    "steps": [
+      "Datos",
+      "Fondo",
+      "Confirmar"
+    ],
+    "select": [
+      "Fondo 1",
+      "Fondo 2",
+      "Fondo 3"
+    ],
+    "selectLabel": "Tipo de fondo",
+    "radios": [
+      "Mensual",
+      "Trimestral",
+      "Anual"
+    ],
+    "switch1": "Avisos por SMS",
+    "switch2": "Estado de cuenta digital",
+    "check1": "Acepto los términos",
+    "check2": "Recordar este equipo",
+    "progress": "Afiliación completada",
+    "progressValue": 66,
+    "people": [
+      "Lucía Rojas",
+      "Diego Paz",
+      "Ana Quispe"
+    ],
+    "modalTitle": "¿Cancelar el trámite?",
+    "modalBody": "Perderás los datos que ingresaste en este paso.",
+    "modalCta": "Cancelar trámite",
+    "alertOk": "Trámite enviado",
+    "alertOkBody": "Te avisaremos por correo cuando esté listo.",
+    "alertWarn": "Falta un documento",
+    "alertWarnBody": "Sube tu DNI para continuar.",
+    "alertErr": "No pudimos validar tu DNI",
+    "alertErrBody": "Revisa el número e inténtalo otra vez.",
+    "tabs": [
+      "Resumen",
+      "Aportes",
+      "Fondos"
+    ],
+    "typeSample": "Tu futuro, en buenas manos",
+    "search": "Buscar trámites…"
+  },
+  "summary": "Design system for a Peruvian pension fund: one component library for the public site, the member portal and campaigns, with plain-language patterns for complex financial tasks.",
+  "semantic": {
+    "success": "#4E7300",
+    "warning": "#B86A00",
+    "error": "#C62828",
+    "info": "#2B6CB0"
+  },
+  "spacing": [
+    4,
+    8,
+    12,
+    16,
+    24,
+    32,
+    40,
+    56,
+    80
+  ],
+  "shadows": {
+    "sm": "0 1px 3px rgba(0,0,0,0.10)",
+    "md": "0 4px 16px rgba(0,0,0,0.12)",
+    "lg": "0 16px 40px rgba(0,0,0,0.18)"
+  },
+  "motion": {
+    "fast": 150,
+    "base": 240,
+    "slow": 400,
+    "easing": "cubic-bezier(.25,.8,.25,1)"
+  },
+  "typeScale": [
+    {
+      "name": "Display",
+      "size": 48,
+      "lh": 1.15,
+      "weight": 500,
+      "font": "heading",
+      "sample": "Haz crecer tu {ahorro} hoy"
+    },
+    {
+      "name": "H1",
+      "size": 40,
+      "lh": 1.2,
+      "weight": 500,
+      "font": "heading"
+    },
+    {
+      "name": "H2",
+      "size": 32,
+      "lh": 1.25,
+      "weight": 500,
+      "font": "heading"
+    },
+    {
+      "name": "H3",
+      "size": 24,
+      "lh": 1.3,
+      "weight": 500,
+      "font": "heading"
+    },
+    {
+      "name": "H4",
+      "size": 20,
+      "lh": 1.35,
+      "weight": 600,
+      "font": "heading"
+    },
+    {
+      "name": "Body L",
+      "size": 18,
+      "lh": 1.6,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Body",
+      "size": 16,
+      "lh": 1.6,
+      "weight": 400,
+      "font": "body",
+      "sample": "Tu fondo de pensiones, explicado en palabras simples."
+    },
+    {
+      "name": "Small",
+      "size": 14,
+      "lh": 1.5,
+      "weight": 400,
+      "font": "body"
+    },
+    {
+      "name": "Amount",
+      "size": 32,
+      "lh": 1.1,
+      "weight": 600,
+      "font": "heading",
+      "sample": "S/ 48,250.00"
+    },
+    {
+      "name": "Caption",
+      "size": 12,
+      "lh": 1.4,
+      "weight": 600,
+      "font": "body",
+      "sample": "Rentabilidad nominal anual · Fondo 2"
+    }
+  ],
+  "docs": {
+    "facts": [
+      {
+        "label": "design iterations",
+        "value": "−35%"
+      },
+      {
+        "label": "qualified leads",
+        "value": "+20%"
+      },
+      {
+        "label": "cross-team communication",
+        "value": "+25%"
+      },
+      {
+        "label": "products on one library",
+        "value": "3"
+      }
+    ],
+    "principles": [
+      {
+        "title": "Plain language first",
+        "body": "Pension terms are explained in the interface: helper text, tooltips and examples sit next to every financial field."
+      },
+      {
+        "title": "Calm confidence",
+        "body": "Generous spacing, soft lilac surfaces and one green action keep long forms from feeling stressful."
+      },
+      {
+        "title": "One library, three products",
+        "body": "Site, member portal and campaigns share tokens and components, so a change ships everywhere at once."
+      }
+    ],
+    "dos": [
+      {
+        "kind": "contrast",
+        "do": "Use Modelo Green as a fill with 18px+ bold white text, or the darker #4E7300 for small text.",
+        "dont": "Put 14px white text on #81BD00; it only reaches about 2.3:1."
+      },
+      {
+        "kind": "primary",
+        "do": "Keep one green primary per step of a form.",
+        "dont": "Show “Cámbiate” and “Simula” as two green buttons side by side."
+      },
+      {
+        "kind": "spacing",
+        "do": "Use the 8px grid and 24–32px between form groups.",
+        "dont": "Crowd fields together to fit a long form on one screen."
+      },
+      {
+        "kind": "copy",
+        "do": "Write like a person: “Simula tu pensión”.",
+        "dont": "Use legal jargon in buttons and headings."
+      }
+    ],
+    "a11y": [
+      "Small green text uses #4E7300 (5.6:1 on white); #81BD00 is reserved for fills and large text.",
+      "Amounts are formatted with the PEN currency and read correctly by screen readers.",
+      "Long forms are split into labelled steps with a progress indicator and saved state.",
+      "Every tooltip is also reachable by keyboard and has its text available on tap.",
+      "Error messages explain how to fix the problem in plain Spanish, next to the field."
+    ]
   }
 }
