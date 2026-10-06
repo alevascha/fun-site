@@ -100,7 +100,7 @@ export const homeMeta = lang => (lang === 'es' ? HOME_META_ES : HOME_META);
 
 /* ---------- structured data (schema.org JSON-LD) ---------- */
 
-const person = { '@type': 'Person', '@id': `${SITE.authorUrl}#person`, name: SITE.author, url: SITE.authorUrl, sameAs: SITE.sameAs, jobTitle: 'UX Engineer & Design Systems Engineer' };
+const person = { '@type': 'Person', '@id': `${SITE.authorUrl}#person`, name: SITE.author, url: SITE.authorUrl, sameAs: SITE.sameAs, jobTitle: 'Design Systems Architect · UX & AI Interface Engineer' };
 const website = { '@type': 'WebSite', '@id': `${SITE.url}/#website`, name: SITE.name, url: `${SITE.url}/`, description: SITE.description, inLanguage: ['en', 'es'], publisher: { '@id': person['@id'] } };
 
 function jsonLd(graph) {
@@ -185,7 +185,7 @@ const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'M
 const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> — ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
 const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> — ${esc(g[lang].description)}</li>`).join('')}</ul>`;
 
-const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, UX Engineer &amp; Design Systems Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></nav></footer>`;
+const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></nav></footer>`;
 
 // .ssr-shell: readable by crawlers, hidden from people while the app boots (see index.html).
 const shell = (lang, otherPath, inner) => `<div class="ssr-shell"><div class="page"><div class="page-inner">${nav(lang, otherPath)}${inner}${footer(lang)}</div></div></div>`;

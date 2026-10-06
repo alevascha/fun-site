@@ -3,7 +3,8 @@
 // Case studies show their own hero image on the right.
 //   node scripts/og-portfolio.mjs   →   framer/og/*.png
 // Upload each PNG in Framer: page settings → Social preview, or the
-// "Social Image" field of each Project CMS item.
+// "Social Image" field of each Project CMS item. Also writes the favicons
+// (framer/logo/) for Site Settings → Favicon.
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -49,8 +50,14 @@ const frame = (accent, inner) => `<svg xmlns="http://www.w3.org/2000/svg" xmlns:
 
 const kickerEl = k => `<circle cx="108" cy="118" r="10" fill="url(#o1)"/>
   <text x="130" y="126" font-family="Hanken Grotesk" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(k)}</text>`;
-const pill = (x, y) => `<rect x="${x}" y="${y}" width="210" height="52" rx="26" fill="#F7F7F7"/>
-  <text x="${x + 105}" y="${y + 34}" text-anchor="middle" font-family="Hanken Grotesk" font-size="22" fill="#111011">alevasquez.dev</text>`;
+// The AV mark on its gradient circle (same as framer/logo/av-tile.svg).
+const AV_PATHS = '<path d="M497 640H359L248 320 122 640H0L256 0z"/><path d="M292.43 640H200.8L248 522z"/><path d="M335 0h138l111 320L710 0h122L576 640z"/>';
+const logo = (cx, cy, r) => `<defs><radialGradient id="lg" cx="25%" cy="100%" r="100%"><stop offset="0" stop-color="#CD57FF"/><stop offset="1" stop-color="#FFCE1F"/></radialGradient></defs>
+  <circle cx="${cx}" cy="${cy}" r="${r}" fill="url(#lg)"/>
+  <g transform="translate(${cx - r * 0.469} ${cy - r * 0.359}) scale(${(r * 0.938 / 832).toFixed(5)})" fill="#111011">${AV_PATHS}</g>`;
+const pill = (x, y) => `<rect x="${x}" y="${y}" width="250" height="56" rx="28" fill="#F7F7F7"/>
+  ${logo(x + 28, y + 28, 20)}
+  <text x="${x + 58}" y="${y + 36}" font-family="Hanken Grotesk" font-size="22" fill="#111011">alevasquez.dev</text>`;
 
 // Left text column + an image panel on the right.
 function split({ kicker, title, description, accent, image, round = false }) {
@@ -114,3 +121,14 @@ await render('home', split({ kicker: 'Design Systems Architect · UX & AI Interf
 await render('project', stack({ kicker: 'Alejandro Vasquez · Selected work', title: 'Selected work', description: 'Design systems, product design and UX engineering for retail, fintech, health and SaaS.', accent: '#8B6CF0', images: await Promise.all(['afp-modelo.jpg', 'mystrengthbook.jpg', 'dollar-general.jpg'].map(dataUri)) }));
 for (const p of PROJECTS) await render(`project-${p.id}`, split({ ...p, image: await dataUri(`${p.id}.jpg`) }));
 console.log(`og-portfolio: rendered ${PROJECTS.length + 2} images → framer/og/`);
+
+// Favicons for Framer → Site Settings: the round tile, plus a full-bleed square
+// for iOS (it rounds the corners itself and shows black behind transparency).
+const logoDir = path.join(root, '..', 'framer', 'logo');
+const tile = await fs.readFile(path.join(logoDir, 'av-tile.svg'), 'utf8');
+const square = tile.replace(/<circle [^>]*\/>/, '<rect width="640" height="640" fill="url(#g)"/>');
+const png = (svgText, size) => new Resvg(svgText, { fitTo: { mode: 'width', value: size } }).render().asPng();
+for (const [name, svgText, size] of [['favicon-32', tile, 32], ['favicon-192', tile, 192], ['favicon-512', tile, 512], ['apple-touch-icon', square, 180]])
+  await fs.writeFile(path.join(logoDir, `${name}.png`), png(svgText, size));
+await fs.copyFile(path.join(logoDir, 'av-tile.svg'), path.join(logoDir, 'favicon.svg'));
+console.log('og-portfolio: favicons → framer/logo/');

@@ -35,10 +35,10 @@
   html[data-avfx-theme=light]{--avfx-dot:rgba(17,16,17,.08);--avfx-dot-lit:rgba(150,40,210,.55);--avfx-spot:rgba(205,87,255,.10);--avfx-orb1:rgba(205,87,255,.16);--avfx-orb2:rgba(255,206,31,.16);--avfx-orb3:rgba(139,108,240,.12);--avfx-glow:rgba(205,87,255,.10);--avfx-ink:#111011}
   .avfx-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;--cx:50vw;--cy:30vh;--px:0;--py:0}
   .avfx-orbs{position:absolute;inset:-10%;transition:translate 1.2s ${EASE}}
-  .avfx-orb{position:absolute;border-radius:50%;filter:blur(80px);transition:translate 1.4s ${EASE}}
-  .avfx-orb:nth-child(1){width:44vw;height:44vw;left:-8vw;top:-6vw;background:var(--avfx-orb1);translate:calc(var(--px)*-70px) calc(var(--py)*-60px);animation:avfx-drift 22s ease-in-out infinite alternate}
-  .avfx-orb:nth-child(2){width:34vw;height:34vw;right:-6vw;top:30vh;background:var(--avfx-orb2);translate:calc(var(--px)*80px) calc(var(--py)*50px);animation:avfx-drift 27s ease-in-out infinite alternate-reverse}
-  .avfx-orb:nth-child(3){width:50vw;height:36vw;left:22vw;bottom:-14vw;background:var(--avfx-orb3);translate:calc(var(--px)*-40px) calc(var(--py)*70px);animation:avfx-drift 31s ease-in-out infinite alternate}
+  .avfx-orb{position:absolute;border-radius:50%;will-change:transform;transition:translate 1.4s ${EASE}}
+  .avfx-orb:nth-child(1){width:44vw;height:44vw;left:-8vw;top:-6vw;background:radial-gradient(closest-side,var(--avfx-orb1),transparent);translate:calc(var(--px)*-70px) calc(var(--py)*-60px);animation:avfx-drift 22s ease-in-out infinite alternate}
+  .avfx-orb:nth-child(2){width:34vw;height:34vw;right:-6vw;top:30vh;background:radial-gradient(closest-side,var(--avfx-orb2),transparent);translate:calc(var(--px)*80px) calc(var(--py)*50px);animation:avfx-drift 27s ease-in-out infinite alternate-reverse}
+  .avfx-orb:nth-child(3){width:50vw;height:36vw;left:22vw;bottom:-14vw;background:radial-gradient(closest-side,var(--avfx-orb3),transparent);translate:calc(var(--px)*-40px) calc(var(--py)*70px);animation:avfx-drift 31s ease-in-out infinite alternate}
   @keyframes avfx-drift{0%{transform:translate3d(0,0,0) scale(1)}50%{transform:translate3d(-4%,5%,0) scale(1.08)}100%{transform:translate3d(5%,-3%,0) scale(1.02)}}
   .avfx-grid{position:absolute;inset:0;background-image:radial-gradient(circle at 1px 1px,var(--avfx-dot) 1px,transparent 0);background-size:28px 28px;-webkit-mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 85%);mask-image:radial-gradient(120% 90% at 50% 0%,#000 30%,transparent 85%)}
   .avfx-grid-lit{background-image:radial-gradient(circle at 1px 1px,var(--avfx-dot-lit) 1.4px,transparent 0);-webkit-mask-image:radial-gradient(230px circle at var(--cx) var(--cy),#000,transparent);mask-image:radial-gradient(230px circle at var(--cx) var(--cy),#000,transparent);opacity:0;transition:opacity .4s}
@@ -47,6 +47,9 @@
   .avfx-bg[data-active=true] .avfx-grid-lit,.avfx-spot[data-active=true]{opacity:1}
   .avfx-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:2147483001;pointer-events:none;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#CD57FF,#ff7ab6 50%,#FFCE1F)}
   .avfx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;border-radius:inherit;-webkit-mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%);mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%)}
+  .avfx-canvas.avfx-touch{height:min(100%,115svh);-webkit-mask-image:none;mask-image:none}
+  .avfx-touchglow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;z-index:2147483000;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,var(--avfx-spot),transparent);will-change:transform;opacity:0;transition:opacity .8s}
+  .avfx-touchglow[data-on=true]{opacity:1}
   .avfx-ring,.avfx-dot{position:fixed;top:0;left:0;z-index:2147483002;pointer-events:none;border-radius:999px;translate:-50% -50%;opacity:0;transition:opacity .25s}
   .avfx-ring{width:34px;height:34px;display:grid;place-items:center;border:1.5px solid rgba(205,87,255,.7);background:rgba(205,87,255,.06);font:600 13px/1 "Hanken Grotesk","Inter",system-ui,sans-serif;color:#111011;transition:width .35s ${EASE},height .35s ${EASE},background-color .25s,border-color .25s,border-radius .25s,opacity .25s}
   .avfx-ring span{opacity:0;scale:.6;transition:opacity .2s,scale .3s ${EASE}}
@@ -62,6 +65,7 @@
   .avfx-in .avfx-ch>i,.avfx-in .avfx-w>i{translate:0 0;rotate:0deg}
   .avfx-w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
   .avfx-w>i{display:inline-block;font-style:inherit;translate:0 105%;rotate:4deg;transition:translate .8s ${EASE},rotate .8s ${EASE};transition-delay:calc(var(--d,0)*1ms)}
+  .avfx-fill{background-size:calc(var(--n,1)*100%) 100%;background-position:calc(var(--i,0)/max(var(--n,1) - 1,1)*100%) 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
   .avfx-grad{background-image:linear-gradient(90deg,#CD57FF,#ff7ab6 55%,#FFCE1F);background-size:calc(var(--n,1)*100%) 100%;background-position:calc(var(--i,0)/max(var(--n,1) - 1,1)*100%) 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;padding-right:.04em}
   [data-avfx-card]{transition:rotate .5s ${EASE},scale .5s ${EASE},box-shadow .4s}
   [data-avfx-card]:hover{scale:1.012;box-shadow:0 30px 60px -30px rgba(205,87,255,.35),0 0 0 1px rgba(205,87,255,.25)}
@@ -111,7 +115,10 @@
   progress.className = 'avfx-progress';
   progress.setAttribute('aria-hidden', 'true');
   document.body.prepend(bg);
-  document.body.append(spot, progress);
+  // The spotlight is a full-screen blend layer: lovely with a mouse, but on
+  // phones it makes every scroll frame re-blend the whole page.
+  if (coarse) document.body.append(progress);
+  else document.body.append(spot, progress);
 
   let frame = 0, px = 0, py = 0;
   const paint = () => {
@@ -176,23 +183,36 @@
   // release on every way a press can end.
   for (const n of ['pointerup', 'pointercancel', 'dragstart', 'contextmenu', 'blur', 'resize']) addEventListener(n, () => { pressed = false; }, { passive: true });
 
-  // Touch: the light wanders on its own and jumps to your finger.
+  // Touch: a soft light wanders on its own and glides to your finger. It only
+  // moves with `transform`, so the GPU slides it without repainting the page.
+  // Tilting the phone nudges the orbs (only on real changes, not 60 times a second).
   if (coarse && !reduce) {
-    bg.dataset.active = spot.dataset.active = 'true';
-    const wander = t => {
+    const glow = document.createElement('div');
+    glow.className = 'avfx-touchglow';
+    glow.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(glow);
+    let gx = innerWidth / 2, gy = innerHeight / 2.5, graf = 0;
+    const roam = t => {
+      graf = requestAnimationFrame(roam);
+      let tx = ptr.x, ty = ptr.y;
       if (performance.now() - ptr.lastTouch > 1800) {
         const s = t / 1000;
-        ptr.x = innerWidth * (0.5 + 0.38 * Math.sin(s * 0.45));
-        ptr.y = innerHeight * (0.45 + 0.3 * Math.sin(s * 0.31 + 1.3));
-        paint();
+        tx = innerWidth * (0.5 + 0.38 * Math.sin(s * 0.45));
+        ty = innerHeight * (0.45 + 0.3 * Math.sin(s * 0.31 + 1.3));
       }
-      requestAnimationFrame(wander);
+      gx += (tx - gx) * 0.06; gy += (ty - gy) * 0.06;
+      glow.style.transform = `translate3d(${gx.toFixed(1)}px,${gy.toFixed(1)}px,0)`;
     };
-    requestAnimationFrame(wander);
+    const roamOn = () => { if (!graf && !document.hidden) graf = requestAnimationFrame(roam); };
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(graf); graf = 0; } else roamOn(); });
+    roamOn();
+    requestAnimationFrame(() => { glow.dataset.on = 'true'; });
     addEventListener('deviceorientation', e => {
       if (e.gamma == null) return;
-      px = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
-      py = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 60));
+      const nx = Math.max(-0.5, Math.min(0.5, e.gamma / 60));
+      const ny = Math.max(-0.5, Math.min(0.5, (e.beta - 45) / 60));
+      if (Math.abs(nx - px) < 0.04 && Math.abs(ny - py) < 0.04) return;
+      px = nx; py = ny;
       schedule();
     }, { passive: true });
   }
@@ -285,7 +305,16 @@
     const total = label.replace(/ /g, '').length;
     let idx = 0;
     const chars = [];
+    // Framer paints gradient text with background-clip:text on a wrapper span.
+    // Chrome can't clip that to letters that animate on their own (it smears
+    // into a blob), so each letter gets its own slice of the gradient instead.
+    const fills = new Map();
     for (const node of nodes) {
+      const fill = node.parentElement.closest('[data-text-fill]');
+      // Prefer Framer's own value: it uses theme tokens, so it follows light/dark.
+      const bgImg = fill && el.contains(fill) ? (fill.style.backgroundImage || getComputedStyle(fill).backgroundImage) : 'none';
+      const fillChars = bgImg !== 'none' ? (fills.get(fill)?.fillChars || []) : null;
+      if (fillChars) fills.set(fill, { bgImg, fillChars });
       const frag = document.createDocumentFragment();
       for (const word of node.textContent.split(/(\s+)/)) {
         if (!word) continue;
@@ -305,6 +334,7 @@
             i.style.setProperty('--i', idx - gradientFrom);
             i.style.setProperty('--n', total - gradientFrom);
           }
+          else if (fillChars) fillChars.push(i);
           c.append(i); mask.append(c); w.append(mask);
           chars.push(c);
           idx++;
@@ -312,6 +342,15 @@
         frag.append(w);
       }
       node.replaceWith(frag);
+    }
+    for (const [fill, { bgImg, fillChars }] of fills) {
+      fillChars.forEach((i, k) => {
+        i.classList.add('avfx-fill');
+        i.style.backgroundImage = bgImg;
+        i.style.setProperty('--i', k);
+        i.style.setProperty('--n', fillChars.length);
+      });
+      fill.style.backgroundImage = 'none';
     }
     el.setAttribute('aria-label', label);
     for (const child of el.children) child.setAttribute('aria-hidden', 'true');
@@ -387,7 +426,7 @@
   function particles(host) {
     if (host.querySelector(':scope > .avfx-canvas')) return;
     const canvas = document.createElement('canvas');
-    canvas.className = 'avfx-canvas';
+    canvas.className = coarse ? 'avfx-canvas avfx-touch' : 'avfx-canvas';
     canvas.setAttribute('aria-hidden', 'true');
     host.style.isolation = 'isolate';
     host.appendChild(canvas);
@@ -395,11 +434,11 @@
     let w = 0, h = 0, list = [], raf = 0, running = false, t = 0, visible = true;
     const local = { x: -9999, y: -9999, on: false };
     const seed = () => {
-      const n = Math.min(coarse ? 70 : 140, Math.round((w * h) / 9000));
+      const n = coarse ? Math.min(70, Math.round((w * h) / 5000)) : Math.min(140, Math.round((w * h) / 9000));
       list = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: 0, vy: 0, r: 1 + Math.random() * 1.8, c: COLORS[(Math.random() * COLORS.length) | 0], p: Math.random() * 6.28 }));
     };
     const resize = () => {
-      const r = canvas.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio || 1);
+      const r = canvas.getBoundingClientRect(), dpr = Math.min(coarse ? 1.5 : 2, devicePixelRatio || 1);
       w = r.width; h = r.height;
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -420,14 +459,17 @@
         if (p.y < -10) p.y = h + 10; else if (p.y > h + 10) p.y = -10;
       }
     };
+    // Phones fade the bottom out here instead of a CSS mask on a live canvas.
+    const fade = y => (coarse ? Math.max(0, Math.min(1, (0.85 - y / h) / 0.4)) : 1);
     function draw() {
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < list.length; i++) {
-        const a = list[i];
+        const a = list[i], fa = fade(a.y);
+        if (!fa) continue;
         for (let j = i + 1; j < list.length; j++) {
           const b = list[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
           if (d2 < 12100) {
-            ctx.strokeStyle = `rgba(${a.c},${(1 - Math.sqrt(d2) / 110) * 0.35})`;
+            ctx.strokeStyle = `rgba(${a.c},${(1 - Math.sqrt(d2) / 110) * 0.35 * fa})`;
             ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
@@ -438,13 +480,28 @@
       }
       for (const p of list) {
         const pulse = 0.6 + Math.sin(t * 6 + p.p) * 0.4;
-        ctx.fillStyle = `rgba(${p.c},${0.55 + pulse * 0.4})`;
+        const fp = fade(p.y);
+        if (!fp) continue;
+        ctx.fillStyle = `rgba(${p.c},${(0.55 + pulse * 0.4) * fp})`;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.8 + pulse * 0.4), 0, 6.283); ctx.fill();
       }
     }
-    const loop = () => { step(); draw(); raf = requestAnimationFrame(loop); };
+    // 60 fps; if a phone can't keep up (frames > 22 ms on average), draw every
+    // other frame and step twice, so the motion keeps its speed.
+    let odd = false, half = false, last = 0, slow = 0, seen = 0;
+    const loop = now => {
+      raf = requestAnimationFrame(loop);
+      if (coarse && !half && last) {
+        const dt = now - last;
+        if (dt < 100) { slow += dt; seen++; }
+        if (seen === 60) { half = slow / seen > 22; slow = seen = 0; }
+      }
+      last = now;
+      if (half && (odd = !odd)) return;
+      step(); if (half) step(); draw();
+    };
     const start = () => { if (!running && !reduce && visible && !document.hidden) { running = true; raf = requestAnimationFrame(loop); } };
-    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    const stop = () => { running = false; last = 0; cancelAnimationFrame(raf); };
     new ResizeObserver(resize).observe(canvas);
     new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(canvas);
     document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
@@ -460,6 +517,19 @@
       for (const p of list) { const dx = p.x - bx, dy = p.y - by, d = Math.hypot(dx, dy) || 1; if (d < 220) { const k = (1 - d / 220) * 14; p.vx += dx / d * k; p.vy += dy / d * k; } }
     }, { passive: true });
     resize(); start();
+  }
+
+  /* ------------------------------------------------- offscreen pause */
+  // Framer's gradient ball redraws a canvas under a 40px blur every frame, even
+  // below the fold. Hidden layers skip paint and compositing.
+  const offIO = new IntersectionObserver(entries => {
+    for (const e of entries) e.target.style.visibility = e.isIntersecting ? '' : 'hidden';
+  }, { rootMargin: '200px 0px' });
+  const offWatched = new WeakSet();
+  function pauseOffscreen(el) {
+    if (offWatched.has(el)) return;
+    offWatched.add(el);
+    offIO.observe(el);
   }
 
   /* ------------------------------------------------------ parallax */
@@ -482,6 +552,7 @@
   // Runs after Framer hydrates and again whenever it swaps DOM (client-side
   // navigation, breakpoint changes). Every step is idempotent.
   function enhance() {
+    document.querySelectorAll('[data-framer-name="Gradient Blur"]').forEach(pauseOffscreen);
     const main = document.getElementById('main') || document.body;
 
     // The page frame paints an opaque color over <body>, so the backdrop

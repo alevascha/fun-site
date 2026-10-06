@@ -20,7 +20,7 @@ export const STATIC_PAGES = [
       {
         heading: 'Who builds it',
         body: [
-          'I’m Alejandro Vasquez, a UX Engineer and Design Systems Engineer with more than eight years of experience bridging design and engineering. These experiments are the fun side of that work — small tools I wished I had while building design systems.',
+          'I’m Alejandro Vasquez, a Design Systems Architect and UX & AI Interface Engineer with more than eight years of experience bridging design and engineering. These experiments are the fun side of that work — small tools I wished I had while building design systems.',
           'You can see my client work and case studies at alevasquez.dev.',
         ],
       },
@@ -124,7 +124,7 @@ export const STATIC_PAGES_ES = {
       {
         heading: 'Quién lo construye',
         body: [
-          'Soy Alejandro Vasquez, UX Engineer y Design Systems Engineer con más de ocho años de experiencia uniendo diseño e ingeniería. Estos experimentos son el lado divertido de ese trabajo: pequeñas herramientas que me hubiera gustado tener mientras construía design systems.',
+          'Soy Alejandro Vasquez, Design Systems Architect y UX & AI Interface Engineer con más de ocho años de experiencia uniendo diseño e ingeniería. Estos experimentos son el lado divertido de ese trabajo: pequeñas herramientas que me hubiera gustado tener mientras construía design systems.',
           'Puedes ver mi trabajo con clientes y mis casos de estudio en alevasquez.dev.',
         ],
       },
