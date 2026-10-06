@@ -1,6 +1,12 @@
 // "What's new" entries (newest first). Also published as /rss.xml.
 export const CHANGELOG = [
   {
+    date: '2026-10-06',
+    id: 'five-games',
+    en: { title: 'New: five games', body: 'Optical Eye (layout precision), State Panic (UI states arcade), Easing Golf (cubic-bezier mini golf), Contrast Survival (WCAG reflexes) and Token Rush (design tokens against the clock).' },
+    es: { title: 'Nuevo: cinco juegos', body: 'Ojo óptico (precisión de layout), Pánico de estados (arcade de estados de interfaz), Golf de curvas (minigolf con cubic-bezier), Supervivencia de contraste (reflejos WCAG) y Carrera de tokens (design tokens contra reloj).' },
+  },
+  {
     date: '2026-10-03',
     id: 'games',
     en: { title: 'New: two games', body: 'Hue Hunt, a daily color-matching challenge scored by perceptual distance, and Pass or Fail, a quick-fire WCAG contrast game.' },

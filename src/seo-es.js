@@ -292,6 +292,96 @@ export const ES = {
       { q: '¿Por qué cuesta juzgar el contraste a ojo?', a: 'El contraste percibido depende del tono, el tamaño y el entorno, así que dos pares con la misma proporción pueden verse muy distintos. Por eso se mide.' },
     ],
   },
+  'optical-eye': {
+    slug: 'ojo-optico',
+    name: 'Ojo óptico',
+    card: 'Corrige siete detalles de layout a ojo: centra un ícono de play, iguala padding y ajusta un círculo frente a un cuadrado. Algunas respuestas son ópticas, no matemáticas.',
+    title: 'Ojo óptico: juego de precisión de layout',
+    description: 'Pon a prueba tu ojo para el layout: centra un ícono de play, iguala padding y espaciados, y ajusta un círculo frente a un cuadrado. Puntaje por precisión.',
+    intro: 'Siete detalles de layout para corregir a ojo: centrar un ícono de play, igualar padding, emparejar espaciados y ajustar un círculo frente a un cuadrado. Algunas respuestas son matemáticas y otras ópticas.',
+    features: [
+      'Siete detalles para corregir con un control cada uno, sin números',
+      'Rondas exactas y rondas ópticas que los diseñadores aprenden a la mala',
+      'El valor perfecto aparece después de cada ronda, con la razón',
+      'Resultado para compartir con tu precisión por ronda',
+    ],
+    faq: [
+      { q: '¿Por qué el ícono de play va a la derecha del centro?', a: 'El peso visual de un triángulo está en su centroide, a un tercio de su lado plano, así que centrar su caja hace que se vea corrido a la izquierda. Moverlo a la derecha cerca de un sexto de su ancho lo corrige.' },
+      { q: '¿Por qué un círculo debe ser más grande que un cuadrado?', a: 'Un círculo cubre menos área que un cuadrado del mismo ancho, así que se ve más chico. Las grillas de íconos y las tipografías agrandan las formas redondas entre un 10 y un 13% para compensar.' },
+    ],
+  },
+  'state-panic': {
+    slug: 'panico-de-estados',
+    name: 'Pánico de estados',
+    card: 'Los componentes caen con algo pasándoles. Elige hover, focus, presionado, cargando, error o deshabilitado antes de que toquen el piso.',
+    title: 'Pánico de estados: juego de estados de interfaz',
+    description: 'Juego arcade de estados de componentes: elige hover, focus-visible, presionado, cargando, error o deshabilitado antes de que cada componente toque el piso.',
+    intro: 'Los componentes caen con algo pasándoles. Elige el estado de interfaz correcto (hover, focus, presionado, cargando, error o deshabilitado) antes de que toquen el piso. Con tres fallos se termina.',
+    features: [
+      'Seis estados reales en botones, campos, interruptores y tarjetas',
+      'Eventos escritos como situaciones reales de producto',
+      'Los componentes cambian al estado que eliges',
+      'Cada vez más rápido; en escritorio funcionan las teclas 1–6',
+    ],
+    faq: [
+      { q: '¿Cuál es la diferencia entre hover y focus-visible?', a: 'Hover es el puntero del mouse sobre un elemento. Focus-visible aparece cuando alguien llega con el teclado, y debe verse con claridad por accesibilidad.' },
+      { q: '¿Por qué diseñar estados de carga, error y deshabilitado?', a: 'Todo componente interactivo pasa tiempo en esos estados en productos reales. Omitirlos produce botones congelados, errores silenciosos y usuarios confundidos.' },
+    ],
+  },
+  'easing-golf': {
+    slug: 'golf-de-curvas',
+    name: 'Golf de curvas',
+    card: 'Minigolf con curvas de animación: dale forma a un cubic-bezier para que el disco pase cada bandera a tiempo y tira. El par es tres.',
+    title: 'Golf de curvas: juego de curvas de animación',
+    description: 'Minigolf con curvas de animación: arrastra dos manijas cubic-bezier para que el disco pase cada bandera a tiempo y tira. Seis hoyos, par tres cada uno.',
+    intro: 'Minigolf con curvas de animación. Dale forma a un cubic-bezier para que el disco pase cada bandera en el momento justo y tira. Gana quien usa menos golpes; el par es tres.',
+    features: [
+      'Seis hoyos con curvas reales, incluidos rebote y anticipación',
+      'Arrastra las manijas con el dedo, el mouse o las flechas',
+      'Los tiros fallados muestran los puntos objetivo: cada golpe enseña',
+      'Tarjeta para compartir con birdies y bogeys',
+    ],
+    faq: [
+      { q: '¿Qué es una curva cubic-bezier?', a: 'Relaciona el tiempo de la animación con el progreso usando dos puntos de control. En CSS se escribe cubic-bezier(x1, y1, x2, y2); valores sobre 1 o bajo 0 en el eje y crean rebote y anticipación.' },
+      { q: '¿Cómo mejorar leyendo curvas?', a: 'Un inicio empinado es movimiento rápido al principio (ease out) y uno plano es un arranque lento (ease in). Practica en el playground de curvas y vuelve por un mejor puntaje.' },
+    ],
+  },
+  'contrast-survival': {
+    slug: 'supervivencia-de-contraste',
+    name: 'Supervivencia de contraste',
+    card: 'El fondo no deja de cambiar. Ajusta la luminosidad del texto para que pase WCAG AA, luego AAA, el mayor tiempo posible.',
+    title: 'Supervivencia de contraste: juego de reflejos WCAG',
+    description: 'El fondo cambia sin parar. Ajusta la luminosidad del texto para seguir pasando WCAG AA (4.5:1) y luego AAA (7:1) el mayor tiempo posible.',
+    intro: 'El fondo cambia de color y luminosidad sin parar. Mantén la luminosidad del texto para que el par siga pasando WCAG: AA con 4.5:1 primero y AAA con 7:1 después de veinte segundos.',
+    features: [
+      'Proporción de contraste WCAG en vivo mientras el fondo cambia',
+      'AA los primeros veinte segundos, luego AAA con 7:1',
+      'Control deslizante y flechas del teclado',
+      'Tiempo de supervivencia para compartir',
+    ],
+    faq: [
+      { q: '¿Por qué los tonos medios son una trampa?', a: 'Sobre un fondo de luminosidad media ni el texto blanco ni el negro llegan a un contraste alto, así que el color correcto cambia justo en el medio. Por eso esos fondos son difíciles para texto.' },
+      { q: '¿Cuál es la diferencia entre AA y AAA?', a: 'AA pide 4.5:1 para texto normal y 3:1 para texto grande. AAA pide 7:1 y 4.5:1, lo que limita bastante los colores posibles.' },
+    ],
+  },
+  'token-rush': {
+    slug: 'carrera-de-tokens',
+    name: 'Carrera de tokens',
+    card: 'Reemplaza valores fijos con los design tokens correctos, rápido. Mismo valor no es el mismo token. Luego cambia el tema y mira qué se rompe.',
+    title: 'Carrera de tokens: juego de design tokens',
+    description: 'Reemplaza valores fijos de un componente con los design tokens semánticos correctos, contra reloj. Luego cambia el tema y mira qué se rompe.',
+    intro: 'Un componente lleno de valores fijos. Cada ronda ilumina uno; elige rápido el token semántico que debería reemplazarlo. Algunos tokens comparten valor a propósito: lee el significado, no solo el número.',
+    features: [
+      'Catorce propiedades: color, espaciado, radio y tipografía',
+      'Tokens que comparten valor a propósito, como space-md y radius-lg',
+      'Responder rápido suma más; funcionan las teclas 1–6',
+      'Al final, el cambio de tema muestra lo que quedó con valores fijos',
+    ],
+    faq: [
+      { q: '¿Por qué no elegir un token solo por su valor?', a: 'Dos tokens pueden compartir valor hoy y separarse mañana. Aquí space-md y radius-lg miden 16px, pero solo uno debería cambiar cuando ajustas el espaciado.' },
+      { q: '¿Qué son los tokens semánticos?', a: 'Tokens nombrados por su propósito (text-secondary, bg-surface) y no por su valor (gray-400). Permiten que un tema cambie valores en un solo lugar sin que los componentes pierdan su significado.' },
+    ],
+  },
 };
 
 // Non-tool pages: English path → Spanish path.

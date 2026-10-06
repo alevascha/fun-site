@@ -229,4 +229,74 @@ export const SEO = {
       { q: 'Why is contrast hard to judge by eye?', a: 'Perceived contrast depends on hue, size and surroundings, so two pairs with the same ratio can look very different. That is why it is measured.' },
     ],
   },
+  'optical-eye': {
+    title: 'Optical Eye — Layout Precision Game for Designers',
+    description: 'A free game that tests your eye for layout: center a play icon, even out padding, match spacing and size a circle against a square. Scored by pixel precision.',
+    features: [
+      'Seven layout flaws to fix with one slider each, no numbers',
+      'Mix of exact rounds and optical ones designers learn the hard way',
+      'The perfect value appears after every round, with the reason',
+      'Shareable result with your precision per round',
+    ],
+    faq: [
+      { q: 'Why does a play icon need to sit right of center?', a: 'A triangle’s visual weight is at its centroid, a third of the way from its flat side, so centering its bounding box makes it look shifted left. Nudging it right by about a sixth of its width fixes it.' },
+      { q: 'Why should a circle be bigger than a square?', a: 'A circle covers less area than a square of the same width, so it looks smaller. Icon grids and typefaces make round shapes about 10 to 13% larger to compensate.' },
+    ],
+  },
+  'state-panic': {
+    title: 'State Panic — UI States Arcade Game',
+    description: 'A fast arcade game about component states: pick hover, focus-visible, pressed, loading, error or disabled for each falling component before it hits the floor.',
+    features: [
+      'Six real UI states on buttons, inputs, toggles and cards',
+      'Events written like real product situations',
+      'Components morph into the state you choose',
+      'Gets faster as you go; keys 1–6 work on desktop',
+    ],
+    faq: [
+      { q: 'What is the difference between hover and focus-visible?', a: 'Hover is the mouse pointer resting on an element. Focus-visible appears when someone reaches it with the keyboard, and it must be clearly visible for accessibility.' },
+      { q: 'Why design loading, error and disabled states?', a: 'Every interactive component spends time in these states in real products. Skipping them leads to frozen buttons, silent failures and confused users.' },
+    ],
+  },
+  'easing-golf': {
+    title: 'Easing Golf — Cubic-Bezier Animation Curve Game',
+    description: 'Mini golf with animation curves: drag two cubic-bezier handles so the puck passes each flag at the right time, then putt. Six holes, par three each.',
+    features: [
+      'Six holes based on real easing curves, including overshoot and anticipation',
+      'Drag the handles with touch, mouse or arrow keys',
+      'Missed putts reveal the target points, so every stroke teaches',
+      'Shareable scorecard with birdies and bogeys',
+    ],
+    faq: [
+      { q: 'What is a cubic-bezier easing curve?', a: 'It maps animation time to progress with two control points. CSS writes it as cubic-bezier(x1, y1, x2, y2); values above 1 or below 0 on the y axis create overshoot and anticipation.' },
+      { q: 'How do I get better at reading curves?', a: 'A steep start means fast early movement (ease out), a flat start means a slow start (ease in). Practice in the Motion Playground, then come back for a lower score.' },
+    ],
+  },
+  'contrast-survival': {
+    title: 'Contrast Survival — WCAG Contrast Reflex Game',
+    description: 'The background keeps shifting color and lightness. Adjust the text lightness to keep passing WCAG AA (4.5:1), then AAA (7:1), and survive as long as you can.',
+    features: [
+      'Live WCAG contrast ratio while the background drifts',
+      'AA for the first twenty seconds, then AAA at 7:1',
+      'Slider and arrow-key controls',
+      'Shareable survival time',
+    ],
+    faq: [
+      { q: 'Why is mid-tone such a trap?', a: 'On a medium-light background neither white nor black text reaches high contrast, so the right text color flips around the middle. That is why mid-tone backgrounds are hard to use for text.' },
+      { q: 'What is the difference between AA and AAA?', a: 'AA asks for 4.5:1 for normal text and 3:1 for large text. AAA asks for 7:1 and 4.5:1, which noticeably limits the colors you can use.' },
+    ],
+  },
+  'token-rush': {
+    title: 'Token Rush — Design Tokens Game',
+    description: 'Replace hard-coded values in a component with the right semantic design tokens, against the clock. Then switch the theme and see what breaks.',
+    features: [
+      'Fourteen properties: color, spacing, radius and type',
+      'Tokens that share a value on purpose, like space-md and radius-lg',
+      'Faster answers score more; keys 1–6 work',
+      'Theme switch at the end shows what stays hard-coded',
+    ],
+    faq: [
+      { q: 'Why not pick a token just by its value?', a: 'Two tokens can share a value today and drift apart tomorrow. space-md and radius-lg are both 16px here, but only one of them should change when you adjust spacing.' },
+      { q: 'What are semantic tokens?', a: 'Tokens named by purpose (text-secondary, bg-surface) instead of by value (gray-400). They let a theme change values in one place while components keep their meaning.' },
+    ],
+  },
 };

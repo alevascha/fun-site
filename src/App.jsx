@@ -28,6 +28,11 @@ const MultiSize = lazy(() => import('./pages/MultiSize'));
 const MobilePreview = lazy(() => import('./pages/MobilePreview'));
 const HueHunt = lazy(() => import('./pages/HueHunt'));
 const PassOrFail = lazy(() => import('./pages/PassOrFail'));
+const OpticalEye = lazy(() => import('./pages/OpticalEye'));
+const StatePanic = lazy(() => import('./pages/StatePanic'));
+const EasingGolf = lazy(() => import('./pages/EasingGolf'));
+const ContrastSurvival = lazy(() => import('./pages/ContrastSurvival'));
+const TokenRush = lazy(() => import('./pages/TokenRush'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const ProPage = lazy(() => import('./pages/ProPage'));
@@ -54,6 +59,11 @@ const TOOLS = {
   'mobile-preview': MobilePreview,
   'hue-hunt': HueHunt,
   'pass-or-fail': PassOrFail,
+  'optical-eye': OpticalEye,
+  'state-panic': StatePanic,
+  'easing-golf': EasingGolf,
+  'contrast-survival': ContrastSurvival,
+  'token-rush': TokenRush,
 };
 
 export default function App() {

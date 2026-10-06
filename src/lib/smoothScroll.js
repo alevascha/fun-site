@@ -29,6 +29,16 @@ export function glideToTop() {
   else window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
+// Bring a game board into view when play starts: centered when it fits on
+// screen, otherwise its top just under the floating header.
+export function glideTo(el, header = 84) {
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY;
+  const target = Math.max(0, top - Math.max(header, (window.innerHeight - el.offsetHeight) / 2));
+  if (lenis) lenis.scrollTo(target, { duration: 0.8, force: true });
+  else window.scrollTo({ top: target, behavior: 'smooth' });
+}
+
 // Pause page smooth-scrolling (e.g. while the pointer is over an embedded
 // page, so the page's momentum doesn't keep moving underneath it).
 export function holdSmoothScroll(hold) {
