@@ -31,8 +31,8 @@
 
   /* ---------------------------------------------------------------- CSS */
   const css = `
-  :root{--avfx-dot:rgba(255,255,255,.07);--avfx-dot-lit:rgba(226,170,255,.75);--avfx-spot:rgba(205,87,255,.16);--avfx-orb1:rgba(205,87,255,.20);--avfx-orb2:rgba(255,206,31,.10);--avfx-orb3:rgba(139,108,240,.16);--avfx-glow:rgba(205,87,255,.16);--avfx-ink:#f7f7f7;--avfx-pill:#1a1919}
-  html[data-avfx-theme=light]{--avfx-dot:rgba(17,16,17,.08);--avfx-dot-lit:rgba(150,40,210,.55);--avfx-spot:rgba(205,87,255,.10);--avfx-orb1:rgba(205,87,255,.16);--avfx-orb2:rgba(255,206,31,.16);--avfx-orb3:rgba(139,108,240,.12);--avfx-glow:rgba(205,87,255,.10);--avfx-ink:#111011;--avfx-pill:#fff}
+  :root{--avfx-dot:rgba(255,255,255,.07);--avfx-dot-lit:rgba(226,170,255,.75);--avfx-spot:rgba(205,87,255,.16);--avfx-orb1:rgba(205,87,255,.20);--avfx-orb2:rgba(255,206,31,.10);--avfx-orb3:rgba(139,108,240,.16);--avfx-glow:rgba(205,87,255,.16);--avfx-ink:#f7f7f7}
+  html[data-avfx-theme=light]{--avfx-dot:rgba(17,16,17,.08);--avfx-dot-lit:rgba(150,40,210,.55);--avfx-spot:rgba(205,87,255,.10);--avfx-orb1:rgba(205,87,255,.16);--avfx-orb2:rgba(255,206,31,.16);--avfx-orb3:rgba(139,108,240,.12);--avfx-glow:rgba(205,87,255,.10);--avfx-ink:#111011}
   .avfx-bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;--cx:50vw;--cy:30vh;--px:0;--py:0}
   .avfx-orbs{position:absolute;inset:-10%;transition:translate 1.2s ${EASE}}
   .avfx-orb{position:absolute;border-radius:50%;filter:blur(80px);transition:translate 1.4s ${EASE}}
@@ -63,37 +63,6 @@
   .avfx-w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.14em;margin-bottom:-.14em}
   .avfx-w>i{display:inline-block;font-style:inherit;translate:0 105%;rotate:4deg;transition:translate .8s ${EASE},rotate .8s ${EASE};transition-delay:calc(var(--d,0)*1ms)}
   .avfx-grad{background-image:linear-gradient(90deg,#CD57FF,#ff7ab6 55%,#FFCE1F);background-size:calc(var(--n,1)*100%) 100%;background-position:calc(var(--i,0)/max(var(--n,1) - 1,1)*100%) 50%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;padding-right:.04em}
-  /* Header: the same floating pill as the Fun Lab nav (12px from the top, inset, 38px round buttons). */
-  :root{--avfx-nav-bg:rgba(0,0,0,.72);--avfx-nav-border:rgba(255,255,255,.08);--avfx-nav-shadow:0 24px 60px -24px rgba(0,0,0,.7);--avfx-nav-btn:#121212}
-  html[data-avfx-theme=light]{--avfx-nav-bg:rgba(255,255,255,.72);--avfx-nav-border:rgba(17,16,17,.09);--avfx-nav-shadow:0 24px 60px -24px rgba(60,40,20,.25);--avfx-nav-btn:#f3f0ec}
-  [data-framer-name="Nav"]:has(> [data-framer-name="Left"]){margin-top:12px!important;padding:8px 8px 8px 14px!important;border-radius:999px!important;background:var(--avfx-nav-bg)!important;border:1px solid var(--avfx-nav-border)!important;box-shadow:var(--avfx-nav-shadow)!important;-webkit-backdrop-filter:blur(18px) saturate(140%)!important;backdrop-filter:blur(18px) saturate(140%)!important;box-sizing:border-box!important}
-  @media (max-width:1199.98px){[data-framer-name="Nav"]:has(> [data-framer-name="Left"]){width:calc(100% - 32px)!important;margin-left:16px!important;margin-right:16px!important}}
-  [data-framer-name="Nav"] > [data-framer-name="Left"] [data-framer-name="Logo"]{width:36px!important;height:36px!important}
-  [data-framer-name="Nav"] [data-framer-name="Right"] > [class*="-container"]:has(> [data-framer-name="Variant 1"] > div + div:last-child){width:38px!important;height:38px!important;display:grid!important;place-items:center;border-radius:999px;border:1px solid var(--avfx-nav-border);background:var(--avfx-nav-btn);box-sizing:border-box}
-  [data-framer-name="Nav"] [data-framer-name="Right"] > [class*="-container"] > [data-framer-name="Variant 1"]:has(> div + div:last-child){scale:.75}
-  /* Phone menu panel (replaces the template overlay), same as the Fun Lab one. */
-  .avfx-menu{position:fixed;z-index:2147482990;box-sizing:border-box;padding:10px;border-radius:24px;background:var(--avfx-nav-bg);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%);border:1px solid var(--avfx-nav-border);box-shadow:var(--avfx-nav-shadow);font-family:"Inter","Inter Placeholder",system-ui,sans-serif;opacity:0;translate:0 -8px;scale:.98;transform-origin:top center;pointer-events:none;transition:opacity .25s,translate .4s ${EASE},scale .4s ${EASE}}
-  .avfx-menu[data-open=true]{opacity:1;translate:0 0;scale:1;pointer-events:auto}
-  .avfx-menu ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
-  .avfx-menu li a{display:flex;align-items:center;justify-content:space-between;min-height:48px;padding:0 14px;border-radius:14px;color:var(--avfx-ink);font-size:17px;font-weight:500;letter-spacing:-.01em;text-decoration:none;transition:background-color .2s}
-  .avfx-menu li a:hover,.avfx-menu li a:focus-visible{background:rgba(127,127,127,.14);outline:none}
-  .avfx-menu .avfx-arrow{opacity:.5}
-  .avfx-menu-cta{display:flex;align-items:center;justify-content:center;min-height:48px;margin-top:8px;border-radius:999px;background:linear-gradient(180deg,#2b2a29,#121212);color:#f7f7f7;font-size:15px;font-weight:600;text-decoration:none;box-shadow:0 0 0 1px rgba(255,255,255,.12)}
-  .avfx-menu a:focus-visible,[data-avfx-burger]:focus-visible{outline:2px solid #CD57FF;outline-offset:2px}
-  [data-avfx-burger] > [data-framer-name="Variant 1"] > div{transition:top .3s ${EASE},rotate .3s ${EASE}}
-  [data-avfx-open=true] > [data-framer-name="Variant 1"] > div{top:15px!important}
-  [data-avfx-open=true] > [data-framer-name="Variant 1"] > div:first-child{rotate:45deg}
-  [data-avfx-open=true] > [data-framer-name="Variant 1"] > div:last-child{rotate:-45deg}
-  /* Process step pills: room around the icon and text; smaller, tighter caps on phones so labels wrap cleanly. */
-  [data-framer-name^="txt "] > [data-framer-name="category"]{padding:8px 18px 8px 12px!important;max-width:100%;box-sizing:border-box}
-  @media (max-width:809.98px){
-    [data-framer-name^="txt "] > [data-framer-name="category"]{border-radius:20px!important}
-    [data-framer-name^="txt "] > [data-framer-name="category"] [data-framer-name="Text"]{flex-shrink:1!important;min-width:0!important;width:auto!important}
-    [data-framer-name^="txt "] > [data-framer-name="category"] [data-framer-name="Text"] p{font-size:13px!important;letter-spacing:.12em!important;line-height:1.45!important}
-  }
-  /* Fun Lab in the header menu: a gradient-ringed pill so it stands apart from the page links. */
-  [data-framer-name="Nav"] > a[href*="fun.alevasquez.dev"]{border-radius:999px;border:1px solid transparent;background:linear-gradient(120deg,rgba(205,87,255,.16),rgba(255,206,31,.07)) padding-box,linear-gradient(var(--avfx-pill),var(--avfx-pill)) padding-box,linear-gradient(120deg,#CD57FF,#ff7ab6 55%,#FFCE1F) border-box;box-shadow:0 0 18px -6px rgba(205,87,255,.55);transition:box-shadow .35s,translate .35s ${EASE}}
-  [data-framer-name="Nav"] > a[href*="fun.alevasquez.dev"]:hover{box-shadow:0 0 26px -4px rgba(205,87,255,.85);translate:0 -1px}
   [data-avfx-card]{transition:rotate .5s ${EASE},scale .5s ${EASE},box-shadow .4s}
   [data-avfx-card]:hover{scale:1.012;box-shadow:0 30px 60px -30px rgba(205,87,255,.35),0 0 0 1px rgba(205,87,255,.25)}
   [data-avfx-card] img{transition:scale .9s ${EASE}}
@@ -282,7 +251,6 @@
   function setNavHidden(h) {
     if (!header || h === navHidden) return;
     navHidden = h;
-    if (h) setMenu(false);
     header.style.translate = h ? '0 -96px' : '';
     header.style.scale = h ? '.96' : '';
     header.style.opacity = h ? '0' : '';
@@ -294,90 +262,6 @@
     if (y !== lastY) setNavHidden(!busy && y > lastY && y > 240);
     lastY = y;
   }, { passive: true });
-
-  /* ------------------------------------------------------ phone menu */
-  // The template's full-screen phone menu still lists the template's pages
-  // ("Landings", "Proposal", "Hire Nicey Studio"). The hamburger opens this
-  // panel instead: the desktop menu's links, laid out like the Fun Lab one.
-  const MENU = [
-    ['Work', './project'],
-    ['Process', './#process'],
-    ['Experience', './#experience'],
-    ['FAQ', './#faq'],
-    ['Fun Lab', 'https://fun.alevasquez.dev', true],
-  ];
-  const BURGER = '[data-framer-name="Nav"] [data-framer-name="Right"] > [class*="-container"]:has(> [data-framer-name="Variant 1"] > div + div:last-child)';
-  let menu = null, menuOpen = false;
-  function buildMenu() {
-    menu = document.createElement('nav');
-    menu.className = 'avfx-menu';
-    menu.id = 'avfx-menu';
-    menu.setAttribute('aria-label', 'Menu');
-    const cta = [...document.querySelectorAll('[data-framer-name="Nav"] a')].find(a => /connect with me/i.test(a.textContent));
-    menu.innerHTML = '<ul>' + MENU.map(([label, href, ext]) =>
-      `<li><a href="${href}"${ext ? ' target="_blank" rel="noopener"' : ''}>${label}<span class="avfx-arrow" aria-hidden="true">${ext ? '↗' : '→'}</span></a></li>`).join('') +
-      `</ul><a class="avfx-menu-cta" href="${cta ? cta.href : 'https://www.linkedin.com/in/aledvascha/'}" target="_blank" rel="noopener">Connect with me</a>`;
-    menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
-    document.body.append(menu);
-  }
-  function setMenu(open) {
-    const btn = document.querySelector(BURGER);
-    if (open && !btn) return;
-    if (open && !menu) buildMenu();
-    menuOpen = open;
-    if (menu) {
-      if (open) {
-        const nav = btn.closest('[data-framer-name="Nav"]:has(> [data-framer-name="Left"])') || btn;
-        const r = nav.getBoundingClientRect();
-        menu.style.top = `${r.bottom + 8}px`;
-        menu.style.left = `${r.left}px`;
-        menu.style.width = `${r.width}px`;
-      }
-      menu.dataset.open = open;
-      menu.inert = !open;
-    }
-    document.querySelectorAll(BURGER).forEach(b => {
-      b.setAttribute('aria-expanded', open);
-      b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      b.dataset.avfxOpen = open;
-    });
-    if (open) setNavHidden(false);
-  }
-  // Framer's own tap handler would open the old overlay, so the hamburger's
-  // pointer events stop here, before they reach it.
-  ['pointerdown', 'pointerup', 'mousedown', 'mouseup', 'click'].forEach(type => addEventListener(type, e => {
-    const btn = e.target.closest?.(BURGER);
-    if (!btn) {
-      if (type === 'click' && menuOpen && !e.target.closest('.avfx-menu')) setMenu(false);
-      return;
-    }
-    e.stopImmediatePropagation();
-    e.preventDefault();
-    if (type === 'click') setMenu(!menuOpen);
-  }, true));
-  addEventListener('keydown', e => {
-    const btn = e.target.closest?.(BURGER);
-    if (btn && (e.key === 'Enter' || e.key === ' ')) {
-      e.stopImmediatePropagation();
-      e.preventDefault();
-      setMenu(!menuOpen);
-    } else if (e.key === 'Escape' && menuOpen) {
-      setMenu(false);
-      document.querySelector(BURGER)?.focus();
-    }
-  }, true);
-  addEventListener('resize', () => { if (menuOpen) setMenu(false); });
-  function prepBurger() {
-    document.querySelectorAll(BURGER).forEach(b => {
-      if (b.dataset.avfxBurger) return;
-      b.dataset.avfxBurger = '1';
-      b.setAttribute('role', 'button');
-      b.tabIndex = 0;
-      b.setAttribute('aria-controls', 'avfx-menu');
-      b.setAttribute('aria-expanded', menuOpen);
-      b.setAttribute('aria-label', menuOpen ? 'Close menu' : 'Open menu');
-    });
-  }
 
   /* -------------------------------------------------------- magnetic */
   function magnetic(el, strength) {
@@ -610,7 +494,6 @@
     }
     syncTheme();
     findHeader();
-    prepBurger();
 
     // Hero heading (an h1 on desktop, an h2 in Framer's phone layout): rise
     // in, react, gradient on "Design & Engineering".
