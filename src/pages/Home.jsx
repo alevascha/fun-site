@@ -163,11 +163,13 @@ export default function Home() {
             <SplitText text="Ale's Fun" delay={0.15} stagger={0.04} reactive />{' '}
             <SplitText text="Lab" as="em" delay={0.45} stagger={0.06} reactive charClassName="grad-char" />
           </h1>
+          {/* No fade on the subtitle: it's the page's Largest Contentful Paint,
+              and an opacity-0 start delays it until the animation runs. */}
           <motion.p
             className="hub-sub"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: EASE, delay: 0.35 }}
+            initial={{ y: 16 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.7, ease: EASE }}
           >
             {t(
               'Small, fun tools I build on the side — color, type and design-system experiments with accessibility baked in. Pick one and play.',

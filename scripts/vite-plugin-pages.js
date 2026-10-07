@@ -41,6 +41,15 @@ export default function pagesPlugin() {
       let html;
       try { html = await fs.readFile(path.join(outDir, 'index.html'), 'utf8'); } catch { return; } // dev / non-build
 
+      // Inline the entry CSS (~14 KB gzipped): a <link> blocks the first paint
+      // until a second request finishes, which costs ~0.4 s on mobile.
+      const links = [...html.matchAll(/<link rel="stylesheet" crossorigin href="(\/assets\/[^"]+\.css)">/g)];
+      for (const [tag, href] of links) {
+        const css = await fs.readFile(path.join(outDir, href), 'utf8');
+        html = html.replace(tag, () => `<style>${css}</style>`);
+      }
+      await fs.writeFile(path.join(outDir, 'index.html'), html);
+
       // "/es" → es.html, "/es/guias/x" → es/guias/x.html. Hosts serve
       // /route from route.html with a 200 (no redirect to /route/).
       const write = async (route, content) => {
