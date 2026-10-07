@@ -3,6 +3,7 @@ import Background from '../components/Background';
 import SiteNav from '../components/SiteNav';
 import SiteFooter from '../components/SiteFooter';
 import SplitText from '../components/motion/SplitText';
+import TokenOrbit from '../components/motion/TokenOrbit';
 import Newsletter from '../components/Newsletter';
 import { Reveal } from '../components/ui';
 import usePageMeta from '../hooks/usePageMeta';
@@ -25,7 +26,8 @@ export default function GuidesIndex() {
       <Background />
       <div className="page-inner">
         <SiteNav />
-        <header className="tool-header">
+        <header className="tool-header guides-header">
+          <TokenOrbit className="guides-orbit" />
           <Link to={to('/')} className="back-link"><span className="arrow" aria-hidden="true">←</span> {t('Back to the lab', 'Volver al lab')}</Link>
           <SplitText key={lang} as="h1" className="tool-title" text={t('Guides', 'Guías')} delay={0.1} stagger={0.04} reactive />
           <p className="tool-desc">{t('Short, practical answers to the questions behind each tool.', 'Respuestas breves y prácticas a las preguntas detrás de cada herramienta.')}</p>

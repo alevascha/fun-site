@@ -259,7 +259,7 @@ export default function Home() {
           </p>
           <Magnetic strength={0.5}>
             <motion.a
-              href="https://www.alevasquez.dev/"
+              href="https://www.alevasquez.dev/contact"
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-chip"

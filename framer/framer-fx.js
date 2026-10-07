@@ -15,6 +15,9 @@
    - buttons/icons: magnetic pull
    - images: scroll parallax; top scroll-progress bar; Lenis smooth scroll
    - touch: ripples where you tap, ambient wandering light
+   - hero 3D: design tokens orbiting the gradient ball, unfolding on scroll
+   - page transitions: a curtain slides over the page while Framer navigates
+   - case studies: big images open up from a rounded window as they scroll in
    Uses the individual `translate` / `scale` / `rotate` CSS properties so it
    composes with Framer's own transform animations instead of fighting them.
    Everything is off for prefers-reduced-motion. */
@@ -46,7 +49,7 @@
   html[data-avfx-theme=light] .avfx-spot{mix-blend-mode:multiply;background:radial-gradient(560px circle at var(--cx) var(--cy),rgba(245,225,255,.9),transparent 70%)}
   .avfx-bg[data-active=true] .avfx-grid-lit,.avfx-spot[data-active=true]{opacity:1}
   .avfx-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:2147483001;pointer-events:none;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#CD57FF,#ff7ab6 50%,#FFCE1F)}
-  .avfx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;border-radius:inherit;-webkit-mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%);mask-image:linear-gradient(#000 0%,#000 45%,transparent 85%)}
+  .avfx-canvas{position:absolute;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;border-radius:inherit;-webkit-mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%);mask-image:radial-gradient(120% 90% at 50% 40%,#000 30%,transparent 85%)}
   .avfx-canvas.avfx-touch{height:min(100%,115svh);-webkit-mask-image:none;mask-image:none}
   .avfx-touchglow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;z-index:2147483000;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,var(--avfx-spot),transparent);will-change:transform;opacity:0;transition:opacity .8s}
   .avfx-touchglow[data-on=true]{opacity:1}
@@ -80,6 +83,12 @@
   [data-avfx-banner][data-framer-name$="Hover"]{background-image:linear-gradient(rgb(51,54,56),rgb(51,54,56))!important}
   .avfx-ripple{position:fixed;z-index:2147483002;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;pointer-events:none;border:2px solid rgba(205,87,255,.8);background:radial-gradient(circle,rgba(255,206,31,.35),transparent 70%);animation:avfx-ripple .7s ${EASE} forwards}
   @keyframes avfx-ripple{to{transform:scale(7);opacity:0}}
+  .avfx-orbit{position:absolute;z-index:1;pointer-events:none}
+  .avfx-curtain{position:fixed;inset:0;z-index:2147483003;pointer-events:none;translate:0 100%;visibility:hidden}
+  .avfx-curtain::before,.avfx-curtain::after{content:"";position:absolute;left:0;right:0;height:4px;background:linear-gradient(90deg,#CD57FF,#ff7ab6 50%,#FFCE1F);box-shadow:0 0 24px 4px rgba(205,87,255,.45)}
+  .avfx-curtain::before{top:0}.avfx-curtain::after{bottom:0}
+  .avfx-curtain[data-state=cover]{visibility:visible;pointer-events:auto;translate:0 0;transition:translate .42s cubic-bezier(.7,0,.3,1)}
+  .avfx-curtain[data-state=reveal]{visibility:visible;translate:0 -100%;transition:translate .6s cubic-bezier(.7,0,.3,1)}
   @media (prefers-reduced-motion:reduce){.avfx-orb{animation:none}.avfx-ch>i,.avfx-w>i{translate:0 0;rotate:0deg;transition:none}}
   `;
   const style = document.createElement('style');
@@ -435,8 +444,17 @@
     const local = { x: -9999, y: -9999, on: false };
     const seed = () => {
       const n = coarse ? Math.min(70, Math.round((w * h) / 5000)) : Math.min(140, Math.round((w * h) / 9000));
-      list = Array.from({ length: n }, () => ({ x: Math.random() * w, y: Math.random() * h, vx: 0, vy: 0, r: 1 + Math.random() * 1.8, c: COLORS[(Math.random() * COLORS.length) | 0], p: Math.random() * 6.28 }));
+      list = Array.from({ length: n }, () => spawn({ r: 1 + Math.random() * 1.8, c: COLORS[(Math.random() * COLORS.length) | 0], p: Math.random() * 6.28 }, true));
     };
+    // The flow field slowly herds particles into a few streams, so after a while
+    // they pile up in one corner. Each one lives 10-24 s, fades out and is reborn
+    // somewhere random, which keeps the constellation evenly spread.
+    function spawn(o, stagger) {
+      o.x = Math.random() * w; o.y = Math.random() * h; o.vx = 0; o.vy = 0;
+      o.life = 600 + Math.random() * 840; o.age = stagger ? Math.random() * o.life : 0;
+      return o;
+    }
+    const alive = o => Math.min(1, o.age / 90, (o.life - o.age) / 90);
     const resize = () => {
       const r = canvas.getBoundingClientRect(), dpr = Math.min(coarse ? 1.5 : 2, devicePixelRatio || 1);
       w = r.width; h = r.height;
@@ -455,6 +473,7 @@
           if (d2 < 22500 && d2 > 0.01) { const d = Math.sqrt(d2), k = (1 - d / 150) * 1.4; p.vx += dx / d * k; p.vy += dy / d * k; }
         }
         p.vx *= 0.94; p.vy *= 0.94; p.x += p.vx; p.y += p.vy;
+        if (++p.age >= p.life) spawn(p, false);
         if (p.x < -10) p.x = w + 10; else if (p.x > w + 10) p.x = -10;
         if (p.y < -10) p.y = h + 10; else if (p.y > h + 10) p.y = -10;
       }
@@ -464,23 +483,23 @@
     function draw() {
       ctx.clearRect(0, 0, w, h);
       for (let i = 0; i < list.length; i++) {
-        const a = list[i], fa = fade(a.y);
+        const a = list[i], fa = fade(a.y) * alive(a);
         if (!fa) continue;
         for (let j = i + 1; j < list.length; j++) {
           const b = list[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
           if (d2 < 12100) {
-            ctx.strokeStyle = `rgba(${a.c},${(1 - Math.sqrt(d2) / 110) * 0.35 * fa})`;
+            ctx.strokeStyle = `rgba(${a.c},${(1 - Math.sqrt(d2) / 110) * 0.35 * fa * alive(b)})`;
             ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
           }
         }
         if (local.on && !coarse) {
           const d = Math.hypot(a.x - local.x, a.y - local.y);
-          if (d < 180) { ctx.strokeStyle = `rgba(${a.c},${(1 - d / 180) * 0.6})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(local.x, local.y); ctx.stroke(); }
+          if (d < 180) { ctx.strokeStyle = `rgba(${a.c},${(1 - d / 180) * 0.6 * fa})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(local.x, local.y); ctx.stroke(); }
         }
       }
       for (const p of list) {
         const pulse = 0.6 + Math.sin(t * 6 + p.p) * 0.4;
-        const fp = fade(p.y);
+        const fp = fade(p.y) * alive(p);
         if (!fp) continue;
         ctx.fillStyle = `rgba(${p.c},${(0.55 + pulse * 0.4) * fp})`;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.8 + pulse * 0.4), 0, 6.283); ctx.fill();
@@ -518,6 +537,205 @@
     }, { passive: true });
     resize(); start();
   }
+
+  /* ------------------------------------------------------ token orbit */
+  // The hero's 3D piece: a shell of design tokens orbiting the gradient ball.
+  // They fly in from a loose cloud and click into a sphere, lean toward the
+  // pointer, bulge away from it, and unfold into a flat grid as you scroll
+  // (tokens becoming a system). Plain canvas 2D with a perspective projection,
+  // no WebGL library to download.
+  function orbit(ball) {
+    if (ball.querySelector(':scope > .avfx-orbit')) return;
+    const canvas = document.createElement('canvas');
+    canvas.className = 'avfx-orbit';
+    canvas.setAttribute('aria-hidden', 'true');
+    ball.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const N = coarse ? 190 : 340, FOCAL = 900;
+    const pts = Array.from({ length: N }, (_, i) => {
+      // Fibonacci sphere: evenly spread points on a unit sphere.
+      const y = 1 - (i + 0.5) / N * 2, rr = Math.sqrt(1 - y * y), th = i * 2.39996;
+      const s = Math.random() * 6.28, c = Math.acos(Math.random() * 2 - 1);
+      return {
+        sx: Math.cos(th) * rr, sy: y, sz: Math.sin(th) * rr,
+        cx: Math.sin(c) * Math.cos(s) * 2.6, cy: Math.cos(c) * 2.6, cz: Math.sin(c) * Math.sin(s) * 2.6, // intro cloud
+        gx: 0, gz: 0,
+        col: COLORS[i % 7 === 0 ? 2 : i % 5 === 0 ? 3 : i % 3 === 0 ? 1 : 0],
+        chip: i % 11 === 0, d: Math.random() * 500, bx: 0, by: 0,
+      };
+    });
+    const cols = Math.ceil(Math.sqrt(N));
+    pts.forEach((p, i) => { p.gx = ((i % cols) / (cols - 1) - 0.5) * 2.6; p.gz = (Math.floor(i / cols) / (cols - 1) - 0.5) * 2.6; });
+    const NEAR = [8, 13, 21, 34], LINK = 1.7 * Math.sqrt(4 * Math.PI / N);
+    let size = 0, R = 0, raf = 0, running = false, visible = true;
+    let rotY = 0, tiltX = 0.25, tiltY = 0, morph = 0;
+    const born = performance.now();
+    const ease = x => 1 - Math.pow(1 - x, 3);
+
+    const resize = () => {
+      const r = ball.getBoundingClientRect(), mid = r.left + r.width / 2;
+      size = Math.max(r.width, Math.min(r.width * 1.7, 2 * Math.min(mid, innerWidth - mid)));
+      R = r.width * 0.6;
+      const dpr = Math.min(coarse ? 1.5 : 2, devicePixelRatio || 1);
+      Object.assign(canvas.style, { width: size + 'px', height: size + 'px', left: (r.width - size) / 2 + 'px', top: (r.height - size) / 2 + 'px' });
+      canvas.width = Math.round(size * dpr); canvas.height = Math.round(size * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      draw(performance.now());
+    };
+
+    const proj = [];
+    function draw(now) {
+      const h = size / 2;
+      ctx.clearRect(0, 0, size, size);
+      const r = canvas.getBoundingClientRect();
+      // Lean toward the pointer, anywhere on the page.
+      const nx = Math.max(-1, Math.min(1, (ptr.x - r.left - h) / innerWidth * 2));
+      const ny = Math.max(-1, Math.min(1, (ptr.y - r.top - h) / innerHeight * 2));
+      tiltY += (nx * 0.5 - tiltY) * 0.05;
+      tiltX += (0.25 + ny * 0.35 - tiltX) * 0.05;
+      // Unfold into a grid once the sphere's center scrolls past the middle of
+      // the screen (on phones the hero ball sits below the fold).
+      const want = Math.min(1, Math.max(0, (innerHeight / 2 - (r.top + h)) / (innerHeight * 0.6)));
+      morph += (want - morph) * 0.08;
+      const m = ease(morph);
+      rotY += reduce ? 0 : 0.0028 * (1 - m * 0.7);
+      const ay = rotY + tiltY, ax = tiltX + m * 0.55;
+      const cy = Math.cos(ay), sy = Math.sin(ay), cx = Math.cos(ax), sx = Math.sin(ax);
+      const lx = ptr.x - r.left, ly = ptr.y - r.top, t = now - born;
+      for (let i = 0; i < N; i++) {
+        const p = pts[i];
+        const k = reduce ? 1 : ease(Math.min(1, Math.max(0, (t - p.d) / 1600)));
+        // cloud → sphere → grid
+        let x = p.cx + (p.sx - p.cx) * k, y = p.cy + (p.sy - p.cy) * k, z = p.cz + (p.sz - p.cz) * k;
+        x += (p.gx - x) * m; y += (0 - y) * m; z += (p.gz - z) * m;
+        x *= R; y *= R; z *= R;
+        const x1 = x * cy - z * sy, z1 = x * sy + z * cy;
+        const y2 = y * cx - z1 * sx, z2 = y * sx + z1 * cx;
+        const s = FOCAL / (FOCAL + z2);
+        let px = h + x1 * s, py = h + y2 * s;
+        // Bulge away from the cursor (springy, in screen space).
+        if (fine && !reduce) {
+          const dx = px - lx, dy = py - ly, d = Math.hypot(dx, dy);
+          const push = d < 110 && d > 0.1 ? (1 - d / 110) * 26 : 0;
+          p.bx += ((push ? dx / d * push : 0) - p.bx) * 0.15;
+          p.by += ((push ? dy / d * push : 0) - p.by) * 0.15;
+          px += p.bx; py += p.by;
+        }
+        const depth = Math.max(0, Math.min(1, 0.5 - z2 / (2 * R))); // 1 front, 0 back
+        proj[i] = { x: px, y: py, s, a: (0.18 + depth * 0.82) * Math.min(1, k * 1.5), x3: x, y3: y, z3: z };
+      }
+      // Lattice lines between near neighbours (Fibonacci offsets).
+      ctx.lineWidth = 0.7;
+      const lim = LINK * R * (1 + m * 0.4);
+      for (let i = 0; i < N; i++) {
+        const a = proj[i];
+        for (const o of NEAR) {
+          const b = proj[i + o];
+          if (!b) continue;
+          const d = Math.hypot(a.x3 - b.x3, a.y3 - b.y3, a.z3 - b.z3);
+          if (d > lim) continue;
+          ctx.strokeStyle = `rgba(${pts[i].col},${(1 - d / lim) * 0.28 * Math.min(a.a, b.a)})`;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+        }
+      }
+      // Tokens: dots, and every 11th one a small rounded "chip".
+      for (let i = 0; i < N; i++) {
+        const p = pts[i], q = proj[i], z = q.s;
+        ctx.fillStyle = `rgba(${p.col},${q.a})`;
+        if (p.chip) {
+          const w = 9 * z, hh = 5.5 * z;
+          ctx.beginPath(); ctx.roundRect ? ctx.roundRect(q.x - w / 2, q.y - hh / 2, w, hh, 2.5 * z) : ctx.rect(q.x - w / 2, q.y - hh / 2, w, hh); ctx.fill();
+        } else {
+          ctx.beginPath(); ctx.arc(q.x, q.y, 1.7 * z, 0, 6.283); ctx.fill();
+        }
+      }
+    }
+    const loop = now => { raf = requestAnimationFrame(loop); draw(now); };
+    const start = () => { if (!running && !reduce && visible && !document.hidden) { running = true; raf = requestAnimationFrame(loop); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+    new ResizeObserver(resize).observe(ball);
+    addEventListener('resize', resize, { passive: true });
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; visible ? start() : stop(); }).observe(canvas);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    if (reduce) addEventListener('scroll', () => requestAnimationFrame(draw), { passive: true });
+    resize(); start();
+  }
+
+  /* --------------------------------------------- case-study scroll */
+  // Big images on /projects/<slug> open up from a rounded window as they
+  // scroll in (scrubbed, so they follow the scroll both ways). The cover,
+  // already on screen at load, instead eases back and dims as you leave it.
+  const scrubbed = new Set();
+  let scrubRun = () => {};
+  if (!reduce) {
+    let f = 0;
+    const run = () => {
+      f = 0;
+      for (const img of scrubbed) {
+        if (!img.isConnected) { scrubbed.delete(img); continue; }
+        const r = img.getBoundingClientRect();
+        if (r.bottom < -100 || r.top > innerHeight + 100) continue;
+        const rad = img.dataset.avfxRad;
+        if (img.dataset.avfxScrub === 'cover') {
+          const x = Math.min(1, Math.max(0, -r.top / r.height));
+          img.style.scale = (1 - x * 0.08).toFixed(4);
+          img.style.opacity = (1 - x * 0.5).toFixed(3);
+        } else {
+          const e = Math.min(1, Math.max(0, (innerHeight - r.top) / (innerHeight * 0.6)));
+          const k = 1 - (1 - e) * (1 - e);
+          img.style.clipPath = k >= 1 ? '' : `inset(${((1 - k) * 12).toFixed(2)}% ${((1 - k) * 9).toFixed(2)}% round ${rad})`;
+          img.style.scale = (1.06 - k * 0.06).toFixed(4);
+        }
+      }
+    };
+    addEventListener('scroll', () => { if (!f) f = requestAnimationFrame(run); }, { passive: true });
+    addEventListener('resize', () => { if (!f) f = requestAnimationFrame(run); }, { passive: true });
+    scrubRun = run;
+  }
+
+  /* -------------------------------------------------- page transitions */
+  // Framer swaps pages client-side. A curtain in the page color (with the
+  // brand gradient on its edges) slides up over the old page, Framer
+  // navigates underneath it, and it keeps sliding up to uncover the new one.
+  const curtain = document.createElement('div');
+  curtain.className = 'avfx-curtain';
+  curtain.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(curtain);
+  let covering = false;
+  const afterReveal = [];
+  const whenShown = fn => (covering ? afterReveal.push(fn) : fn());
+  function reveal() {
+    if (!covering) return;
+    curtain.dataset.state = 'reveal';
+    // Start the entrance effects (hero letters etc.) just as the curtain lifts.
+    setTimeout(() => { covering = false; afterReveal.splice(0).forEach(fn => fn()); }, 120);
+    setTimeout(() => { if (!covering) curtain.dataset.state = ''; }, 700);
+  }
+  if (!reduce) addEventListener('click', e => {
+    if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || covering) return;
+    const a = e.target.closest?.('a[href]');
+    if (!a || (a.target && a.target !== '_self') || a.hasAttribute('download')) return;
+    if (a.dataset.avfxGo) { delete a.dataset.avfxGo; return; }
+    const url = new URL(a.href, location.href);
+    if (url.origin !== location.origin || (url.pathname === location.pathname)) return;
+    e.preventDefault(); e.stopPropagation();
+    covering = true;
+    curtain.style.backgroundColor = getComputedStyle(pageRoot || document.body).backgroundColor;
+    curtain.dataset.state = 'cover';
+    const from = location.pathname;
+    setTimeout(() => {
+      a.dataset.avfxGo = '1';
+      a.click();
+      // Uncover once the new page has rendered (or after 1.5 s no matter what).
+      const t0 = performance.now();
+      const wait = () => {
+        if (location.pathname !== from) setTimeout(reveal, 180);
+        else if (performance.now() - t0 > 1500) reveal();
+        else requestAnimationFrame(wait);
+      };
+      requestAnimationFrame(wait);
+    }, 420);
+  }, true);
 
   /* ------------------------------------------------- offscreen pause */
   // Framer's gradient ball redraws a canvas under a 40px blur every frame, even
@@ -576,7 +794,7 @@
       const gradFrom = at > 0 ? text.slice(0, at).replace(/\s/g, '').length : null;
       const chars = splitChars(h, gradFrom);
       if (!reduce) reactive.add(chars);
-      requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('avfx-in')));
+      whenShown(() => requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('avfx-in'))));
     });
 
     // 404 page: the big number gets the brand gradient and reactive letters.
@@ -600,15 +818,21 @@
     // Hero particles inside the rounded hero panel.
     const hero = main.querySelector('[data-framer-name="Hero Section"] > [data-framer-name="Wrapper"]');
     if (hero) particles(hero);
+    // 3D token orbit around the hero's gradient ball.
+    const ball = main.querySelector('[data-framer-name="Hero Section"] [data-framer-name="Ball"]');
+    if (ball && ball.offsetWidth) orbit(ball);
+    // Same constellation behind the contact panel.
+    const contactPanel = main.querySelector('[data-framer-name="Contact panel"]');
+    if (contactPanel) particles(contactPanel);
 
     // Cards: project cards, testimonials and any big rounded opaque panel.
-    // The /project page lists the same card component outside a "Project Cards"
+    // The /projects page lists the same card component outside a "Project Cards"
     // frame, so a card is also the panel around any "View Project" link.
     const isPanel = el => {
       const cs = getComputedStyle(el);
       return parseFloat(cs.borderTopLeftRadius) >= 12 && cs.backgroundColor !== 'rgba(0, 0, 0, 0)' && el.offsetWidth >= 240;
     };
-    const viewPanels = [...main.querySelectorAll('a[href*="project/"]')]
+    const viewPanels = [...main.querySelectorAll('a[href*="projects/"], a[href*="project/"]')]
       .filter(a => /view project/i.test(a.textContent))
       .map(a => { let p = a.parentElement; while (p && p !== main && !isPanel(p)) p = p.parentElement; return p !== main && p; })
       .filter(Boolean);
@@ -666,6 +890,20 @@
       img.style.scale = '1.12';
       parallax.add(img);
     });
+
+    // Case studies: scroll-scrubbed reveals on the big rounded images.
+    if (!reduce && /^\/projects\/[^/]+/.test(location.pathname)) {
+      main.querySelectorAll('img').forEach(img => {
+        if (img.dataset.avfxScrub || img.dataset.avfx || img.offsetWidth < 480 || img.closest('[aria-hidden="true"], [data-avfx-card]')) return;
+        const rad = getComputedStyle(img).borderTopLeftRadius;
+        if (parseFloat(rad) < 8) return;
+        img.dataset.avfxRad = rad;
+        img.dataset.avfxScrub = img.getBoundingClientRect().top < innerHeight * 0.75 ? 'cover' : 'reveal';
+        img.style.willChange = 'clip-path, scale';
+        scrubbed.add(img);
+      });
+      scrubRun();
+    }
   }
 
   /* --------------------------------------------------- smooth scroll */

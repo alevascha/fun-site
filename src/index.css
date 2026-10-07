@@ -432,6 +432,20 @@ img { max-width: 100%; display: block; }
 .back-link:hover { color: var(--text); }
 .back-link .arrow { transition: transform 0.25s var(--ease-out); }
 .back-link:hover .arrow { transform: translateX(-4px); }
+/* Guides index: the portfolio's 3D token orbit floats beside the header. */
+.guides-header { position: relative; }
+.guides-header > :not(.guides-orbit) { position: relative; }
+.guides-orbit {
+  position: absolute;
+  right: -20px;
+  top: 50%;
+  width: min(380px, 36vw);
+  aspect-ratio: 1;
+  translate: 0 -50%;
+  pointer-events: none;
+}
+@media (min-width: 861px) { .guides-header { min-height: 400px; align-content: center; } }
+@media (max-width: 860px) { .guides-orbit { display: none; } }
 .tool-title-row { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .tool-emoji {
   width: clamp(56px, 7vw, 72px); height: clamp(56px, 7vw, 72px);
