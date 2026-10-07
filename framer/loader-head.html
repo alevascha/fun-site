@@ -1,0 +1,5 @@
+<!-- Ale's intro loader, part 1 (Framer → Custom Code → Start of <head>, all pages).
+     Paints a dark cover before the page does, on the first visit of a session;
+     the motion layer (end of <body>) builds the loader on top and removes it. -->
+<style>html.avfx-loading{overflow:hidden}html.avfx-loading::before{content:"";position:fixed;inset:0;z-index:2147483646;background:#111011}</style>
+<script>try{if(!sessionStorage.getItem('avfx-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/bot|crawl|spider|slurp|facebookexternalhit|preview/i.test(navigator.userAgent))document.documentElement.classList.add('avfx-loading')}catch(e){}</script>
