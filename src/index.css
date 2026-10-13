@@ -783,6 +783,14 @@ input[type='range']:active::-webkit-slider-thumb { transform: scale(1.2); box-sh
   margin: 0 auto 32px;
 }
 .hub-hero-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+/* Phones read left-aligned: centered multi-line text is harder to scan on a
+   narrow screen and clashes with the left-aligned cards below. Desktop keeps
+   the centered hero; short "moments" (the closing CTA) stay centered. */
+@media (max-width: 640px) {
+  .hub-hero { text-align: left; }
+  .hub-title, .hub-sub { margin-left: 0; margin-right: 0; }
+  .hub-hero-actions { justify-content: flex-start; }
+}
 
 .hub-section-head {
   display: flex;
@@ -1436,7 +1444,7 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
   gap: 20px;
   align-items: center;
-  margin-top: clamp(32px, 5vw, 56px);
+  margin-top: clamp(48px, 8vw, 96px); /* same section rhythm as the rest of the page */
   padding: clamp(20px, 3vw, 32px);
   border-radius: var(--radius-lg);
   background: radial-gradient(120% 140% at 0% 0%, rgba(205, 87, 255, 0.16), transparent 60%), radial-gradient(120% 140% at 100% 100%, rgba(255, 206, 31, 0.12), transparent 60%), var(--surface);
@@ -1781,6 +1789,23 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .pf-misses { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
 .pf-miss { display: grid; gap: 6px; padding: 14px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--border); }
 .pf-miss-note { font-size: 12px; font-weight: 600; opacity: .9; }
+
+/* ---- Beginner layer shared by the games (GamePrimer) ---- */
+.gp { display: grid; gap: 10px; width: 100%; text-align: left; }
+.gp-plain { margin: 0; padding: 14px 16px; border-radius: 14px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border); line-height: 1.6; }
+.gp-tag { display: block; margin-bottom: 4px; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--tool-accent, var(--accent-a)); }
+.gp-terms { font-size: 14px; color: var(--muted); }
+.gp-terms summary { cursor: pointer; font-weight: 600; color: var(--text); width: fit-content; }
+.gp-terms dl { display: grid; gap: 8px; margin: 10px 0 0; }
+.gp-terms dt { display: inline; font-weight: 700; color: var(--text); }
+.gp-terms dt::after { content: ': '; }
+.gp-terms dd { display: inline; margin: 0; line-height: 1.55; }
+.gp-practice { min-height: 44px; }
+.gp-badge { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 12px; font-size: 14px; background: color-mix(in srgb, var(--tool-accent, var(--accent-a)) 14%, transparent); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--tool-accent, var(--accent-a)) 40%, transparent); }
+.gp-exit { border: 0; background: none; padding: 0; font: inherit; font-weight: 600; color: var(--text); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.gp-lesson { margin: 0; padding: 12px 14px; border-radius: 12px; line-height: 1.55; font-size: 15px; background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--border); }
+.gp-lesson.is-bad { box-shadow: inset 3px 0 0 var(--fail), inset 0 0 0 1px var(--border); }
+.gp-lesson.is-ok { box-shadow: inset 3px 0 0 var(--pass), inset 0 0 0 1px var(--border); }
 
 /* ---- Optical Eye ---- */
 .oe-title { font-size: 15px; text-align: center; }

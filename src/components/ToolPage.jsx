@@ -111,7 +111,7 @@ export default function ToolPage({ id, intro, children }) {
         <AdSlot slot="tool" />
 
         <Reveal as="section" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="more-title">
-          <h2 id="more-title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 20px' }}>{t('More experiments', 'Más experimentos')}</h2>
+          <h2 id="more-title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 24px' }}>{t('More experiments', 'Más experimentos')}</h2>
           <div className="more-grid">
             {others.map(o => (
               <motion.div key={o.id} whileHover={{ y: -4 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }}>

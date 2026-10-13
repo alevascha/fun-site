@@ -53,11 +53,11 @@ export function ExpCard({ exp, fresh, index }) {
   const depth = isTouch ? 0 : [40, -10, 70][index % 3];
   const parallaxY = useSpring(useTransform(scrollYProgress, [0, 1], [depth, -depth]), { stiffness: 120, damping: 24 });
 
-  // Touch: each card tips up into focus as it reaches the middle of the
+  // Touch: each card grows gently into focus as it reaches the middle of the
   // screen, glows brightest there, and its emoji spins with the scroll.
-  const focus = { stiffness: 160, damping: 26 };
-  const focusScale = useSpring(useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [0.86, 1, 1, 0.92]), focus);
-  const focusRotateX = useSpring(useTransform(scrollYProgress, [0, 0.4, 0.6, 1], [24, 0, 0, -14]), focus);
+  // Tied straight to the scroll (no spring, no 3D tilt): a lagging tilt made
+  // neighbouring cards overlap and look broken during fast up/down scrolling.
+  const focusScale = useTransform(scrollYProgress, [0, 0.35, 0.65, 1], [0.95, 1, 1, 0.97]);
   const focusGlow = useTransform(scrollYProgress, [0.15, 0.5, 0.85], [0.1, 0.65, 0.1]);
   const emojiSpin = useTransform(scrollYProgress, [0, 1], [-50, 50]);
 
@@ -76,7 +76,7 @@ export function ExpCard({ exp, fresh, index }) {
         to={to(exp.path)}
         className="exp-card"
         style={isTouch
-          ? { '--card-accent': exp.accent, rotateX: focusRotateX, scale: focusScale, transformPerspective: 900 }
+          ? { '--card-accent': exp.accent, scale: focusScale }
           : { '--card-accent': exp.accent, rotateX, rotateY, transformPerspective: 900 }}
         onMouseMove={isTouch ? undefined : handleMouseMove}
         onMouseLeave={isTouch ? undefined : handleMouseLeave}

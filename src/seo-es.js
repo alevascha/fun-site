@@ -280,7 +280,7 @@ export const ES = {
     card: 'Veinte rondas rápidas: ¿este texto pasa el contraste WCAG AA? Confía en tu ojo y luego mira las proporciones reales.',
     title: 'Pasa o falla: juego de contraste WCAG',
     description: 'Pon a prueba tu ojo para el contraste accesible: veinte rondas cronometradas para decidir si el texto pasa WCAG AA (4.5:1 normal, 3:1 grande). Gratis y con explicaciones.',
-    intro: 'Veinte rondas rápidas: ¿este texto pasa el contraste WCAG AA o no? Confía en tu ojo y luego mira las proporciones reales. El texto normal necesita 4.5:1 y el grande 3:1.',
+    intro: '¿Este texto se lee bien sobre su fondo? Veinte rondas rápidas para entrenar el ojo en contraste accesible (la regla WCAG AA), con los números reales después de cada respuesta. No necesitas experiencia en diseño.',
     features: [
       'Pares generados cerca del límite AA, nunca justo en la línea',
       'Rondas con texto normal y grande, como en interfaces reales',
@@ -316,7 +316,7 @@ export const ES = {
     card: 'Los componentes caen con algo pasándoles. Elige hover, focus, presionado, cargando, error o deshabilitado antes de que toquen el piso.',
     title: 'Pánico de estados: juego de estados de interfaz',
     description: 'Juego arcade de estados de componentes: elige hover, focus-visible, presionado, cargando, error o deshabilitado antes de que cada componente toque el piso.',
-    intro: 'Los componentes caen con algo pasándoles. Elige el estado de interfaz correcto (hover, focus, presionado, cargando, error o deshabilitado) antes de que toquen el piso. Con tres fallos se termina.',
+    intro: 'Los botones y campos cambian de aspecto según lo que pasa: alguien los señala, los presiona o la app está cargando. Lee la situación y elige el aspecto correcto antes de que el componente toque el piso.',
     features: [
       'Seis estados reales en botones, campos, interruptores y tarjetas',
       'Eventos escritos como situaciones reales de producto',
@@ -334,7 +334,7 @@ export const ES = {
     card: 'Minigolf con curvas de animación: dale forma a un cubic-bezier para que el disco pase cada bandera a tiempo y tira. El par es tres.',
     title: 'Golf de curvas: juego de curvas de animación',
     description: 'Minigolf con curvas de animación: arrastra dos manijas cubic-bezier para que el disco pase cada bandera a tiempo y tira. Seis hoyos, par tres cada uno.',
-    intro: 'Minigolf con curvas de animación. Dale forma a un cubic-bezier para que el disco pase cada bandera en el momento justo y tira. Gana quien usa menos golpes; el par es tres.',
+    intro: 'Minigolf sobre cómo se mueven las cosas en pantalla. Dobla una curva para que el disco acelere o frene y pase cada bandera en el momento justo, y tira. Gana quien usa menos golpes.',
     features: [
       'Seis hoyos con curvas reales, incluidos rebote y anticipación',
       'Arrastra las manijas con el dedo, el mouse o las flechas',
@@ -352,7 +352,7 @@ export const ES = {
     card: 'El fondo no deja de cambiar. Ajusta la luminosidad del texto para que pase WCAG AA, luego AAA, el mayor tiempo posible.',
     title: 'Supervivencia de contraste: juego de reflejos WCAG',
     description: 'El fondo cambia sin parar. Ajusta la luminosidad del texto para seguir pasando WCAG AA (4.5:1) y luego AAA (7:1) el mayor tiempo posible.',
-    intro: 'El fondo cambia de color y luminosidad sin parar. Mantén la luminosidad del texto para que el par siga pasando WCAG: AA con 4.5:1 primero y AAA con 7:1 después de veinte segundos.',
+    intro: 'El fondo cambia de color sin parar. Aclara u oscurece el texto para que siempre se lea bien, primero al nivel estándar (WCAG AA) y luego al estricto (AAA). Sobrevive todo lo que puedas.',
     features: [
       'Proporción de contraste WCAG en vivo mientras el fondo cambia',
       'AA los primeros veinte segundos, luego AAA con 7:1',
@@ -370,7 +370,7 @@ export const ES = {
     card: 'Reemplaza valores fijos con los design tokens correctos, rápido. Mismo valor no es el mismo token. Luego cambia el tema y mira qué se rompe.',
     title: 'Carrera de tokens: juego de design tokens',
     description: 'Reemplaza valores fijos de un componente con los design tokens semánticos correctos, contra reloj. Luego cambia el tema y mira qué se rompe.',
-    intro: 'Un componente lleno de valores fijos. Cada ronda ilumina uno; elige rápido el token semántico que debería reemplazarlo. Algunos tokens comparten valor a propósito: lee el significado, no solo el número.',
+    intro: 'Los productos les ponen nombre a sus colores y tamaños para que un solo cambio actualice todas las pantallas. Cada ronda resalta un valor suelto de una tarjeta; elige el nombre (design token) que debería usar. Algunos nombres comparten valor: piensa para qué sirve.',
     features: [
       'Catorce propiedades: color, espaciado, radio y tipografía',
       'Tokens que comparten valor a propósito, como space-md y radius-lg',

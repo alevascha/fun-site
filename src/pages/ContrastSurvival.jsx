@@ -9,6 +9,7 @@ import { useLang } from '../i18n';
 import { track } from '../lib/analytics';
 import { haptic } from '../lib/haptics';
 import { glideTo } from '../lib/smoothScroll';
+import { GamePrimer, Lesson, PracticeBadge, PracticeButton } from '../components/GamePrimer';
 
 /* Contrast Survival: the background drifts through hues and lightness, faster
    and faster. You hold the text lightness so the pair keeps passing WCAG:
@@ -18,6 +19,7 @@ import { glideTo } from '../lib/smoothScroll';
 const AAA_AT = 20; // seconds
 const DRAIN = 26; // health per second while failing
 const REGEN = 6;
+const PRACTICE_SECONDS = 25; // practice: half speed, AA only, no damage
 
 // Background path: a few slow sine waves so it never repeats predictably.
 function bgAt(t) {
@@ -42,11 +44,15 @@ export default function ContrastSurvival() {
   const state = useRef({ t0: 0, last: 0, hp: 100, failing: 0 });
   const Lref = useRef(L);
   Lref.current = L;
+  const [practice, setPractice] = useState(false);
+  const [practiced, setPracticed] = useState(false);
+  const practiceRef = useRef(false);
 
-  const start = () => {
+  const start = (asPractice = false) => {
+    setPractice(asPractice); practiceRef.current = asPractice;
     state.current = { t0: performance.now(), last: performance.now(), hp: 100, failing: 0 };
     setL(98); setFrame({ t: 0, bg: bgAt(0), hp: 100 }); setPhase('play');
-    track('Contrast Survival start');
+    track(asPractice ? 'Contrast Survival practice' : 'Contrast Survival start');
   };
 
   useEffect(() => {
@@ -57,13 +63,18 @@ export default function ContrastSurvival() {
       const dt = Math.min(0.25, (now - st.last) / 1000);
       st.last = now;
       const time = (now - st.t0) / 1000;
-      const bg = bgAt(time);
-      const need = time >= AAA_AT ? 7 : 4.5;
-      const ratio = contrastRatio(hslToRgb(bg[0], 12, Lref.current), hslToRgb(...bg));
+      const easy = practiceRef.current;
+      const bg = bgAt(easy ? time * 0.5 : time);
+      const need = !easy && time >= AAA_AT ? 7 : 4.5;
+      const bgRgb = hslToRgb(...bg);
+      const ratio = contrastRatio(hslToRgb(bg[0], 12, Lref.current), bgRgb);
       const ok = ratio >= need;
-      st.hp = Math.min(100, Math.max(0, st.hp + (ok ? REGEN : -DRAIN) * dt));
+      // Which way to move: whichever end of the slider contrasts more with this background.
+      const up = contrastRatio(hslToRgb(bg[0], 12, 100), bgRgb) >= contrastRatio(hslToRgb(bg[0], 12, 0), bgRgb);
+      if (!easy) st.hp = Math.min(100, Math.max(0, st.hp + (ok ? REGEN : -DRAIN) * dt));
       if (!ok) st.failing += dt;
-      setFrame({ t: time, bg, hp: st.hp, ratio, need, ok });
+      setFrame({ t: time, bg, hp: st.hp, ratio, need, ok, up });
+      if (easy && time >= PRACTICE_SECONDS) { setPracticed(true); setPhase('intro'); return; }
       if (st.hp <= 0) { haptic([40, 60, 40]); setPhase('over'); return; }
       raf = requestAnimationFrame(tick);
     };
@@ -85,7 +96,7 @@ export default function ContrastSurvival() {
 
   const survived = +frame.t.toFixed(1);
   useEffect(() => {
-    if (phase !== 'over') return;
+    if (phase !== 'over' || practice) return;
     track('Contrast Survival finished', { seconds: survived });
     if (survived > best) { setBest(survived); try { localStorage.setItem('contrastsurvival:best', String(survived)); } catch { /* private mode */ } }
   }, [phase]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -109,7 +120,7 @@ export default function ContrastSurvival() {
   const fgHex = hslToHex(frame.bg[0], 12, L);
 
   return (
-    <ToolPage id="contrast-survival" intro="The background keeps shifting color and lightness. Hold the text lightness so the pair keeps passing WCAG: AA at 4.5:1 first, AAA at 7:1 after twenty seconds. Survive as long as you can.">
+    <ToolPage id="contrast-survival" intro="The background keeps changing color. Make the text lighter or darker so it always stays easy to read, first at the standard level (WCAG AA), then at the strict one (AAA). Survive as long as you can.">
       <AnimatePresence mode="wait">
         {phase === 'intro' && (
           <motion.div key="intro" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.4, ease: EASE }} className="card pf-intro">
@@ -119,20 +130,31 @@ export default function ContrastSurvival() {
               <span style={{ background: '#7A5BC8', color: '#B9A9E0' }}>Aa 2.0</span>
             </div>
             <h2 className="pf-h">{t('Keep the text readable', 'Mantén el texto legible')}</h2>
+            <GamePrimer
+              plain={t('The background keeps changing color. Your only job is to make the text lighter or darker so it stays easy to read. A number tells you how readable it is: keep it above the goal.', 'El fondo cambia de color todo el tiempo. Tu único trabajo es aclarar u oscurecer el texto para que siga siendo fácil de leer. Un número te dice qué tan legible es: mantenlo sobre la meta.')}
+              terms={[
+                [t('Contrast ratio', 'Proporción de contraste'), t('How much the text stands out, from 1:1 (invisible) to 21:1 (black on white).', 'Cuánto resalta el texto, de 1:1 (invisible) a 21:1 (negro sobre blanco).')],
+                ['AA / AAA', t('Accessibility levels. AA asks for 4.5:1, AAA (stricter) asks for 7:1.', 'Niveles de accesibilidad. AA pide 4.5:1 y AAA (más estricto) pide 7:1.')],
+                [t('Rule of thumb', 'Regla práctica'), t('Dark background, light text. Light background, dark text. Mid-tones are the hard part.', 'Fondo oscuro, texto claro. Fondo claro, texto oscuro. Los tonos medios son lo difícil.')],
+              ]}
+            />
+            {practiced && <Lesson tone="ok">{t('Practice done. The real game is twice as fast, goes up to AAA and failing costs health.', 'Práctica lista. El juego real va al doble de velocidad, sube a AAA y fallar te quita salud.')}</Lesson>}
             <ul className="pf-rules">
               <li>{t('The background drifts. You control only the text lightness.', 'El fondo cambia. Tú solo controlas la luminosidad del texto.')}</li>
               <li>{t('Stay above 4.5:1. After 20 seconds the bar rises to AAA, 7:1.', 'Mantente sobre 4.5:1. A los 20 segundos la exigencia sube a AAA, 7:1.')}</li>
               <li>{t('Failing drains your health. Use the slider or ↑ / ↓.', 'Fallar te quita salud. Usa el control o ↑ / ↓.')}</li>
             </ul>
-            <motion.button type="button" className="btn btn-primary pf-start" whileTap={{ scale: 0.96 }} onClick={start}>{t('Start the game', 'Empezar el juego')}</motion.button>
+            <motion.button type="button" className="btn btn-primary pf-start" whileTap={{ scale: 0.96 }} onClick={() => start(false)}>{t('Start the game', 'Empezar el juego')}</motion.button>
+            {!practiced && <PracticeButton onClick={() => start(true)} />}
             {best > 0 && <p className="small muted" style={{ margin: 0 }}>{t(`Your best: ${best}s`, `Tu mejor tiempo: ${best} s`)}</p>}
           </motion.div>
         )}
 
         {phase === 'play' && (
           <motion.div key="play" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="pf-play">
+            {practice && <PracticeBadge onExit={() => start(false)} />}
             <div className="pf-hud">
-              <span className="mono">{frame.t.toFixed(1)}s</span>
+              <span className="mono">{practice ? `${Math.max(0, PRACTICE_SECONDS - frame.t).toFixed(0)}s` : `${frame.t.toFixed(1)}s`}</span>
               <span className="pf-timer" aria-label={t('Health', 'Salud')}><span style={{ width: `${frame.hp}%`, background: frame.hp < 35 ? 'var(--fail)' : 'var(--accent-grad-linear)' }} /></span>
               <span className={'cs-need' + (frame.need === 7 ? ' is-aaa' : '')}>{frame.need === 7 ? 'AAA 7:1' : 'AA 4.5:1'}</span>
             </div>
@@ -148,6 +170,15 @@ export default function ContrastSurvival() {
               <input type="range" min="0" max="100" step="1" value={L} aria-label={t('Text lightness', 'Luminosidad del texto')} onChange={e => setL(+e.target.value)}
                 style={{ '--track': `linear-gradient(90deg, ${hslToHex(frame.bg[0], 12, 0)}, ${hslToHex(frame.bg[0], 12, 50)}, ${hslToHex(frame.bg[0], 12, 100)})`, '--thumb': fgHex }} />
             </div>
+            {frame.ratio > 0 && (frame.ok === false || practice) && (
+              <Lesson tone={frame.ok ? 'ok' : 'bad'}>
+                {frame.ok
+                  ? t(`Readable: ${formatRatio(frame.ratio)}:1 is above the ${frame.need}:1 goal.`, `Legible: ${formatRatio(frame.ratio)}:1 está sobre la meta de ${frame.need}:1.`)
+                  : frame.up
+                    ? t(`Too faint: ${formatRatio(frame.ratio)}:1, needs ${frame.need}:1. The background is dark, slide the text lighter →`, `Muy tenue: ${formatRatio(frame.ratio)}:1, necesita ${frame.need}:1. El fondo es oscuro, desliza el texto a más claro →`)
+                    : t(`Too faint: ${formatRatio(frame.ratio)}:1, needs ${frame.need}:1. The background is light, slide the text darker ←`, `Muy tenue: ${formatRatio(frame.ratio)}:1, necesita ${frame.need}:1. El fondo es claro, desliza el texto a más oscuro ←`)}
+              </Lesson>
+            )}
           </motion.div>
         )}
 
@@ -163,7 +194,7 @@ export default function ContrastSurvival() {
               <div className="pf-demo" aria-hidden="true"><span style={{ background: bgHex, color: fgHex }}>{t('Last frame', 'Último cuadro')} · {frame.ratio ? formatRatio(frame.ratio) : '–'}:1</span></div>
               <div className="chip-row" style={{ justifyContent: 'center' }}>
                 <motion.button type="button" className="btn btn-primary" whileTap={{ scale: 0.96 }} onClick={share}>{copied ? t('Copied ✓', 'Copiado ✓') : t('Share score', 'Compartir puntaje')}</motion.button>
-                <button type="button" className="btn btn-ghost" onClick={start}>{t('Play again', 'Jugar otra vez')}</button>
+                <button type="button" className="btn btn-ghost" onClick={() => start(false)}>{t('Play again', 'Jugar otra vez')}</button>
                 <Link to={es ? '/es/verificador-de-contraste' : '/contrast-checker'} className="btn btn-ghost">{t('Open Contrast Checker', 'Abrir el verificador')}</Link>
               </div>
             </Reveal>
