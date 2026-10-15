@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Background from '../components/Background';
 import SiteNav from '../components/SiteNav';
 import SiteFooter from '../components/SiteFooter';
@@ -9,6 +9,7 @@ import ParticleField from '../components/motion/ParticleField';
 import Magnetic from '../components/motion/Magnetic';
 import Marquee from '../components/motion/Marquee';
 import Newsletter from '../components/Newsletter';
+import Steps from '../components/Steps';
 import { Reveal } from '../components/ui';
 import usePageMeta from '../hooks/usePageMeta';
 import { useLang } from '../i18n';
@@ -34,11 +35,6 @@ export default function ProPage() {
   const { scrollYProgress: heroP } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroY = useTransform(heroP, [0, 1], [0, 80]);
   const orbScale = useTransform(heroP, [0, 1], [1, 1.35]);
-
-  // The steps' connecting line fills as the section scrolls through.
-  const stepsRef = useRef(null);
-  const { scrollYProgress: stepsP } = useScroll({ target: stepsRef, offset: ['start 80%', 'end 60%'] });
-  const lineFill = useSpring(stepsP, { stiffness: 120, damping: 30 });
 
   return (
     <div className="page">
@@ -159,33 +155,17 @@ export default function ProPage() {
         </section>
 
         {/* ---------- How the license works ---------- */}
-        <section ref={stepsRef} className="pro-section" aria-labelledby="how-title">
+        <section className="pro-section" aria-labelledby="how-title">
           <Reveal className="pro-section-head">
             <SplitText key={lang + 'h'} as="h2" id="how-title" className="hub-section-title" text={t('How your license works', 'Cómo funciona tu licencia')} inView stagger={0.03} />
           </Reveal>
-          <ol className="pro-steps">
-            <motion.span className="pro-steps-line" aria-hidden="true" style={{ '--fill': lineFill }} />
-            {PRO_STEPS.map((s, i) => (
-              <motion.li
-                key={s.en[0]}
-                className="pro-step"
-                initial={{ opacity: 0, y: 24 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-60px' }}
-                transition={{ duration: 0.5, ease: EASE, delay: i * 0.12 }}
-              >
-                <span className="pro-step-num" aria-hidden="true">{i + 1}</span>
-                <h3>{s[lang][0]}</h3>
-                <p className="muted">{s[lang][1]}</p>
-              </motion.li>
-            ))}
-          </ol>
+          <Steps items={PRO_STEPS.map(st => ({ title: st[lang][0], text: st[lang][1] }))} />
         </section>
 
         {/* ---------- FAQ ---------- */}
-        <Reveal as="section" className="card pro-faq" aria-labelledby="faq-title">
-          <h2 id="faq-title" className="card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
-          <div className="stack" style={{ gap: 8 }}>
+        <Reveal as="section" className="card faq-card" aria-labelledby="faq-title">
+          <h2 id="faq-title" className="card-title faq-card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
+          <div className="stack faq-list" style={{ gap: 8 }}>
             {PRO_FAQ.map(f => (
               <details key={f.en[0]} className="faq" onToggle={e => { if (e.currentTarget.open) track('Pro FAQ', { q: f.en[0] }); }}>
                 <summary><h3 className="faq-q">{f[lang][0]}</h3></summary>

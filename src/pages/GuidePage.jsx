@@ -73,7 +73,7 @@ export default function GuidePage() {
         </article>
         <Newsletter source={`guide-${guide.slug}`} />
         <Reveal as="section" style={{ marginTop: 'clamp(40px, 6vw, 72px)' }}>
-          <h2 style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 24px' }}>{t('More guides', 'Más guías')}</h2>
+          <h2 className="hub-section-title" style={{ marginBottom: 24 }}>{t('More guides', 'Más guías')}</h2>
           <div className="card-grid">
             {others.map(g => (
               <Link key={g.slug} to={to(`/guides/${g.slug}`)} className="guide-card">

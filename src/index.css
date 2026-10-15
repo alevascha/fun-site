@@ -1940,7 +1940,7 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 
 /* ===== Lab Pro ===== */
 .pro-section { margin-top: clamp(48px, 8vw, 96px); scroll-margin-top: 96px; }
-.pro-section-head { margin-bottom: 24px; }
+.pro-section-head { margin-bottom: 24px; } /* same as .hub-section-head on the home */
 .pro-section-head p { margin: 8px 0 0; max-width: 60ch; }
 
 /* Plans: the featured card gets a slowly rotating gradient ring. */
@@ -1981,24 +1981,26 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .pro-next-label { margin: 28px 0 0; text-align: center; letter-spacing: .08em; text-transform: uppercase; }
 .pro-section .marquee { margin-top: 4px; }
 
-/* License steps: a line fills as the section scrolls. */
-.pro-steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-.pro-steps-line { position: absolute; top: 26px; left: 26px; right: 26px; height: 2px; background: var(--accent-grad-linear); transform-origin: left center; scale: var(--fill, 0) 1; }
-.pro-step { position: relative; display: grid; gap: 8px; align-content: start; }
-.pro-step-num { position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; font: 300 24px/1 var(--font-display); color: #111011; background: var(--accent-grad); box-shadow: 0 0 0 6px var(--bg, #272625), 0 12px 28px -10px rgba(205, 87, 255, 0.65); }
-.pro-step h3 { margin: 10px 0 0; font-size: 18px; }
-.pro-step p { margin: 0; font-size: 15px; line-height: 1.55; }
+/* Numbered steps (components/Steps.jsx): a line fills as the list scrolls. */
+.steps { position: relative; list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 20px); }
+.steps-line { position: absolute; top: 26px; left: 26px; right: 26px; height: 2px; background: var(--accent-grad-linear); transform-origin: left center; scale: var(--fill, 0) 1; }
+.step { position: relative; display: grid; gap: 8px; align-content: start; }
+.step-num { position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; font: 300 24px/1 var(--font-display); color: #111011; background: var(--accent-grad); box-shadow: 0 0 0 6px var(--bg, #272625), 0 12px 28px -10px rgba(205, 87, 255, 0.65); transition: transform .4s cubic-bezier(.16, 1, .3, 1); }
+.step:hover .step-num { transform: scale(1.08) rotate(-6deg); }
+.step h3 { margin: 10px 0 0; font-size: 18px; }
+.step p { margin: 0; font-size: 15px; line-height: 1.6; }
+.step-num + p { margin-top: 10px; }
 
-.pro-faq { margin-top: clamp(48px, 8vw, 96px); }
 
 @media (max-width: 900px) {
   .pro-plans { grid-template-columns: 1fr; max-width: 520px; margin: 0 auto; }
   .pro-list { grid-template-columns: 1fr; }
-  .pro-steps { grid-template-columns: 1fr; gap: 24px; padding-left: 0; }
-  .pro-steps-line { top: 26px; bottom: 26px; left: 25px; right: auto; width: 2px; height: auto; transform-origin: center top; scale: 1 var(--fill, 0); }
-  .pro-step { grid-template-columns: 52px 1fr; column-gap: 16px; }
-  .pro-step-num { grid-row: span 2; }
-  .pro-step h3 { margin: 12px 0 0; }
+  .steps { grid-template-columns: 1fr; gap: 24px; }
+  .steps-line { top: 26px; bottom: 26px; left: 25px; right: auto; width: 2px; height: auto; transform-origin: center top; scale: 1 var(--fill, 0); }
+  .step { grid-template-columns: 52px 1fr; column-gap: 16px; }
+  .step-num { grid-row: span 2; }
+  .step h3 { margin: 12px 0 0; }
+  .step-num + p { margin-top: 0; align-self: center; }
 }
 @media (max-width: 640px) {
   .pro-trust { justify-content: flex-start; flex-direction: column; }
@@ -2019,22 +2021,27 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .legal-doc p { margin: 0 0 12px; color: var(--muted); }
 .legal-doc a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 
-/* "How to use" + "About" on tool pages */
-.tool-guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 20px); align-items: start; }
-/* Same rhythm as the FAQ card beside it: title, then 14-20px, then items. */
-.tool-steps { list-style: none; margin: clamp(14px, 1.6vw, 20px) 0 0; padding: 0; display: grid; gap: clamp(14px, 1.6vw, 18px); }
-.tool-steps li { display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; color: var(--muted); font-size: 15px; line-height: 24px; }
-/* Content cards under each tool: bigger titles, one title-to-content gap. */
-.tool-card-title { font-size: clamp(26px, 3vw, 34px); margin: 0; letter-spacing: -0.01em; }
-.tool-features { margin: clamp(14px, 1.6vw, 20px) 0 0; padding-left: 18px; font-size: 15px; line-height: 1.7; }
-.tool-features li + li { margin-top: 4px; }
-.tool-faq-list { margin-top: clamp(14px, 1.6vw, 20px); }
-/* FAQ questions are h3 for the outline; they look like the summary text. */
+/* Content under each tool: How to use (Steps), About (editorial), FAQ card */
+.tool-section { margin-top: clamp(48px, 8vw, 96px); }
+.tool-section-head { margin-bottom: 24px; }
+.tool-about { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: clamp(20px, 4vw, 64px); align-items: start; }
+.tool-about-head { position: sticky; top: 110px; }
+.tool-about-p { margin: 0 0 16px; font-size: 17px; line-height: 1.75; color: var(--muted); }
+.tool-about-p:first-child { font-size: clamp(18px, 1.6vw, 20px); color: var(--text); }
+.tool-features-block { margin-top: clamp(20px, 3vw, 32px); padding-top: clamp(20px, 3vw, 28px); border-top: 1px solid var(--border); }
+.tool-features-block:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+.tool-features-title { margin: 0 0 14px; font-family: var(--font-label); font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+/* ✓ list, same mark as the /pro plans */
+.check-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 24px; }
+.check-list li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; font-size: 15px; line-height: 1.55; color: var(--muted); }
+.check-mark { color: var(--accent-a); font-weight: 700; }
+/* FAQ card: same on tool pages and /pro */
+.faq-card { margin-top: clamp(48px, 8vw, 96px); }
+.faq-card-title { font-size: clamp(26px, 3vw, 34px); margin: 0; letter-spacing: -0.01em; }
+.faq-list { margin-top: clamp(14px, 1.6vw, 20px); }
 .faq-q { display: inline; margin: 0; font: inherit; letter-spacing: inherit; }
-.tool-about-p { margin: 12px 0 0; font-size: 15px; line-height: 1.7; }
-.tool-about-p:first-of-type { margin-top: clamp(14px, 1.6vw, 20px); }
-/* The 30px circle sits centred on the first 24px line of text. */
-.tool-steps li > span:last-child { padding-top: 3px; }
-.tool-step-num { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; font: 400 17px/1 var(--font-display); color: #111011; background: var(--accent-grad); box-shadow: 0 8px 20px -8px rgba(205, 87, 255, 0.6); transition: transform .3s cubic-bezier(.16, 1, .3, 1); }
-.tool-steps li:hover .tool-step-num { transform: scale(1.12) rotate(-6deg); }
-@media (max-width: 900px) { .tool-guide { grid-template-columns: 1fr; } }
+@media (max-width: 900px) {
+  .tool-about { grid-template-columns: 1fr; }
+  .tool-about-head { position: static; }
+  .check-list { grid-template-columns: 1fr; }
+}

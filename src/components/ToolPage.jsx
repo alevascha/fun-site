@@ -16,6 +16,7 @@ import Feedback from './Feedback';
 import { useLang } from '../i18n';
 import { GUIDES } from '../guides';
 import { FIGMA_PLUGINS } from '../pro-content';
+import Steps from './Steps';
 import { track } from '../lib/analytics';
 
 // Figma's logo mark, monochrome so it follows the text color.
@@ -96,57 +97,54 @@ export default function ToolPage({ id, intro, children }) {
 
         <main>{children}</main>
 
-        {(seo.howTo?.length > 0 || seo.about?.length > 0) && (
-          <Reveal as="section" className="tool-guide" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="tool-howto-title">
-            {seo.howTo?.length > 0 && (
-              <div className="card">
-                <h2 id="tool-howto-title" className="card-title tool-card-title">{t(`How to use ${name(exp)}`, `Cómo usar ${name(exp)}`)}</h2>
-                <ol className="tool-steps">
-                  {seo.howTo.map((step, i) => (
-                    <motion.li key={step} initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}>
-                      <span className="tool-step-num" aria-hidden="true">{i + 1}</span>
-                      <span>{step}</span>
-                    </motion.li>
-                  ))}
-                </ol>
-              </div>
-            )}
-            {seo.about?.length > 0 && (
-              <div className="card">
-                <h2 className="card-title tool-card-title">{t(`About ${name(exp)}`, `Sobre ${name(exp)}`)}</h2>
-                {seo.about.map(para => <p key={para.slice(0, 40)} className="muted tool-about-p">{para}</p>)}
-              </div>
-            )}
-          </Reveal>
+        {/* ---------- How to use ---------- */}
+        {seo.howTo?.length > 0 && (
+          <section className="tool-section" aria-labelledby="tool-howto-title">
+            <Reveal className="tool-section-head">
+              <SplitText key={lang + 'how'} as="h2" id="tool-howto-title" className="hub-section-title" text={t(`How to use ${name(exp)}`, `Cómo usar ${name(exp)}`)} inView stagger={0.02} />
+            </Reveal>
+            <Steps items={seo.howTo.map(text => ({ text }))} />
+          </section>
         )}
 
-        {(seo.features?.length > 0 || seo.faq?.length > 0) && (
-          <Reveal as="section" className="grid-2" style={{ marginTop: seo.howTo?.length || seo.about?.length ? 'clamp(14px, 1.6vw, 20px)' : 'clamp(48px, 8vw, 96px)' }} aria-label={t('About this tool', 'Sobre esta herramienta')}>
-            {seo.features?.length > 0 && (
-              <div className="card">
-                <h2 className="card-title tool-card-title">{t('What it does', 'Qué hace')}</h2>
-                <ul className="muted tool-features">
-                  {seo.features.map(f => <li key={f}>{f}</li>)}
-                </ul>
-              </div>
-            )}
-            {seo.faq?.length > 0 && (
-              <div className="card">
-                <h2 className="card-title tool-card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
-                <div className="stack tool-faq-list" style={{ gap: 8 }}>
-                  {seo.faq.map(f => (
-                    <details key={f.q} className="faq">
-                      <summary><h3 className="faq-q">{f.q}</h3></summary>
-                      <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f.a}</p>
-                    </details>
-                  ))}
-                </div>
-                {guide && (
-                  <Link to={to(`/guides/${guide.slug}`)} className="btn btn-ghost btn-sm faq-guide" style={{ marginTop: 14 }}>
-                    <span>📖 {t('Read the guide', 'Lee la guía')}: {guide[lang].title}</span> <span className="arrow" aria-hidden="true">→</span>
-                  </Link>
-                )}
-              </div>
+        {/* ---------- About + what it does (editorial, no card) ---------- */}
+        {(seo.about?.length > 0 || seo.features?.length > 0) && (
+          <section className="tool-section tool-about" aria-labelledby="tool-about-title">
+            <Reveal className="tool-about-head">
+              <SplitText key={lang + 'about'} as="h2" id="tool-about-title" className="hub-section-title" text={seo.about?.length ? t(`About ${name(exp)}`, `Sobre ${name(exp)}`) : t('What it does', 'Qué hace')} inView stagger={0.02} />
+            </Reveal>
+            <div className="tool-about-body">
+              {seo.about?.map((para, i) => (
+                <Reveal key={para.slice(0, 40)} as="p" className="tool-about-p" delay={i * 0.06}>{para}</Reveal>
+              ))}
+              {seo.features?.length > 0 && (
+                <Reveal className="tool-features-block" delay={0.1}>
+                  {seo.about?.length > 0 && <h3 className="tool-features-title">{t('What it does', 'Qué hace')}</h3>}
+                  <ul className="check-list">
+                    {seo.features.map(f => <li key={f}><span className="check-mark" aria-hidden="true">✓</span>{f}</li>)}
+                  </ul>
+                </Reveal>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* ---------- FAQ (same card as /pro) ---------- */}
+        {seo.faq?.length > 0 && (
+          <Reveal as="section" className="card faq-card" aria-labelledby="tool-faq-title">
+            <h2 id="tool-faq-title" className="card-title faq-card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
+            <div className="stack faq-list" style={{ gap: 8 }}>
+              {seo.faq.map(f => (
+                <details key={f.q} className="faq">
+                  <summary><h3 className="faq-q">{f.q}</h3></summary>
+                  <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f.a}</p>
+                </details>
+              ))}
+            </div>
+            {guide && (
+              <Link to={to(`/guides/${guide.slug}`)} className="btn btn-ghost btn-sm faq-guide" style={{ marginTop: 14 }}>
+                <span>📖 {t('Read the guide', 'Lee la guía')}: {guide[lang].title}</span> <span className="arrow" aria-hidden="true">→</span>
+              </Link>
             )}
           </Reveal>
         )}
@@ -158,7 +156,7 @@ export default function ToolPage({ id, intro, children }) {
         <AdSlot slot="tool" />
 
         <Reveal as="section" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="more-title">
-          <h2 id="more-title" style={{ fontSize: 'clamp(28px, 4vw, 40px)', margin: '0 0 24px' }}>{t('More experiments', 'Más experimentos')}</h2>
+          <h2 id="more-title" className="hub-section-title" style={{ marginBottom: 24 }}>{t('More experiments', 'Más experimentos')}</h2>
           <div className="more-grid">
             {others.map(o => (
               <motion.div key={o.id} whileHover={{ y: -4 }} whileTap={{ scale: 0.97 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }}>
