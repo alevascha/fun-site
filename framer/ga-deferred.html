@@ -1,0 +1,29 @@
+<!-- Google Analytics, deferred (Framer → Custom Code → End of <body>, all pages).
+     Replaces Framer's built-in GA integration (Site Settings), which loads
+     gtag.js (~176 KB) while the page is still loading. This loads it once the
+     page has finished loading and the browser is idle, or right away on the
+     first tap, scroll or key press, so nothing is lost. Page views on Framer's
+     client-side navigation are tracked by GA4's enhanced measurement
+     ("Page changes based on browser history events", on by default). -->
+<script>
+(function () {
+  var ID = 'G-VFR39PY4NF';
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { dataLayer.push(arguments); };
+  gtag('js', new Date());
+  gtag('config', ID);
+  var loaded = false;
+  function load() {
+    if (loaded) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ID;
+    document.head.appendChild(s);
+  }
+  function idle() { 'requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 4000 }) : setTimeout(load, 2500); }
+  function afterLoad() { setTimeout(idle, 1500); }
+  if (document.readyState === 'complete') afterLoad(); else addEventListener('load', afterLoad, { once: true });
+  ['pointerdown', 'keydown', 'scroll'].forEach(function (e) { addEventListener(e, load, { once: true, passive: true }); });
+})();
+</script>

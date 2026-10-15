@@ -36,6 +36,33 @@
   const COLORS = [[205, 87, 255], [139, 108, 240], [255, 206, 31], [255, 122, 182]];
   const ptr = { x: innerWidth / 2, y: innerHeight / 3, active: false, lastTouch: 0 };
 
+  /* ------------------------------------------------------- performance */
+  // Same rules as fun.alevasquez.dev (src/lib/perf.js). Nothing here removes
+  // motion; it pauses what nobody can see and lightens ambient effects on
+  // weak devices.
+  // - html.avfx-tab-hidden: background tab, every CSS animation pauses.
+  // - .avfx-off: continuous animations (spinning gradient rings) pause while
+  //   scrolled out of view.
+  // - html.avfx-lite ("lite mode"): 4 or fewer CPU cores, 4 GB or less memory,
+  //   Data Saver on, or under ~40fps in the first seconds. The touch light
+  //   only follows touches, half the particles, slower orb drift.
+  const root = document.documentElement;
+  const syncHidden = () => root.classList.toggle('avfx-tab-hidden', document.hidden);
+  document.addEventListener('visibilitychange', syncHidden);
+  syncHidden();
+  const cores = navigator.hardwareConcurrency || 0, memory = navigator.deviceMemory || 0;
+  let lite = navigator.connection?.saveData === true || (cores && cores <= 4) || (memory && memory <= 4);
+  const liteListeners = [];
+  const setLite = () => { if (lite) return; lite = true; root.classList.add('avfx-lite'); liteListeners.forEach(f => f()); };
+  if (lite) root.classList.add('avfx-lite');
+  const measureFps = () => setTimeout(() => {
+    if (lite || document.hidden) return;
+    let frames = 0, start = 0;
+    const tick = t => { if (!start) start = t; frames++; if (t - start < 1500) requestAnimationFrame(tick); else if (frames / ((t - start) / 1000) < 40) setLite(); };
+    requestAnimationFrame(tick);
+  }, 2500);
+  const offscreenIO = new IntersectionObserver(entries => { for (const e of entries) e.target.classList.toggle('avfx-off', !e.isIntersecting); });
+
   /* ---------------------------------------------------------------- CSS */
   const css = `
   :root{--avfx-dot:rgba(255,255,255,.07);--avfx-dot-lit:rgba(226,170,255,.75);--avfx-spot:rgba(205,87,255,.16);--avfx-orb1:rgba(205,87,255,.20);--avfx-orb2:rgba(255,206,31,.10);--avfx-orb3:rgba(139,108,240,.16);--avfx-glow:rgba(205,87,255,.16);--avfx-ink:#f7f7f7}
@@ -153,7 +180,12 @@
   @keyframes avfx-fade{from{opacity:0}}
   .avfx-curtain[data-state=reveal]{visibility:visible;translate:0 -100%;transition:translate .6s cubic-bezier(.7,0,.3,1)}
   @media (prefers-reduced-motion:reduce){.avfx-orb{animation:none}.avfx-ch>i,.avfx-w>i{translate:0 0;rotate:0deg;transition:none}}
-  `;
+  
+  html.avfx-tab-hidden *,html.avfx-tab-hidden *::before,html.avfx-tab-hidden *::after{animation-play-state:paused!important}
+  .avfx-off,.avfx-off::before,.avfx-off::after{animation-play-state:paused!important}
+  html.avfx-lite .avfx-orb:nth-child(1){animation-duration:44s}html.avfx-lite .avfx-orb:nth-child(2){animation-duration:54s}html.avfx-lite .avfx-orb:nth-child(3){animation-duration:62s}
+  html.avfx-lite .avfx-touchglow{display:none}
+`;
   const style = document.createElement('style');
   style.id = 'avfx-style';
   style.textContent = css;
@@ -275,7 +307,8 @@
       gx += (tx - gx) * 0.06; gy += (ty - gy) * 0.06;
       glow.style.transform = `translate3d(${gx.toFixed(1)}px,${gy.toFixed(1)}px,0)`;
     };
-    const roamOn = () => { if (!graf && !document.hidden) graf = requestAnimationFrame(roam); };
+    const roamOn = () => { if (!graf && !document.hidden && !lite) graf = requestAnimationFrame(roam); };
+    liteListeners.push(() => { cancelAnimationFrame(graf); graf = 0; });
     document.addEventListener('visibilitychange', () => { if (document.hidden) { cancelAnimationFrame(graf); graf = 0; } else roamOn(); });
     roamOn();
     requestAnimationFrame(() => { glow.dataset.on = 'true'; });
@@ -310,10 +343,16 @@
       sc += ((pressed ? 0.8 : 1) - sc) * 0.3;
       ring.style.transform = `translate3d(${rx}px,${ry}px,0) scale(${sc.toFixed(3)})`;
       dot.style.transform = `translate3d(${ptr.x}px,${ptr.y}px,0)`;
-      requestAnimationFrame(tick);
+      // Rest once the ring has caught up with a still pointer; any movement
+      // or press wakes it again.
+      if (Math.abs(vx) + Math.abs(vy) < 0.05 && Math.abs(ptr.x - rx) + Math.abs(ptr.y - ry) < 0.5 && Math.abs((pressed ? 0.8 : 1) - sc) < 0.002) { cursorRaf = 0; return; }
+      cursorRaf = requestAnimationFrame(tick);
     };
-    requestAnimationFrame(tick);
+    let cursorRaf = requestAnimationFrame(tick);
+    const wake = () => { if (!cursorRaf && !document.hidden) cursorRaf = requestAnimationFrame(tick); };
+    for (const n of ['pointerdown', 'pointerup']) addEventListener(n, wake, { passive: true });
     addEventListener('pointermove', e => {
+      wake();
       if (e.pointerType !== 'mouse' && e.pointerType !== 'pen') return;
       if (!shown) { shown = true; ring.style.opacity = dot.style.opacity = '1'; }
     }, { passive: true });
@@ -512,7 +551,8 @@
     let w = 0, h = 0, list = [], raf = 0, running = false, t = 0, visible = true;
     const local = { x: -9999, y: -9999, on: false };
     const seed = () => {
-      const n = coarse ? Math.min(70, Math.round((w * h) / 5000)) : Math.min(140, Math.round((w * h) / 9000));
+      const n0 = coarse ? Math.min(70, Math.round((w * h) / 5000)) : Math.min(140, Math.round((w * h) / 9000));
+      const n = lite ? Math.round(n0 / 2) : n0;
       list = Array.from({ length: n }, () => spawn({ r: 1 + Math.random() * 1.8, c: COLORS[(Math.random() * COLORS.length) | 0], p: Math.random() * 6.28 }, true));
     };
     // The flow field slowly herds particles into a few streams, so after a while
@@ -1067,7 +1107,7 @@
       revealIO.observe(p);
     });
     const cv = q('CV call to action');
-    if (cv) cv.dataset.avfxRing = '1';
+    if (cv) { cv.dataset.avfxRing = '1'; offscreenIO.observe(cv); }
   }
 
   /* -------------------------------------------------------- enhance */  /* -------------------------------------------------------- enhance */
@@ -1172,6 +1212,7 @@
       if (el.dataset.avfxBanner || el.offsetWidth < 280 || parseFloat(getComputedStyle(el).borderTopLeftRadius) < 24) return;
       if (el.parentElement.closest('[data-avfx-banner]')) return;
       el.dataset.avfxBanner = '1';
+      offscreenIO.observe(el);
       if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
     });
 
@@ -1269,6 +1310,7 @@
   /* ------------------------------------------------------------ boot */
   function boot() {
     enhance();
+    measureFps();
     let pending = 0;
     new MutationObserver(() => {
       clearTimeout(pending);
