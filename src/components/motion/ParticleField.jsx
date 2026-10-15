@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { isLite, onLiteChange } from '../../lib/perf';
 
 const COLORS = [[205, 87, 255], [139, 108, 240], [255, 206, 31], [255, 122, 182]];
 
@@ -20,7 +21,8 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
     const mouse = { x: -9999, y: -9999, active: false };
 
     function seed() {
-      const n = Math.min(max, Math.round((w * h) / density));
+      // Lite mode (weak devices): half the particles.
+      const n = Math.min(isLite() ? Math.round(max / 2) : max, Math.round((w * h) / (isLite() ? density * 2 : density)));
       particles = Array.from({ length: n }, () => {
         const c = COLORS[Math.floor(Math.random() * COLORS.length)];
         return spawn({ r: 1 + Math.random() * 1.8, c, phase: Math.random() * Math.PI * 2 }, true);
@@ -156,7 +158,9 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
     document.addEventListener('visibilitychange', onVis);
     resize();
     start();
+    const offLite = onLiteChange(seed);
     return () => {
+      offLite();
       stop(); ro.disconnect(); io.disconnect();
       window.removeEventListener('pointermove', onMove);
       window.removeEventListener('touchstart', onTouch);

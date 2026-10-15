@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { motion, useAnimationFrame, useReducedMotion, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
+import { motion, useAnimationFrame, useInView, useReducedMotion, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
 
 const wrap = (min, max, v) => ((((v - min) % (max - min)) + (max - min)) % (max - min)) + min;
 
@@ -13,9 +13,11 @@ export default function Marquee({ items, baseVelocity = -0.9 }) {
   const x = useTransform(baseX, v => `${wrap(-50, 0, v)}%`);
   const direction = useRef(1);
   const reduce = useReducedMotion();
+  const ref = useRef(null);
+  const inView = useInView(ref, { margin: '100px' }); // no work while scrolled away
 
   useAnimationFrame((_, delta) => {
-    if (reduce) return;
+    if (reduce || !inView) return;
     let move = direction.current * baseVelocity * (delta / 1000);
     const f = factor.get();
     if (f < 0) direction.current = -1; else if (f > 0) direction.current = 1;
@@ -25,7 +27,7 @@ export default function Marquee({ items, baseVelocity = -0.9 }) {
 
   const row = [...items, ...items];
   return (
-    <div className="marquee" aria-hidden="true">
+    <div ref={ref} className="marquee" aria-hidden="true">
       <motion.div className="marquee-track" style={{ x, skewX: skew }}>
         {[0, 1].map(k => (
           <span key={k} className="marquee-group">

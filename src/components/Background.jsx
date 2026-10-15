@@ -1,5 +1,11 @@
 import { useEffect, useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { isLite, onLiteChange } from '../lib/perf';
+
+// How often the touch-screen light moves on its own. 30fps costs about half
+// of 60fps (measured: ~395ms vs ~757ms of main thread per 5s on a 4x slower
+// CPU) and looks the same, since the light drifts slowly.
+const WANDER_FPS = 30;
 
 /* Page-wide animated backdrop: drifting orbs with parallax, a dot grid that
    lights up around the pointer, a soft spotlight, a scroll progress bar, and
@@ -75,8 +81,15 @@ export default function Background() {
       schedule();
     };
 
-    // Ambient wander so touch screens still feel alive.
+    // Ambient wander so touch screens still feel alive. Stops while the tab
+    // is hidden, and in lite mode (weak devices) the light only follows
+    // touches. WANDER_FPS caps how often it moves.
+    const step = 1000 / WANDER_FPS;
+    let lastWander = 0;
     const wander = t => {
+      wanderRaf = requestAnimationFrame(wander);
+      if (t - lastWander < step - 1) return;
+      lastWander = t;
       if (performance.now() - lastTouch > 1800) {
         const s = t / 1000;
         x = window.innerWidth * (0.5 + 0.38 * Math.sin(s * 0.45));
@@ -84,11 +97,15 @@ export default function Background() {
         lightCard(document.elementFromPoint(x, y));
         apply();
       }
-      wanderRaf = requestAnimationFrame(wander);
     };
+    const startWander = () => { if (!wanderRaf && !document.hidden && !isLite()) wanderRaf = requestAnimationFrame(wander); };
+    const stopWander = () => { cancelAnimationFrame(wanderRaf); wanderRaf = 0; };
+    const onVis = () => (document.hidden ? stopWander() : startWander());
+    const offLite = onLiteChange(stopWander);
     if (coarse && !reduce) {
       el.dataset.active = 'true';
-      wanderRaf = requestAnimationFrame(wander);
+      startWander();
+      document.addEventListener('visibilitychange', onVis);
       window.addEventListener('deviceorientation', onTilt, { passive: true });
     }
 
@@ -100,8 +117,10 @@ export default function Background() {
       window.removeEventListener('pointerdown', onDown);
       document.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('deviceorientation', onTilt);
+      document.removeEventListener('visibilitychange', onVis);
+      offLite();
       cancelAnimationFrame(frame);
-      cancelAnimationFrame(wanderRaf);
+      stopWander();
     };
   }, []);
 

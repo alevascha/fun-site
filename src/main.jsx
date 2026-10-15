@@ -3,8 +3,10 @@ import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
+import { measureFps, watchOffscreen } from './lib/perf'
 
-const mount = () => createRoot(document.getElementById('root')).render(
+const mount = () => { renderApp(); watchOffscreen(); measureFps(); };
+const renderApp = () => createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <App />
