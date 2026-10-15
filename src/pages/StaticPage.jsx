@@ -11,6 +11,9 @@ import usePageMeta from '../hooks/usePageMeta';
 import { getStaticPage, STATIC_PAGES_ES } from '../pages-content';
 import { useLang } from '../i18n';
 
+// Legal pages read as one plain document, like most terms and policies.
+const LEGAL = new Set(['privacy', 'terms', 'refunds']);
+
 export default function StaticPage({ id }) {
   const { lang, t, to } = useLang();
   const page = getStaticPage(id, lang);
@@ -31,6 +34,26 @@ export default function StaticPage({ id }) {
           <p className="tool-desc">{page.description}</p>
           <p className="small muted" style={{ margin: 0 }}>{t('Last updated', 'Última actualización:')} {new Date(page.updated + 'T00:00:00').toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
         </header>
+        {LEGAL.has(id) ? (
+          <main className="legal-doc">
+            {page.sections.map(s => (
+              <section key={s.heading}>
+                <h2>{s.heading}</h2>
+                {s.body.map(p => <p key={p.slice(0, 40)}>{p}</p>)}
+                {s.links && (
+                  <p className="legal-links">
+                    {s.links.map((l, i) => (
+                      <span key={l.href}>
+                        {i > 0 && ' · '}
+                        {l.href.startsWith('/') ? <Link to={l.href}>{l.label}</Link> : <a href={l.href} target="_blank" rel="noopener noreferrer">{l.label}</a>}
+                      </span>
+                    ))}
+                  </p>
+                )}
+              </section>
+            ))}
+          </main>
+        ) : (
         <main className="stack" style={{ maxWidth: 820 }}>
           {page.sections.map((s, i) => (
             <Reveal key={s.heading} className="card" delay={Math.min(i * 0.04, 0.2)}>
@@ -46,6 +69,7 @@ export default function StaticPage({ id }) {
             </Reveal>
           ))}
         </main>
+        )}
         <SiteFooter />
       </div>
     </div>

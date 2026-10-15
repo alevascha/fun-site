@@ -52,7 +52,7 @@ function useReactiveLetters(ref, enabled) {
   }, [ref, enabled]);
 }
 
-export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.025, className, style, inView = false, charClassName, reactive = false }) {
+export default function SplitText({ text, as = 'span', id, delay = 0, stagger = 0.025, className, style, inView = false, charClassName, reactive = false }) {
   const Comp = motion[as];
   const ref = useRef(null);
   useReactiveLetters(ref, reactive);
@@ -63,7 +63,7 @@ export default function SplitText({ text, as = 'span', delay = 0, stagger = 0.02
     ? { initial: 'hidden', whileInView: 'show', viewport: REVEAL_VIEWPORT }
     : { initial: 'hidden', animate: 'show' };
   return (
-    <Comp ref={ref} className={className} style={style} {...trigger}>
+    <Comp ref={ref} id={id} className={className} style={style} {...trigger}>
       <span className="sr-only">{text}</span>
       {words.map((word, wi) => (
         <span key={wi} aria-hidden="true" style={{ display: 'inline-block', whiteSpace: 'nowrap' }}>

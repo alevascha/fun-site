@@ -60,6 +60,22 @@ export const PRO_FAQ = [
     es: ['¿Cómo funciona?', `Cada plugin se instala gratis desde Figma Community e incluye ${FREE_USES} usos gratis. Explorar y previsualizar nunca cuenta; un uso es cuando el plugin escribe en tu archivo (crea estilos o Variables, aplica colores, genera frames). Después, una licencia desbloquea la versión completa.`],
   },
   {
+    en: ['How do I use my license after paying?', 'Your license key arrives by email. Open any of the plugins in Figma, choose “Enter license” and paste it. With Lab Pro, paste the same key once in each plugin you use; each one remembers it on your Figma account.'],
+    es: ['¿Cómo uso mi licencia después de pagar?', 'Tu clave de licencia llega por correo. Abre cualquiera de los plugins en Figma, elige “Ingresar licencia” y pégala. Con Lab Pro, pega la misma clave una vez en cada plugin que uses; cada uno la recuerda en tu cuenta de Figma.'],
+  },
+  {
+    en: ['Can I use it on more than one computer?', 'Yes. The license is personal, so you can activate it on the computers and Figma accounts you use yourself. Please don’t share it with other people.'],
+    es: ['¿Puedo usarla en más de una computadora?', 'Sí. La licencia es personal, así que puedes activarla en las computadoras y cuentas de Figma que usas tú. Por favor no la compartas con otras personas.'],
+  },
+  {
+    en: ['I bought one plugin. Can I upgrade to Lab Pro?', 'Yes. Write to us and we will send you a discount code worth what you paid, so you only pay the difference.'],
+    es: ['Compré un plugin. ¿Puedo pasar a Lab Pro?', 'Sí. Escríbenos y te enviamos un código de descuento por lo que pagaste, así solo pagas la diferencia.'],
+  },
+  {
+    en: ['I lost my license key', 'Search your inbox for the email from Lemon Squeezy, or open my orders page at app.lemonsqueezy.com/my-orders with the email you used to buy. If you still can’t find it, write to us.'],
+    es: ['Perdí mi clave de licencia', 'Busca en tu correo el email de Lemon Squeezy, o entra a app.lemonsqueezy.com/my-orders con el correo con el que compraste. Si aun así no la encuentras, escríbenos.'],
+  },
+  {
     en: ['Yearly or lifetime?', 'Yearly is the cheapest way in and includes every new plugin while it is active. Lifetime costs more once, then covers every current and future plugin with no renewals.'],
     es: ['¿Anual o de por vida?', 'El anual es la forma más barata de empezar e incluye cada plugin nuevo mientras esté activo. El de por vida cuesta más una sola vez y cubre todos los plugins actuales y futuros, sin renovaciones.'],
   },
@@ -74,6 +90,26 @@ export const PRO_FAQ = [
   {
     en: ['Will the web tools stay free?', 'Yes. Everything on this site stays free. Pro is for what only a plugin can do inside your Figma file.'],
     es: ['¿Las herramientas web seguirán siendo gratis?', 'Sí. Todo lo que hay en este sitio sigue siendo gratis. Pro es para lo que solo un plugin puede hacer dentro de tu archivo de Figma.'],
+  },
+];
+
+// After paying: what happens with the license key, step by step.
+export const PRO_STEPS = [
+  {
+    en: ['Choose a plan', 'Pay securely through Lemon Squeezy with a card or PayPal. Taxes are calculated at checkout.'],
+    es: ['Elige un plan', 'Paga de forma segura con Lemon Squeezy, con tarjeta o PayPal. Los impuestos se calculan al pagar.'],
+  },
+  {
+    en: ['Get your key by email', 'Your license key arrives in your inbox right after the payment. You can also find it in your Lemon Squeezy order page.'],
+    es: ['Recibe tu clave por correo', 'Tu clave de licencia llega a tu correo apenas pagas. También la encuentras en la página de tu pedido en Lemon Squeezy.'],
+  },
+  {
+    en: ['Paste it in any plugin', 'Open a plugin in Figma, choose “Enter license” and paste the key. It unlocks right away.'],
+    es: ['Pégala en cualquier plugin', 'Abre un plugin en Figma, elige “Ingresar licencia” y pega la clave. Se desbloquea al instante.'],
+  },
+  {
+    en: ['Use the same key everywhere', 'With Lab Pro, paste the same key once in each plugin you open. Each plugin remembers it on your Figma account.'],
+    es: ['Usa la misma clave en todos', 'Con Lab Pro, pega la misma clave una vez en cada plugin que abras. Cada plugin la recuerda en tu cuenta de Figma.'],
   },
 ];
 
