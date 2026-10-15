@@ -871,6 +871,11 @@
     }, 420);
   }, true);
 
+  // Framer wraps every page in <div id="main"> without a landmark role;
+  // screen readers (and audits) expect one main landmark per page.
+  const mainEl = document.getElementById('main');
+  if (mainEl && !document.querySelector('main, [role="main"]')) mainEl.setAttribute('role', 'main');
+
   /* ------------------------------------------------------- intro loader */
   // First page view of a session only. The head snippet (framer/loader-head.html)
   // paints a dark cover before anything else and adds html.avfx-loading; this
