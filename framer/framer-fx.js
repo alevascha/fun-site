@@ -161,6 +161,7 @@
   [data-avfx-tint]:hover h3,[data-avfx-tint]:hover h4{color:var(--tint)!important}
   .avfx-name{font-weight:600;background:linear-gradient(90deg,#CD57FF,#ff7ab6 55%,#FFCE1F);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
   [data-avfx-chips]{display:flex!important;flex-wrap:wrap;gap:8px}
+  .avfx-sr{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
   .avfx-chip{display:inline-block;padding:6px 12px;border-radius:999px;font-size:13px;line-height:1.3;color:var(--avfx-ink);background:color-mix(in srgb,var(--tint) 14%,transparent);border:1px solid color-mix(in srgb,var(--tint) 40%,transparent);opacity:0;translate:0 10px;scale:.9;transition:opacity .5s ${EASE},translate .5s ${EASE},scale .5s ${EASE},background-color .3s;transition-delay:calc(var(--d,0)*1ms + 200ms)}
   [data-avfx-chips][data-avfx-rise=in] .avfx-chip{opacity:1;translate:0 0;scale:1}
   .avfx-chip:hover{background:color-mix(in srgb,var(--tint) 30%,transparent);transition-delay:0ms}
@@ -407,7 +408,7 @@
 
   /* ------------------------------------------------------ split text */
   // Wrap every character of every text node (keeps Framer's inline spans,
-  // links and line breaks). Screen readers get the original via aria-label.
+  // links and line breaks). Screen readers get one hidden copy (srOnly).
   function splitChars(el, gradientFrom) {
     const label = el.textContent.replace(/\s+/g, ' ').trim();
     const nodes = [];
@@ -463,9 +464,18 @@
       });
       fill.style.backgroundImage = 'none';
     }
-    el.setAttribute('aria-label', label);
-    for (const child of el.children) child.setAttribute('aria-hidden', 'true');
+    srOnly(el, label);
     return chars;
+  }
+
+  // Split text is hidden from screen readers and replaced by one visually
+  // hidden copy. (aria-label isn't allowed on paragraphs, so it isn't used.)
+  function srOnly(el, label) {
+    for (const child of el.children) child.setAttribute('aria-hidden', 'true');
+    const sr = document.createElement('span');
+    sr.className = 'avfx-sr';
+    sr.textContent = label;
+    el.append(sr);
   }
 
   function splitWords(el) {
@@ -489,8 +499,7 @@
       }
       node.replaceWith(frag);
     }
-    el.setAttribute('aria-label', label);
-    for (const child of el.children) child.setAttribute('aria-hidden', 'true');
+    srOnly(el, label);
   }
 
   const revealIO = new IntersectionObserver(entries => {
@@ -870,7 +879,7 @@
   // cycle, then they warp past the camera and the panel slides up to the site,
   // where the hero orbit assembles again. Click or any key skips ahead.
   // It holds until the page has loaded and hydrated (capped at 9 s).
-  const INTRO_MS = 4300;
+  const INTRO_MS = 2400; // + ~0.6 s warp out: about 3 s in all, longer only if the page is still loading
   const WORDS = ['Tokens', 'Components', 'Patterns', 'Systems', 'Experiences'];
   if (document.documentElement.classList.contains('avfx-loading')) {
     try { sessionStorage.setItem('avfx-intro', '1'); } catch {}
@@ -1092,7 +1101,7 @@
       p.dataset.avfxChips = '1';
       const items = p.textContent.replace(/\.$/, '').split(/,\s*(?![^()]*\))/);
       if (items.length < 3) return;
-      p.setAttribute('aria-label', p.textContent);
+      const label = p.textContent;
       p.textContent = '';
       items.forEach((txt, i) => {
         const c = document.createElement('span');
@@ -1103,6 +1112,7 @@
         c.style.setProperty('--d', i * 60);
         p.append(c);
       });
+      srOnly(p, label);
       p.dataset.avfxRise = p.dataset.avfxRise || '1';
       revealIO.observe(p);
     });
