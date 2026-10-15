@@ -147,6 +147,7 @@ export default function Home() {
       <div className="page-inner">
         <SiteNav />
 
+        <main>
         <motion.header ref={heroRef} className="hub-hero" style={{ scale: heroScale, opacity: heroOpacity }}>
           <ParticleField className="hero-canvas" />
           <motion.div className="hub-hero-orb" aria-hidden="true" style={{ y: orbY, scale: orbScale }} />
@@ -271,6 +272,7 @@ export default function Home() {
             </motion.a>
           </Magnetic>
         </Reveal>
+        </main>
 
         <SiteFooter />
       </div>
