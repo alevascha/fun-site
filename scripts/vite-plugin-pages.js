@@ -57,13 +57,14 @@ export default function pagesPlugin() {
         await fs.mkdir(path.dirname(path.join(outDir, rel)), { recursive: true });
         await fs.writeFile(path.join(outDir, rel), content);
       };
-      // Each route's lazy chunks, preloaded from its HTML: otherwise the
-      // browser only discovers them after the entry script runs, a second
-      // round trip before anything can render (the LCP waits on it).
+      // Each route's lazy chunks are preloaded together with the entry, so the
+      // browser doesn't discover them only after the entry script runs.
       let manifest = {};
       try { manifest = JSON.parse(await fs.readFile(path.join(outDir, '.vite/manifest.json'), 'utf8')); } catch { /* no manifest */ }
-      const preloadTags = src => {
-        if (!manifest[src]) return '';
+      const entryTag = html.match(/<script type="module" crossorigin src="([^"]+)"><\/script>/);
+      const basePreloads = [...html.matchAll(/<link rel="modulepreload" crossorigin href="([^"]+)">/g)].map(m => m[1]);
+      html = html.replace(/\s*<script type="module" crossorigin src="[^"]+"><\/script>/, '').replace(/\s*<link rel="modulepreload" crossorigin href="[^"]+">/g, '');
+      const routeAssets = src => {
         const js = new Set(), css = new Set();
         const walk = key => {
           const c = manifest[key];
@@ -72,15 +73,20 @@ export default function pagesPlugin() {
           (c.css || []).forEach(f => css.add(f));
           (c.imports || []).forEach(walk);
         };
-        walk(src);
-        return [...js].filter(f => !html.includes(`/${f}"`)).map(f => `<link rel="modulepreload" crossorigin href="/${f}">`).join('')
-          + [...css].map(f => `<link rel="preload" as="style" crossorigin href="/${f}">`).join('');
+        if (src && manifest[src]) walk(src);
+        return { js: [...basePreloads, ...[...js].map(f => `/${f}`).filter(f => !basePreloads.includes(f))], css: [...css].map(f => `/${f}`) };
       };
       const pascal = id => id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
       const render = (meta, body, ld, opts, src) => {
         const out = injectBody(injectMeta(html, meta, opts), body, ld);
-        const tags = src ? preloadTags(src) : '';
-        return tags ? out.replace('</head>', `    ${tags}\n  </head>`) : out;
+        if (!entryTag) return out;
+        // Entry script and this route's chunks load right away (in <head>):
+        // deferring them until after the first paint was tried and made the
+        // largest paint worse, since each tool's main UI only exists once the
+        // app renders.
+        const { js, css } = routeAssets(src);
+        const tags = [`<script type="module" crossorigin src="${entryTag[1]}"></script>`, ...js.map(f => `<link rel="modulepreload" crossorigin href="${f}">`), ...css.map(f => `<link rel="preload" as="style" crossorigin href="${f}">`)].join('\n    ');
+        return out.replace('</head>', `    ${tags}\n  </head>`);
       };
 
       const sitemap = []; // { en, es, lastmod, priority }

@@ -1160,6 +1160,7 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
   cursor: grab;
   touch-action: none;
   padding: 0;
+  z-index: 2; /* above the Shuffle button, so a point dragged there stays grabbable */
 }
 .mesh-handle:active { cursor: grabbing; }
 

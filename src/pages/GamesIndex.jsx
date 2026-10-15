@@ -33,6 +33,8 @@ export default function GamesIndex() {
           <p className="tool-desc">{t('Train your eye for color and contrast in a couple of minutes a day.', 'Entrena tu ojo para el color y el contraste en un par de minutos al día.')}</p>
         </header>
         <main className="card-grid">
+          {/* Cards use h3 titles (shared with the home); this keeps the outline h1 > h2 > h3. */}
+          <h2 className="sr-only">{t('All games', 'Todos los juegos')}</h2>
           {games.map((exp, i) => <ExpCard key={exp.id} exp={exp} index={i} fresh={isNew(exp)} />)}
         </main>
         <Newsletter source="games" />

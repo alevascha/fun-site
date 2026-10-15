@@ -21,7 +21,7 @@ const nextId = () => ++uid;
 const PRESETS = {
   lab: {
     stops: [['#CD57FF', 0], ['#8B6CF0', 45], ['#FFCE1F', 100]],
-    mesh: { bg: '#1D1C1B', points: [['#CD57FF', 15, 20, 55], ['#8B6CF0', 85, 15, 50], ['#FFCE1F', 60, 90, 55], ['#FF7AB6', 10, 85, 40]] },
+    mesh: { bg: '#1D1C1B', points: [['#CD57FF', 15, 20, 55], ['#8B6CF0', 85, 15, 50], ['#FFCE1F', 60, 90, 55], ['#FF7AB6', 10, 70, 40]] },
   },
   sunset: {
     stops: [['#2B1A4F', 0], ['#FF7AB6', 55], ['#FFB36B', 80], ['#FFCE1F', 100]],
