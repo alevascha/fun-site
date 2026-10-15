@@ -64,8 +64,8 @@ export const PRO_FAQ = [
     es: ['¿Cómo uso mi licencia después de pagar?', 'Tu clave de licencia llega por correo. Abre cualquiera de los plugins en Figma, elige “Ingresar licencia” y pégala. Con Lab Pro, pega la misma clave una vez en cada plugin que uses; cada uno la recuerda en tu cuenta de Figma.'],
   },
   {
-    en: ['Can I use it on more than one computer?', 'Yes. The license is personal, so you can activate it on the computers and Figma accounts you use yourself. Please don’t share it with other people.'],
-    es: ['¿Puedo usarla en más de una computadora?', 'Sí. La licencia es personal, así que puedes activarla en las computadoras y cuentas de Figma que usas tú. Por favor no la compartas con otras personas.'],
+    en: ['Can I use it on more than one computer?', 'Yes. Your license is linked to your Figma account, not to a computer, so it works anywhere you sign in to Figma. It can be linked to up to 2 Figma accounts you use yourself (for example, personal and work). Keys shared with other people stop working.'],
+    es: ['¿Puedo usarla en más de una computadora?', 'Sí. Tu licencia queda vinculada a tu cuenta de Figma, no a una computadora, así que funciona donde sea que inicies sesión en Figma. Puede vincularse a hasta 2 cuentas de Figma que uses tú (por ejemplo, personal y del trabajo). Las claves compartidas con otras personas dejan de funcionar.'],
   },
   {
     en: ['I bought one plugin. Can I upgrade to Lab Pro?', 'Yes. Write to us and we will send you a discount code worth what you paid, so you only pay the difference.'],
@@ -78,6 +78,10 @@ export const PRO_FAQ = [
   {
     en: ['Yearly or lifetime?', 'Yearly is the cheapest way in and includes every new plugin while it is active. Lifetime costs more once, then covers every current and future plugin with no renewals.'],
     es: ['¿Anual o de por vida?', 'El anual es la forma más barata de empezar e incluye cada plugin nuevo mientras esté activo. El de por vida cuesta más una sola vez y cubre todos los plugins actuales y futuros, sin renovaciones.'],
+  },
+  {
+    en: ['Will the price go up?', 'Yes, as new plugins join Lab Pro the price for new buyers goes up. If you already bought, you keep everything with the same key, and yearly subscribers keep the price they signed up with while their subscription stays active.'],
+    es: ['¿El precio va a subir?', 'Sí. A medida que se suman plugins nuevos a Lab Pro, el precio sube para quienes compren después. Si ya compraste, conservas todo con la misma clave, y quienes tienen el plan anual mantienen el precio con el que se suscribieron mientras su suscripción siga activa.'],
   },
   {
     en: ['Who processes the payment?', 'Lemon Squeezy, our merchant of record. They handle the checkout, taxes and invoices, and email you the license key right after you pay.'],
@@ -108,8 +112,8 @@ export const PRO_STEPS = [
     es: ['Pégala en cualquier plugin', 'Abre un plugin en Figma, elige “Ingresar licencia” y pega la clave. Se desbloquea al instante.'],
   },
   {
-    en: ['Use the same key everywhere', 'With Lab Pro, paste the same key once in each plugin you open. Each plugin remembers it on your Figma account.'],
-    es: ['Usa la misma clave en todos', 'Con Lab Pro, pega la misma clave una vez en cada plugin que abras. Cada plugin la recuerda en tu cuenta de Figma.'],
+    en: ['Use the same key everywhere', 'With Lab Pro, paste the same key once in each plugin you open. It stays linked to your Figma account, on up to 2 accounts.'],
+    es: ['Usa la misma clave en todos', 'Con Lab Pro, pega la misma clave una vez en cada plugin que abras. Queda vinculada a tu cuenta de Figma, en hasta 2 cuentas.'],
   },
 ];
 

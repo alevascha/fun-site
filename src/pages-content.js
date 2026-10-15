@@ -90,7 +90,7 @@ export const STATIC_PAGES = [
       {
         heading: 'Purchases and plugin licenses',
         body: [
-          'Lab Pro purchases are handled by Lemon Squeezy, our Merchant of Record. Your payment details go to Lemon Squeezy, not to us; we receive your name, email, country and order details so we can deliver and support your license. The Figma plugins send your license key to Lemon Squeezy to check that it is valid, and store it in Figma’s plugin storage on your account. The plugins keep a count of your free uses in that same storage.',
+          'Lab Pro purchases are handled by Lemon Squeezy, our Merchant of Record. Your payment details go to Lemon Squeezy, not to us; we receive your name, email, country and order details so we can deliver and support your license. When you activate a license, the plugin sends your license key and your Figma account ID (a number Figma assigns to your account, not your name or email) to our license server, which checks the key with Lemon Squeezy and remembers which Figma accounts it is linked to. That is how one license works in every plugin while staying limited to 2 accounts. The plugins store your key in Figma’s plugin storage on your account and keep a count of your free uses there too.',
         ],
         links: [{ label: 'Lemon Squeezy privacy policy', href: 'https://www.lemonsqueezy.com/privacy' }],
       },
@@ -146,8 +146,16 @@ export const STATIC_PAGES = [
       {
         heading: 'Your license',
         body: [
-          'Each license is for one person. You can activate it on the Figma accounts and devices you personally use, up to the activation limit shown at checkout. Please do not share, resell or publish your license key; keys that are shared publicly may be deactivated.',
-          'Plugins check your license key with Lemon Squeezy when you activate it and from time to time after that. They need an internet connection for this check.',
+          'Each license is for one person. It works in every plugin your plan includes, on up to 2 Figma accounts that you personally use (for example, a personal and a work account). The first time you enter your key, it is linked to that Figma account; once 2 accounts are linked, it cannot be activated on a third one.',
+          'Please do not share, resell or publish your license key. Keys that are shared or used by other people may be deactivated. If you change Figma accounts, write to us and we will move your license.',
+          'Plugins check your license key with our license server and Lemon Squeezy when you activate it and from time to time after that. They need an internet connection for this check.',
+        ],
+      },
+      {
+        heading: 'Prices and price changes',
+        body: [
+          'Prices may go up as new plugins are added to Lab Pro. A price change only applies to new purchases: if you already bought a single plugin or Lab Pro lifetime, you keep everything your license includes with the same key and never pay again for it.',
+          'If you have Lab Pro yearly, your renewal stays at the price you signed up with while your subscription remains active. If we ever need to change your renewal price, we will email you at least 30 days before your next renewal, and you can cancel before it renews.',
         ],
       },
       {
@@ -285,7 +293,7 @@ export const STATIC_PAGES_ES = {
       },
       {
         heading: 'Compras y licencias de los plugins',
-        body: ['Las compras de Lab Pro las gestiona Lemon Squeezy, nuestro Merchant of Record. Tus datos de pago van a Lemon Squeezy, no a nosotros; recibimos tu nombre, correo, país y los detalles del pedido para entregar tu licencia y darte soporte. Los plugins de Figma envían tu clave de licencia a Lemon Squeezy para comprobar que es válida y la guardan en el almacenamiento de plugins de Figma de tu cuenta. Ahí mismo llevan la cuenta de tus usos gratis.'],
+        body: ['Las compras de Lab Pro las gestiona Lemon Squeezy, nuestro Merchant of Record. Tus datos de pago van a Lemon Squeezy, no a nosotros; recibimos tu nombre, correo, país y los detalles del pedido para entregar tu licencia y darte soporte. Al activar una licencia, el plugin envía tu clave y el ID de tu cuenta de Figma (un número que Figma asigna a tu cuenta, no tu nombre ni tu correo) a nuestro servidor de licencias, que verifica la clave con Lemon Squeezy y recuerda a qué cuentas de Figma está vinculada. Así una licencia funciona en todos los plugins y queda limitada a 2 cuentas. Los plugins guardan tu clave en el almacenamiento de plugins de Figma de tu cuenta y ahí mismo llevan la cuenta de tus usos gratis.'],
         links: [{ label: 'Política de privacidad de Lemon Squeezy', href: 'https://www.lemonsqueezy.com/privacy' }],
       },
       {
@@ -332,8 +340,16 @@ export const STATIC_PAGES_ES = {
       {
         heading: 'Tu licencia',
         body: [
-          'Cada licencia es para una persona. Puedes activarla en las cuentas de Figma y dispositivos que usas personalmente, hasta el límite de activaciones indicado al comprar. No compartas, revendas ni publiques tu clave de licencia; las claves compartidas públicamente pueden desactivarse.',
-          'Los plugins verifican tu clave con Lemon Squeezy al activarla y de vez en cuando después. Para eso necesitan conexión a internet.',
+          'Cada licencia es para una persona. Funciona en todos los plugins que incluye tu plan, en hasta 2 cuentas de Figma que uses tú (por ejemplo, una personal y una del trabajo). La primera vez que ingresas tu clave, queda vinculada a esa cuenta de Figma; con 2 cuentas vinculadas, no se puede activar en una tercera.',
+          'No compartas, revendas ni publiques tu clave de licencia. Las claves compartidas o usadas por otras personas pueden desactivarse. Si cambias de cuenta de Figma, escríbenos y movemos tu licencia.',
+          'Los plugins verifican tu clave con nuestro servidor de licencias y con Lemon Squeezy al activarla y de vez en cuando después. Para eso necesitan conexión a internet.',
+        ],
+      },
+      {
+        heading: 'Precios y cambios de precio',
+        body: [
+          'Los precios pueden subir a medida que se agregan plugins nuevos a Lab Pro. Un cambio de precio solo aplica a compras nuevas: si ya compraste un plugin o Lab Pro de por vida, conservas todo lo que incluye tu licencia con la misma clave y nunca vuelves a pagar por ello.',
+          'Si tienes Lab Pro anual, tu renovación se mantiene al precio con el que te suscribiste mientras tu suscripción siga activa. Si alguna vez necesitamos cambiar el precio de tu renovación, te avisaremos por correo al menos 30 días antes de la próxima renovación, y podrás cancelar antes de que se renueve.',
         ],
       },
       {
