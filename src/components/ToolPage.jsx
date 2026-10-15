@@ -76,9 +76,11 @@ export default function ToolPage({ id, intro, children }) {
             </motion.div>
             <SplitText key={lang} as="h1" className="tool-title" text={name(exp)} delay={0.15} stagger={0.025} reactive />
           </motion.div>
+          {/* No fade: the description is the page's Largest Contentful Paint,
+              and an opacity-0 start delays it until the animation runs. */}
           <motion.p
             className="tool-desc"
-            variants={{ hidden: { opacity: 0, y: 16 }, show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: EASE } } }}
+            variants={{ hidden: { y: 16 }, show: { y: 0, transition: { duration: 0.6, ease: EASE } } }}
           >
             {lang === 'es' ? seo.intro || seo.description : intro || exp.description}
           </motion.p>

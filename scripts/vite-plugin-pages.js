@@ -57,7 +57,31 @@ export default function pagesPlugin() {
         await fs.mkdir(path.dirname(path.join(outDir, rel)), { recursive: true });
         await fs.writeFile(path.join(outDir, rel), content);
       };
-      const render = (meta, body, ld, opts) => injectBody(injectMeta(html, meta, opts), body, ld);
+      // Each route's lazy chunks, preloaded from its HTML: otherwise the
+      // browser only discovers them after the entry script runs, a second
+      // round trip before anything can render (the LCP waits on it).
+      let manifest = {};
+      try { manifest = JSON.parse(await fs.readFile(path.join(outDir, '.vite/manifest.json'), 'utf8')); } catch { /* no manifest */ }
+      const preloadTags = src => {
+        if (!manifest[src]) return '';
+        const js = new Set(), css = new Set();
+        const walk = key => {
+          const c = manifest[key];
+          if (!c || c.isEntry || js.has(c.file)) return;
+          js.add(c.file);
+          (c.css || []).forEach(f => css.add(f));
+          (c.imports || []).forEach(walk);
+        };
+        walk(src);
+        return [...js].filter(f => !html.includes(`/${f}"`)).map(f => `<link rel="modulepreload" crossorigin href="/${f}">`).join('')
+          + [...css].map(f => `<link rel="preload" as="style" crossorigin href="/${f}">`).join('');
+      };
+      const pascal = id => id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
+      const render = (meta, body, ld, opts, src) => {
+        const out = injectBody(injectMeta(html, meta, opts), body, ld);
+        const tags = src ? preloadTags(src) : '';
+        return tags ? out.replace('</head>', `    ${tags}\n  </head>`) : out;
+      };
 
       const sitemap = []; // { en, es, lastmod, priority }
       const today = new Date().toISOString().slice(0, 10);
@@ -66,17 +90,17 @@ export default function pagesPlugin() {
         await write(page('/', lang), render(homeMeta(lang), homeBody(lang), homeJsonLd(lang)));
 
         for (const exp of active()) {
-          await write(toolPath(exp, lang), render(getPageMeta(exp, lang), toolBody(exp, lang), toolJsonLd(exp, lang)));
+          await write(toolPath(exp, lang), render(getPageMeta(exp, lang), toolBody(exp, lang), toolJsonLd(exp, lang), undefined, `src/pages/${pascal(exp.id)}.jsx`));
         }
         for (const p of STATIC_PAGES) {
-          await write(lang === 'es' ? STATIC_PAGES_ES[p.id].path : p.path, render(staticMeta(p.id, lang), staticBody(p.id, lang)));
+          await write(lang === 'es' ? STATIC_PAGES_ES[p.id].path : p.path, render(staticMeta(p.id, lang), staticBody(p.id, lang), '', undefined, 'src/pages/StaticPage.jsx'));
         }
-        await write(page('/pro', lang), render(PRO_META(lang), proBody(lang)));
-        await write(page('/games', lang), render(GAMES_META(lang), gamesBody(lang)));
-        await write(page('/guides', lang), render(GUIDES_META(lang), guidesBody(lang)));
-        await write(page('/changelog', lang), render(CHANGELOG_META(lang), changelogBody(lang)));
+        await write(page('/pro', lang), render(PRO_META(lang), proBody(lang), '', undefined, 'src/pages/ProPage.jsx'));
+        await write(page('/games', lang), render(GAMES_META(lang), gamesBody(lang), '', undefined, 'src/pages/GamesIndex.jsx'));
+        await write(page('/guides', lang), render(GUIDES_META(lang), guidesBody(lang), '', undefined, 'src/pages/GuidesIndex.jsx'));
+        await write(page('/changelog', lang), render(CHANGELOG_META(lang), changelogBody(lang), '', undefined, 'src/pages/Changelog.jsx'));
         for (const g of GUIDES) {
-          await write(guidePath(g, lang), render(guideMeta(g, lang), guideBody(g, lang), guideJsonLd(g, lang)));
+          await write(guidePath(g, lang), render(guideMeta(g, lang), guideBody(g, lang), guideJsonLd(g, lang), undefined, 'src/pages/GuidePage.jsx'));
         }
         // Newsletter landing pages: reachable from emails only, kept out of search.
         for (const action of ['confirm', 'unsubscribe']) {
