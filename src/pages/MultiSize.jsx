@@ -30,7 +30,7 @@ function SafeZones({ size }) {
         };
     return (
       <motion.span key={i} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ position: 'absolute', pointerEvents: 'none', ...style }}>
-        {z.label && <span style={{ position: 'absolute', left: 6, top: 4, fontSize: 10, fontWeight: 700, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,.6)' }}>{t(z.label, SAFE_ES[z.label])}</span>}
+        {z.label && <span style={{ position: 'absolute', left: 6, top: 4, fontSize: 11, fontWeight: 700, color: '#fff', textShadow: '0 1px 2px rgba(0,0,0,.6)' }}>{t(z.label, SAFE_ES[z.label])}</span>}
       </motion.span>
     );
   });
@@ -62,10 +62,10 @@ function Preview({ size, data, fontsReady, showSafe, index }) {
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5, ease: EASE, delay: Math.min(index * 0.04, 0.4) }}
       className="card card-tight"
-      style={{ margin: 0, display: 'grid', gap: 10, alignContent: 'start' }}
+      style={{ margin: 0, display: 'grid', gap: 12, alignContent: 'start' }}
     >
-      <div style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 8, borderRadius: 14, background: 'var(--surface-2)' }}>
-        <motion.div whileHover={{ scale: 1.02 }} style={{ position: 'relative', width: '100%', maxWidth: size.w / size.h < 0.7 ? 220 : '100%', aspectRatio: `${size.w} / ${size.h}`, borderRadius: 6, overflow: 'hidden', boxShadow: '0 12px 30px -18px rgba(0,0,0,.6)' }}>
+      <div style={{ display: 'grid', placeItems: 'center', minHeight: 120, padding: 8, borderRadius: 16, background: 'var(--surface-2)' }}>
+        <motion.div whileHover={{ scale: 1.02 }} style={{ position: 'relative', width: '100%', maxWidth: size.w / size.h < 0.7 ? 220 : '100%', aspectRatio: `${size.w} / ${size.h}`, borderRadius: 8, overflow: 'hidden', boxShadow: '0 12px 30px -18px rgba(0,0,0,.6)' }}>
           <canvas ref={ref} role="img" aria-label={t(`${size.name} preview`, `Vista previa: ${sizeName}`)} style={{ width: '100%', height: '100%', display: 'block' }} />
           <AnimatePresence>{showSafe && <SafeZones size={size} />}</AnimatePresence>
         </motion.div>
@@ -167,7 +167,7 @@ export default function MultiSize() {
             {image ? (
               <div
                 ref={focalRef}
-                style={{ position: 'relative', borderRadius: 14, overflow: 'hidden', cursor: 'crosshair', touchAction: 'none' }}
+                style={{ position: 'relative', borderRadius: 16, overflow: 'hidden', cursor: 'crosshair', touchAction: 'none' }}
                 onPointerDown={e => { e.currentTarget.setPointerCapture(e.pointerId); moveFocal(e); }}
                 onPointerMove={e => { if (e.buttons) moveFocal(e); }}
                 role="slider"
@@ -203,7 +203,7 @@ export default function MultiSize() {
               </motion.button>
             </span>
           </Reveal>
-          <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 250px), 1fr))', gap: 14, alignItems: 'start' }}>
+          <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 250px), 1fr))', gap: 16, alignItems: 'start' }}>
             <AnimatePresence mode="popLayout">
               {sizes.map((s, i) => <Preview key={s.id} size={s} data={data} fontsReady={fontsReady} showSafe={showSafe} index={i} />)}
             </AnimatePresence>

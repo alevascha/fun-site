@@ -108,7 +108,7 @@ export default function TextExpansion() {
               </AnimatePresence>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                 <span className="field-label">{tr('Text length vs English', 'Longitud del texto vs inglés')}</span>
-                <motion.span key={Math.round(growth * 100)} initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mono" style={{ fontSize: 22, color: growth > 0.25 ? 'var(--fail)' : 'var(--text)' }}>
+                <motion.span key={Math.round(growth * 100)} initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="mono" style={{ fontSize: 24, color: growth > 0.25 ? 'var(--fail)' : 'var(--text)' }}>
                   {growth >= 0 ? '+' : ''}{Math.round(growth * 100)}%
                 </motion.span>
               </div>
@@ -205,9 +205,9 @@ export default function TextExpansion() {
                   {issues.map(i => (
                     <motion.div key={i.name} layout className="check-row" initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 12 }} transition={{ duration: 0.3, ease: EASE }} style={{ gridTemplateColumns: '1fr' }}>
                       <div>
-                        <div className="check-row-label">{localIssueName(i.name, uiLang)} <span className="badge badge-fail" style={{ marginLeft: 6 }}>{tr('cut off', 'recortado')}</span></div>
+                        <div className="check-row-label">{localIssueName(i.name, uiLang)} <span className="badge badge-fail" style={{ marginLeft: 8 }}>{tr('cut off', 'recortado')}</span></div>
                         <div className="check-row-sub" lang={langMeta.lang}>“{i.text}”</div>
-                        <div className="small" style={{ marginTop: 6 }}>{tr(FIXES[i.fix], FIXES_ES[i.fix])}</div>
+                        <div className="small" style={{ marginTop: 8 }}>{tr(FIXES[i.fix], FIXES_ES[i.fix])}</div>
                       </div>
                     </motion.div>
                   ))}

@@ -79,7 +79,7 @@ export default function GuidePage() {
             {others.map(g => (
               <Link key={g.slug} to={to(`/guides/${g.slug}`)} className="guide-card">
                 <span className="guide-card-meta">📖 {g.minutes} min</span>
-                <h3 className="exp-card-title" style={{ fontSize: 22 }}>{g[lang].title}</h3>
+                <h3 className="exp-card-title" style={{ fontSize: 24 }}>{g[lang].title}</h3>
               </Link>
             ))}
           </div>

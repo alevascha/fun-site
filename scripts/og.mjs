@@ -8,7 +8,7 @@ import { experiments, HOME_META, SITE } from '../src/experiments.js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(root, '..', 'public', 'og');
-const fontFiles = ['CrimsonPro-Light.ttf', 'HankenGrotesk-Medium.ttf'].map(f => path.join(root, 'fonts', f));
+const fontFiles = ['CrimsonPro-Light.ttf', 'Inter-Medium.ttf'].map(f => path.join(root, 'fonts', f));
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -45,11 +45,11 @@ function svg({ title, description, accent, kicker }) {
   </g>
   <rect x="32.5" y="32.5" width="1135" height="565" rx="47.5" fill="none" stroke="#ffffff" stroke-opacity="0.1"/>
   <circle cx="108" cy="118" r="10" fill="url(#o1)"/>
-  <text x="130" y="126" font-family="Hanken Grotesk" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(kicker)}</text>
+  <text x="130" y="126" font-family="Inter" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(kicker)}</text>
   ${titleLines.map((l, i) => `<text x="96" y="${titleY + i * (titleSize * 0.98)}" font-family="Crimson Pro" font-size="${titleSize}" letter-spacing="-3" fill="#F7F7F7">${esc(l)}</text>`).join('\n  ')}
-  ${descLines.map((l, i) => `<text x="96" y="${430 + i * 40}" font-family="Hanken Grotesk" font-size="28" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
+  ${descLines.map((l, i) => `<text x="96" y="${430 + i * 40}" font-family="Inter" font-size="28" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
   <rect x="96" y="500" width="250" height="52" rx="26" fill="#F7F7F7"/>
-  <text x="221" y="534" text-anchor="middle" font-family="Hanken Grotesk" font-size="22" fill="#111011">fun.alevasquez.dev</text>
+  <text x="221" y="534" text-anchor="middle" font-family="Inter" font-size="22" fill="#111011">fun.alevasquez.dev</text>
 </svg>`;
 }
 
@@ -60,7 +60,7 @@ const pages = [
 
 await fs.mkdir(outDir, { recursive: true });
 for (const page of pages) {
-  const png = new Resvg(svg(page), { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Hanken Grotesk' } }).render().asPng();
+  const png = new Resvg(svg(page), { font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render().asPng();
   await fs.writeFile(path.join(outDir, `${page.id}.png`), png);
 }
 // App icons (apple-touch-icon, PWA manifest) from the same brand mark.

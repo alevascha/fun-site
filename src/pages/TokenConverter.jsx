@@ -18,7 +18,7 @@ function download(text, filename) {
 function TokenPreview({ t }) {
   if (t.type === 'color') {
     const c = colorRgba(t.value);
-    return <span className="checker" style={{ width: 36, height: 36, borderRadius: 10, display: 'block', overflow: 'hidden', flex: 'none' }}><span style={{ display: 'block', width: '100%', height: '100%', background: c ? `rgb(${c.r} ${c.g} ${c.b} / ${c.a})` : 'transparent', boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)', borderRadius: 10 }} /></span>;
+    return <span className="checker" style={{ width: 36, height: 36, borderRadius: 12, display: 'block', overflow: 'hidden', flex: 'none' }}><span style={{ display: 'block', width: '100%', height: '100%', background: c ? `rgb(${c.r} ${c.g} ${c.b} / ${c.a})` : 'transparent', boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)', borderRadius: 12 }} /></span>;
   }
   if (t.type === 'dimension') {
     const px = parseFloat(t.css) * (/rem|em/.test(t.css) ? 16 : 1);
@@ -30,7 +30,7 @@ function TokenPreview({ t }) {
     const [a, b, c, d] = t.value;
     return <svg width="36" height="36" viewBox="-0.1 -0.3 1.2 1.6" style={{ flex: 'none' }} aria-hidden="true"><path d={`M0 1 C ${a} ${1 - b} ${c} ${1 - d} 1 0`} fill="none" stroke="var(--accent-c)" strokeWidth="0.08" /></svg>;
   }
-  if (t.type === 'shadow') return <span style={{ width: 30, height: 30, margin: 3, flex: 'none', borderRadius: 8, background: 'var(--surface)', boxShadow: t.css, display: 'block' }} />;
+  if (t.type === 'shadow') return <span style={{ width: 30, height: 30, margin: 4, flex: 'none', borderRadius: 8, background: 'var(--surface)', boxShadow: t.css, display: 'block' }} />;
   return <span className="mono muted" style={{ width: 36, flex: 'none', fontSize: 11, textAlign: 'center' }}>{t.type?.slice(0, 4) || '-'}</span>;
 }
 
@@ -102,7 +102,7 @@ export default function TokenConverter() {
             <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()} style={{ marginLeft: 'auto' }}>{tr('Open .json', 'Abrir .json')}</button>
           </div>
           {result.ok && result.modes.length > 1 && (
-            <div className="field" style={{ marginTop: 14 }}>
+            <div className="field" style={{ marginTop: 16 }}>
               <span className="field-label">{tr('Mode', 'Modo')}</span>
               <Segmented label={tr('Variable mode', 'Modo de variables')} value={result.mode} onChange={setMode} options={result.modes.map(m => ({ value: m, label: m }))} />
             </div>
@@ -112,7 +112,7 @@ export default function TokenConverter() {
         <div className="stack">
           <Reveal className="card" delay={0.05}>
             <h2 className="eyebrow">{tr('Options', 'Opciones')}</h2>
-            <div className="grid-2" style={{ gap: 14 }}>
+            <div className="grid-2" style={{ gap: 16 }}>
               <div className="field">
                 <label className="field-label" htmlFor="tok-prefix">{tr('Prefix', 'Prefijo')}</label>
                 <input id="tok-prefix" className="input" placeholder={tr('e.g. ds', 'p. ej. ds')} value={prefix} onChange={e => setPrefix(e.target.value)} />
@@ -122,7 +122,7 @@ export default function TokenConverter() {
                 <Segmented full label={tr('Color format', 'Formato de color')} value={colorFormat} onChange={setColorFormat} options={[{ value: 'hex', label: 'HEX' }, { value: 'rgb', label: 'RGB' }, { value: 'hsl', label: 'HSL' }]} />
               </div>
             </div>
-            <div className="field" style={{ marginTop: 14 }}>
+            <div className="field" style={{ marginTop: 16 }}>
               <span className="field-label">{tr('Aliases', 'Alias')}</span>
               <Segmented full label={tr('Aliases', 'Alias')} value={keepAliases ? 'keep' : 'resolve'} onChange={v => setKeepAliases(v === 'keep')} options={[{ value: 'keep', label: tr('Keep as references', 'Mantener como referencias') }, { value: 'resolve', label: tr('Resolve to values', 'Resolver a valores') }]} />
             </div>
@@ -146,7 +146,7 @@ export default function TokenConverter() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.2 }}
-                style={{ marginTop: 14, maxHeight: 420 }}
+                style={{ marginTop: 16, maxHeight: 420 }}
               >
                 {result.ok ? output : tr('// Fix the JSON on the left to see output', '// Corrige el JSON de la izquierda para ver la salida')}
               </motion.pre>
@@ -156,7 +156,7 @@ export default function TokenConverter() {
       </div>
 
       {result.ok && (
-        <Reveal className="card" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
+        <Reveal className="card" style={{ marginTop: 'clamp(16px, 1.6vw, 20px)' }}>
           <h2 className="eyebrow">{tr('Preview · click to copy a variable', 'Vista previa · haz clic para copiar una variable')}</h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 260px), 1fr))', gap: 8 }}>
             {result.tokens.slice(0, 120).map((t, i) => {

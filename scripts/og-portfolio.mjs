@@ -13,7 +13,7 @@ import { Resvg } from '@resvg/resvg-js';
 const root = path.dirname(fileURLToPath(import.meta.url));
 const src = path.join(root, '..', 'framer', 'og', 'src');
 const outDir = path.join(root, '..', 'framer', 'og');
-const fontFiles = ['CrimsonPro-Light.ttf', 'HankenGrotesk-Medium.ttf'].map(f => path.join(root, 'fonts', f));
+const fontFiles = ['CrimsonPro-Light.ttf', 'Inter-Medium.ttf'].map(f => path.join(root, 'fonts', f));
 
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 function wrap(text, maxChars) {
@@ -49,7 +49,7 @@ const frame = (accent, inner) => `<svg xmlns="http://www.w3.org/2000/svg" xmlns:
 </svg>`;
 
 const kickerEl = k => `<circle cx="108" cy="118" r="10" fill="url(#o1)"/>
-  <text x="130" y="126" font-family="Hanken Grotesk" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(k)}</text>`;
+  <text x="130" y="126" font-family="Inter" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(k)}</text>`;
 // The AV mark on its gradient circle (same as framer/logo/av-tile.svg).
 const AV_PATHS = '<path d="M497 640H359L248 320 122 640H0L256 0z"/><path d="M292.43 640H200.8L248 522z"/><path d="M335 0h138l111 320L710 0h122L576 640z"/>';
 const logo = (cx, cy, r) => `<defs><radialGradient id="lg" cx="25%" cy="100%" r="100%"><stop offset="0" stop-color="#CD57FF"/><stop offset="1" stop-color="#FFCE1F"/></radialGradient></defs>
@@ -57,7 +57,7 @@ const logo = (cx, cy, r) => `<defs><radialGradient id="lg" cx="25%" cy="100%" r=
   <g transform="translate(${cx - r * 0.469} ${cy - r * 0.359}) scale(${(r * 0.938 / 832).toFixed(5)})" fill="#111011">${AV_PATHS}</g>`;
 const pill = (x, y) => `<rect x="${x}" y="${y}" width="250" height="56" rx="28" fill="#F7F7F7"/>
   ${logo(x + 28, y + 28, 20)}
-  <text x="${x + 58}" y="${y + 36}" font-family="Hanken Grotesk" font-size="22" fill="#111011">alevasquez.dev</text>`;
+  <text x="${x + 58}" y="${y + 36}" font-family="Inter" font-size="22" fill="#111011">alevasquez.dev</text>`;
 
 // Left text column + an image panel on the right.
 function split({ kicker, title, description, accent, image, round = false }) {
@@ -77,7 +77,7 @@ function split({ kicker, title, description, accent, image, round = false }) {
   <rect x="626.5" y="166.5" width="499" height="280" rx="21.5" fill="none" stroke="#ffffff" stroke-opacity="0.14"/>`;
   return frame(accent, `${kickerEl(kicker)}
   ${titleLines.map((l, i) => `<text x="96" y="${top + i * size * 0.98}" font-family="Crimson Pro" font-size="${size}" letter-spacing="-2" fill="#F7F7F7">${esc(l)}</text>`).join('\n  ')}
-  ${descLines.map((l, i) => `<text x="96" y="${descTop + i * 34}" font-family="Hanken Grotesk" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
+  ${descLines.map((l, i) => `<text x="96" y="${descTop + i * 34}" font-family="Inter" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
   ${img}
   ${pill(96, 500)}`);
 }
@@ -95,7 +95,7 @@ function stack({ kicker, title, description, accent, images }) {
   }).join('\n  ');
   return frame(accent, `${kickerEl(kicker)}
   ${titleLines.map((l, i) => `<text x="96" y="${210 + i * 74}" font-family="Crimson Pro" font-size="76" letter-spacing="-2" fill="#F7F7F7">${esc(l)}</text>`).join('\n  ')}
-  ${descLines.map((l, i) => `<text x="96" y="${290 + (titleLines.length - 1) * 74 + i * 34}" font-family="Hanken Grotesk" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
+  ${descLines.map((l, i) => `<text x="96" y="${290 + (titleLines.length - 1) * 74 + i * 34}" font-family="Inter" font-size="24" fill="#DBDBDB" fill-opacity="0.75">${esc(l)}</text>`).join('\n  ')}
   ${cards}
   ${pill(96, 500)}`);
 }

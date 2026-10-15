@@ -11,7 +11,7 @@ import { Resvg } from '@resvg/resvg-js';
 
 const root = path.dirname(fileURLToPath(import.meta.url));
 const outDir = path.join(root, '..', 'framer', 'linkedin');
-const fontFiles = ['CrimsonPro-Light.ttf', 'HankenGrotesk-Medium.ttf'].map(f => path.join(root, 'fonts', f));
+const fontFiles = ['CrimsonPro-Light.ttf', 'Inter-Medium.ttf'].map(f => path.join(root, 'fonts', f));
 const W = 1584, H = 396;
 const COLORS = ['#CD57FF', '#8B6CF0', '#FFCE1F', '#FF7AB6'];
 
@@ -54,7 +54,7 @@ const pill = (x, y, label, dot) => {
   return `<g transform="translate(${x} ${y})">
     <rect width="${w.toFixed(0)}" height="50" rx="25" fill="#ffffff" fill-opacity="0.06" stroke="#ffffff" stroke-opacity="0.14"/>
     ${dot ? `<circle cx="24" cy="25" r="5.5" fill="${dot}"/>` : ''}
-    <text x="${dot ? 40 : 21}" y="32" font-family="Hanken Grotesk" font-size="21" fill="#F7F7F7" fill-opacity="0.9">${label}</text>
+    <text x="${dot ? 40 : 21}" y="32" font-family="Inter" font-size="21" fill="#F7F7F7" fill-opacity="0.9">${label}</text>
   </g>`;
 };
 
@@ -82,7 +82,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
     <g transform="translate(52 44)">
       <rect width="262" height="44" rx="12" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.12"/>
       <circle cx="22" cy="22" r="7" fill="#CD57FF"/>
-      <text x="40" y="28" font-family="Hanken Grotesk" font-size="17"><tspan fill="#CD57FF">--brand-primary</tspan><tspan fill="#DBDBDB" fill-opacity="0.7">: #CD57FF;</tspan></text>
+      <text x="40" y="28" font-family="Inter" font-size="17"><tspan fill="#CD57FF">--brand-primary</tspan><tspan fill="#DBDBDB" fill-opacity="0.7">: #CD57FF;</tspan></text>
     </g>
     <g transform="translate(52 108)">
       <rect width="196" height="58" rx="14" fill="#ffffff" fill-opacity="0.05" stroke="#ffffff" stroke-opacity="0.12"/>
@@ -94,7 +94,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
     <g transform="translate(270 112)">
       <rect x="-6" y="-6" width="132" height="62" rx="12" fill="none" stroke="#8B6CF0" stroke-opacity="0.8" stroke-dasharray="4 4"/>
       <rect width="120" height="50" rx="25" fill="url(#grad)"/>
-      <text x="60" y="32" text-anchor="middle" font-family="Hanken Grotesk" font-size="18" fill="#111011">Primary</text>
+      <text x="60" y="32" text-anchor="middle" font-family="Inter" font-size="18" fill="#111011">Primary</text>
       <rect x="-9" y="-9" width="6" height="6" fill="#F7F7F7"/><rect x="117" y="-9" width="6" height="6" fill="#F7F7F7"/>
       <rect x="-9" y="47" width="6" height="6" fill="#F7F7F7"/><rect x="117" y="47" width="6" height="6" fill="#F7F7F7"/>
       <path d="M128 40 L128 66 L135 59 L140 70 L145 68 L140 57 L150 57 Z" fill="#F7F7F7" stroke="#111011" stroke-width="1.5" stroke-linejoin="round"/>
@@ -107,10 +107,10 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 
   <!-- copy (kept right of the profile-photo zone) -->
   <g transform="translate(492 0)">
-    <text x="0" y="76" font-family="Hanken Grotesk" font-size="19" letter-spacing="3.8" fill="url(#grad)">ALEJANDRO VASQUEZ</text>
+    <text x="0" y="76" font-family="Inter" font-size="19" letter-spacing="3.8" fill="url(#grad)">ALEJANDRO VASQUEZ</text>
     <text x="0" y="156" font-family="Crimson Pro" font-weight="300" font-size="78" letter-spacing="-1.4" fill="#F7F7F7">Bridging the gap between</text>
     <text x="0" y="236" font-family="Crimson Pro" font-weight="300" font-size="78" letter-spacing="-1.4" fill="url(#grad)">Design &amp; Engineering</text>
-    <text x="0" y="288" font-family="Hanken Grotesk" font-size="26" fill="#DBDBDB" fill-opacity="0.82">Design Systems Architect · UX &amp; AI Interface Engineer</text>
+    <text x="0" y="288" font-family="Inter" font-size="26" fill="#DBDBDB" fill-opacity="0.82">Design Systems Architect · UX &amp; AI Interface Engineer</text>
     ${pill(0, 316, 'alevasquez.dev', '#CD57FF')}
     ${pill(236, 316, 'fun.alevasquez.dev', '#FFCE1F')}
   </g>
@@ -119,7 +119,7 @@ const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" 
 await fs.mkdir(outDir, { recursive: true });
 await fs.writeFile(path.join(outDir, 'banner.svg'), svg);
 for (const [name, width] of [['banner.png', W], ['banner@2x.png', W * 2]]) {
-  const png = new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Hanken Grotesk' } }).render().asPng();
+  const png = new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: { fontFiles, loadSystemFonts: false, defaultFontFamily: 'Inter' } }).render().asPng();
   await fs.writeFile(path.join(outDir, name), png);
   console.log(`framer/linkedin/${name}: ${(png.length / 1024).toFixed(0)} KB`);
 }

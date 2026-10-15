@@ -47,7 +47,7 @@ export default function Changelog() {
               <time dateTime={entry.date} className="small muted">
                 {new Date(entry.date + 'T00:00:00').toLocaleDateString(lang === 'es' ? 'es' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
               </time>
-              <h2 className="card-title" style={{ margin: '4px 0 6px' }}>{entry[lang].title}</h2>
+              <h2 className="card-title" style={{ margin: '4px 0 8px' }}>{entry[lang].title}</h2>
               <p className="muted" style={{ margin: 0, lineHeight: 1.65 }}>{entry[lang].body}</p>
             </motion.article>
           ))}

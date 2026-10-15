@@ -172,7 +172,7 @@ export default function AutoTrim() {
 
           <Reveal className="card" delay={0.05}>
             <h2 className="eyebrow">{t('Trim settings', 'Ajustes de recorte')}</h2>
-            <div className="stack" style={{ gap: 14 }}>
+            <div className="stack" style={{ gap: 16 }}>
               <Segmented full label={t('What counts as empty', 'Qué se considera vacío')} value={opts.trimSolid ? 'solid' : 'alpha'} onChange={v => setOpts(o => ({ ...o, trimSolid: v === 'solid' }))} options={[{ value: 'alpha', label: t('Transparent', 'Transparente') }, { value: 'solid', label: t('+ Solid background', '+ Fondo sólido') }]} />
               <RangeField label={t('Alpha threshold', 'Umbral de transparencia')} value={opts.alphaThreshold} min={0} max={128} onChange={v => setOpts(o => ({ ...o, alphaThreshold: v }))} />
               <AnimatePresence initial={false}>
@@ -206,7 +206,7 @@ export default function AutoTrim() {
               </div>
             </Reveal>
           ) : (
-            <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))', gap: 14 }}>
+            <motion.div layout style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))', gap: 16 }}>
               <AnimatePresence mode="popLayout">
                 {items.map((item, i) => <ResultCard key={item.id} item={item} index={i} result={results[item.id]} onRemove={() => remove(item.id)} />)}
               </AnimatePresence>

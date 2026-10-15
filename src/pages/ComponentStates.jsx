@@ -435,7 +435,7 @@ export default function ComponentStates() {
                   <motion.button
                     key={c} type="button" aria-label={tr(`Use ${c}`, `Usar ${c}`)} aria-pressed={accent === c}
                     onClick={() => setAccent(c)} whileHover={{ y: -3, rotate: -6 }} whileTap={{ scale: 0.85 }}
-                    style={{ width: 30, height: 30, borderRadius: 10, border: 'none', background: c, boxShadow: accent === c ? '0 0 0 2px var(--surface), 0 0 0 4px var(--focus)' : 'inset 0 0 0 1px rgba(127,127,127,.3)', transition: 'box-shadow .2s ease' }}
+                    style={{ width: 30, height: 30, borderRadius: 12, border: 'none', background: c, boxShadow: accent === c ? '0 0 0 2px var(--surface), 0 0 0 4px var(--focus)' : 'inset 0 0 0 1px rgba(127,127,127,.3)', transition: 'box-shadow .2s ease' }}
                   />
                 ))}
               </div>

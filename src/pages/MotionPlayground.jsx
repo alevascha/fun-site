@@ -221,7 +221,7 @@ extension Animation {
         <Reveal className="card">
           <h2 className="eyebrow">Cubic-bezier <span className="mono" style={{ textTransform: 'none', letterSpacing: 0 }}>{bezierCss}</span></h2>
           <BezierEditor value={bezier} onChange={setBezier} />
-          <div className="chip-row" style={{ marginTop: 14 }}>
+          <div className="chip-row" style={{ marginTop: 16 }}>
             {BEZIER_PRESETS.map(p => (
               <motion.button key={p.name} type="button" className="btn btn-ghost btn-sm" whileTap={{ scale: 0.92 }} aria-pressed={bezier.join() === p.value.join()} onClick={() => setBezier(p.value)}
                 style={bezier.join() === p.value.join() ? { background: 'var(--chip-bg)', color: 'var(--chip-text)' } : undefined}>
@@ -243,7 +243,7 @@ extension Animation {
             </span>
           </h2>
           <SpringPlot sim={sim} />
-          <div className="chip-row" style={{ marginTop: 14 }}>
+          <div className="chip-row" style={{ marginTop: 16 }}>
             {SPRING_PRESETS.map(p => {
               const on = JSON.stringify(p.value) === JSON.stringify(spring);
               return (
@@ -254,7 +254,7 @@ extension Animation {
               );
             })}
           </div>
-          <div className="stack" style={{ gap: 10, marginTop: 16 }}>
+          <div className="stack" style={{ gap: 12, marginTop: 16 }}>
             <RangeField label={t('Stiffness', 'Rigidez')} value={spring.stiffness} min={20} max={800} step={5} onChange={v => setSpring(s => ({ ...s, stiffness: v }))} />
             <RangeField label={t('Damping', 'Amortiguación')} value={spring.damping} min={2} max={80} step={1} onChange={v => setSpring(s => ({ ...s, damping: v }))} />
             <RangeField label={t('Mass', 'Masa')} value={spring.mass} min={0.2} max={5} step={0.1} onChange={v => setSpring(s => ({ ...s, mass: v }))} />
@@ -262,7 +262,7 @@ extension Animation {
         </Reveal>
       </div>
 
-      <Reveal className="card" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
+      <Reveal className="card" style={{ marginTop: 'clamp(16px, 1.6vw, 20px)' }}>
         <h2 className="eyebrow">
           {t('The race', 'La carrera')}
           <span className="chip-row">
@@ -276,34 +276,34 @@ extension Animation {
               <span className="small muted" style={{ position: 'absolute', right: 18, fontFamily: 'var(--font-label)' }}>{lane.label} · {lane.duration}ms</span>
               <span
                 ref={el => { lanesRef.current[i] = el; }}
-                style={{ width: 44, height: 44, marginLeft: 6, borderRadius: '50%', background: ['var(--surface-3)', '#CD57FF', 'var(--accent-grad)'][i], boxShadow: i ? '0 8px 20px -8px rgba(205,87,255,.8)' : 'inset 0 0 0 1px var(--border-strong)', willChange: 'transform', position: 'relative', zIndex: 1 }}
+                style={{ width: 44, height: 44, marginLeft: 8, borderRadius: '50%', background: ['var(--surface-3)', '#CD57FF', 'var(--accent-grad)'][i], boxShadow: i ? '0 8px 20px -8px rgba(205,87,255,.8)' : 'inset 0 0 0 1px var(--border-strong)', willChange: 'transform', position: 'relative', zIndex: 1 }}
               />
             </div>
           ))}
         </div>
       </Reveal>
 
-      <div className="grid-2" style={{ marginTop: 'clamp(14px, 1.6vw, 20px)' }}>
+      <div className="grid-2" style={{ marginTop: 'clamp(16px, 1.6vw, 20px)' }}>
         <Reveal className="card">
           <h2 className="eyebrow">
             {t('In real UI', 'En una interfaz real')}
             <Segmented label={t('Demo easing', 'Easing de la demo')} value={demoSource} onChange={setDemoSource} options={[{ value: 'spring', label: t('Spring', 'Resorte') }, { value: 'bezier', label: t('Curve', 'Curva') }]} />
           </h2>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: 12 }}>
-            <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
-              <div ref={el => { demoRefs.current.modal = el; }} style={{ width: '70%', padding: 14, borderRadius: 14, background: 'var(--surface)', boxShadow: 'var(--shadow-pop)' }}>
+            <div style={{ height: 170, borderRadius: 20, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
+              <div ref={el => { demoRefs.current.modal = el; }} style={{ width: '70%', padding: 16, borderRadius: 16, background: 'var(--surface)', boxShadow: 'var(--shadow-pop)' }}>
                 <div style={{ height: 8, width: '60%', borderRadius: 4, background: 'var(--text)', opacity: 0.8 }} />
                 <div style={{ height: 6, width: '90%', borderRadius: 4, background: 'var(--muted)', opacity: 0.5, marginTop: 8 }} />
                 <div style={{ height: 22, width: 60, borderRadius: 999, background: '#8B6CF0', marginTop: 12, marginLeft: 'auto' }} />
               </div>
             </div>
-            <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
-              <div ref={el => { demoRefs.current.toast = el; }} style={{ position: 'absolute', left: 12, right: 12, bottom: 12, padding: '12px 14px', borderRadius: 14, background: 'var(--chip-bg)', color: 'var(--chip-text)', fontSize: 13, fontWeight: 600 }}>
+            <div style={{ height: 170, borderRadius: 20, background: 'var(--surface-2)', overflow: 'hidden', position: 'relative', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
+              <div ref={el => { demoRefs.current.toast = el; }} style={{ position: 'absolute', left: 12, right: 12, bottom: 12, padding: '12px 16px', borderRadius: 16, background: 'var(--chip-bg)', color: 'var(--chip-text)', fontSize: 13, fontWeight: 600 }}>
                 ✓ {t('Changes saved', 'Cambios guardados')}
               </div>
             </div>
-            <div style={{ height: 170, borderRadius: 18, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
-              <div ref={el => { demoRefs.current.track = el; }} style={{ width: 62, height: 34, borderRadius: 999, padding: 3, background: '#8B6CF0' }}>
+            <div style={{ height: 170, borderRadius: 20, background: 'var(--surface-2)', display: 'grid', placeItems: 'center', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
+              <div ref={el => { demoRefs.current.track = el; }} style={{ width: 62, height: 34, borderRadius: 999, padding: 4, background: '#8B6CF0' }}>
                 <div ref={el => { demoRefs.current.thumb = el; }} style={{ width: 28, height: 28, borderRadius: '50%', background: '#fff', boxShadow: '0 2px 6px rgba(0,0,0,.3)' }} />
               </div>
             </div>
@@ -318,7 +318,7 @@ extension Animation {
               <CopyButton copied={copied === 'out'} onClick={() => copy(exports[exportFormat], 'out', { name: 'Copy', props: { tool: 'motion-playground', format: exportFormat } })}>{t('Copy', 'Copiar')}</CopyButton>
             </span>
           </h2>
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', marginBottom: 12 }}>
+          <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', marginBottom: 12 }}>
             <input className="input" aria-label={t('Token name', 'Nombre del token')} value={name} onChange={e => setName(e.target.value)} style={{ maxWidth: 160 }} />
             <Segmented label={t('Export format', 'Formato de exportación')} value={exportFormat} onChange={setExportFormat} options={[{ value: 'css', label: 'CSS' }, { value: 'tokens', label: 'Tokens' }, { value: 'framer', label: 'Framer Motion' }, { value: 'swift', label: 'SwiftUI' }]} />
           </div>

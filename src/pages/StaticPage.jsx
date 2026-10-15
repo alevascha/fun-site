@@ -58,9 +58,9 @@ export default function StaticPage({ id }) {
           {page.sections.map((s, i) => (
             <Reveal key={s.heading} className="card" delay={Math.min(i * 0.04, 0.2)}>
               <h2 className="card-title">{s.heading}</h2>
-              {s.body.map(p => <p key={p.slice(0, 40)} className="muted" style={{ lineHeight: 1.7, margin: '10px 0 0' }}>{p}</p>)}
+              {s.body.map(p => <p key={p.slice(0, 40)} className="muted" style={{ lineHeight: 1.7, margin: '12px 0 0' }}>{p}</p>)}
               {s.links && (
-                <div className="chip-row" style={{ marginTop: 14 }}>
+                <div className="chip-row" style={{ marginTop: 16 }}>
                   {s.links.map(l => (l.href.startsWith('/')
                     ? <Link key={l.href} className="btn btn-ghost btn-sm" to={l.href}>{l.label} <span aria-hidden="true">→</span></Link>
                     : <a key={l.href} className="btn btn-ghost btn-sm" href={l.href} target="_blank" rel="noopener noreferrer">{l.label} <span aria-hidden="true">↗</span></a>))}

@@ -56,7 +56,7 @@ export default function Newsletter({ source, waitlist = false, compact = false }
     <Reveal as="section" className={'newsletter' + (compact ? ' newsletter-compact' : '')} aria-labelledby={`${id}-title`}>
       <div className="newsletter-copy">
         <h2 id={`${id}-title`} className="card-title" style={{ margin: 0 }}>{title}</h2>
-        <p className="small muted" style={{ margin: '6px 0 0' }}>{sub}</p>
+        <p className="small muted" style={{ margin: '8px 0 0' }}>{sub}</p>
       </div>
       <AnimatePresence mode="wait" initial={false}>
         {state === 'done' ? (

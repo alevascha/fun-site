@@ -86,7 +86,7 @@
   .avfx-touchglow{position:fixed;left:0;top:0;width:560px;height:560px;margin:-280px 0 0 -280px;z-index:2147483000;pointer-events:none;border-radius:50%;background:radial-gradient(closest-side,var(--avfx-spot),transparent);will-change:transform;opacity:0;transition:opacity .8s}
   .avfx-touchglow[data-on=true]{opacity:1}
   .avfx-ring,.avfx-dot{position:fixed;top:0;left:0;z-index:2147483002;pointer-events:none;border-radius:999px;translate:-50% -50%;opacity:0;transition:opacity .25s}
-  .avfx-ring{width:34px;height:34px;display:grid;place-items:center;border:1.5px solid rgba(205,87,255,.7);background:rgba(205,87,255,.06);font:600 13px/1 "Hanken Grotesk","Inter",system-ui,sans-serif;color:#111011;transition:width .35s ${EASE},height .35s ${EASE},background-color .25s,border-color .25s,border-radius .25s,opacity .25s}
+  .avfx-ring{width:34px;height:34px;display:grid;place-items:center;border:1.5px solid rgba(205,87,255,.7);background:rgba(205,87,255,.06);font:600 13px/1 "Inter",system-ui,sans-serif;color:#111011;transition:width .35s ${EASE},height .35s ${EASE},background-color .25s,border-color .25s,border-radius .25s,opacity .25s}
   .avfx-ring span{opacity:0;scale:.6;transition:opacity .2s,scale .3s ${EASE}}
   .avfx-ring[data-mode=hover]{width:54px;height:54px;background:rgba(205,87,255,.14);border-color:rgba(205,87,255,.95)}
   .avfx-ring[data-mode=label]{width:86px;height:86px;border-color:transparent;background:linear-gradient(135deg,#CD57FF,#FFCE1F);box-shadow:0 10px 30px -8px rgba(205,87,255,.6)}

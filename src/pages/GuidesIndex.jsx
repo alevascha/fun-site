@@ -39,7 +39,7 @@ export default function GuidesIndex() {
               <Reveal key={g.slug} delay={i * 0.05}>
                 <Link to={to(`/guides/${g.slug}`)} className="guide-card">
                   <span className="guide-card-meta">📖 {g.minutes} min · {tool.emoji} {name(tool)}</span>
-                  <h2 className="exp-card-title" style={{ fontSize: 26 }}>{g[lang].title}</h2>
+                  <h2 className="exp-card-title" style={{ fontSize: 28 }}>{g[lang].title}</h2>
                   <p className="exp-card-desc">{g[lang].description}</p>
                 </Link>
               </Reveal>

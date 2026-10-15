@@ -130,7 +130,7 @@ export default function ImagePalette() {
               onDragOver={e => { e.preventDefault(); setOver(true); }}
               onDragLeave={() => setOver(false)}
               onDrop={e => { e.preventDefault(); setOver(false); handleFile(e.dataTransfer.files?.[0]); }}
-              style={src ? { minHeight: 0, padding: 10 } : undefined}
+              style={src ? { minHeight: 0, padding: 12 } : undefined}
               layout
             >
               <input ref={fileRef} type="file" accept="image/*" hidden onChange={e => handleFile(e.target.files?.[0])} />
@@ -143,10 +143,10 @@ export default function ImagePalette() {
                     initial={{ opacity: 0, scale: 0.96 }}
                     animate={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0 }}
-                    style={{ borderRadius: 18, width: '100%', maxHeight: 360, objectFit: 'contain' }}
+                    style={{ borderRadius: 20, width: '100%', maxHeight: 360, objectFit: 'contain' }}
                   />
                 ) : (
-                  <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ display: 'grid', gap: 10, justifyItems: 'center' }}>
+                  <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} style={{ display: 'grid', gap: 12, justifyItems: 'center' }}>
                     <motion.span style={{ fontSize: 44 }} animate={{ y: [0, -8, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }} aria-hidden="true">🖼️</motion.span>
                     <strong style={{ fontSize: 16 }}>{t('Drop an image here', 'Suelta una imagen aquí')}</strong>
                     <span className="small muted">{t('or click to browse · or paste with ⌘V / Ctrl+V', 'o haz clic para buscar · o pega con ⌘V / Ctrl+V')}</span>
@@ -155,7 +155,7 @@ export default function ImagePalette() {
               </AnimatePresence>
             </motion.div>
             {error && <p role="alert" className="small" style={{ color: 'var(--fail)', margin: '12px 0 0' }}>{error}</p>}
-            <div style={{ display: 'flex', gap: 8, marginTop: 14, flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', gap: 8, marginTop: 16, flexWrap: 'wrap' }}>
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(0)}>{t('Try a sunset', 'Prueba un atardecer')}</button>
               <button type="button" className="btn btn-ghost btn-sm" onClick={() => trySample(1)}>{t('Try a garden', 'Prueba un jardín')}</button>
               {src && <button type="button" className="btn btn-ghost btn-sm" onClick={() => { setSrc(null); setColors([]); }}>{t('Clear', 'Quitar')}</button>}
@@ -182,7 +182,7 @@ export default function ImagePalette() {
                   {t('Dominant colors', 'Colores dominantes')}
                   <CopyButton copied={copied === 'css'} onClick={() => copy(cssVars, 'css', { name: 'Copy', props: { tool: 'image-palette', format: 'css' } })}>{t('Copy CSS', 'Copiar CSS')}</CopyButton>
                 </h2>
-                <div style={{ display: 'flex', height: 120, borderRadius: 22, overflow: 'hidden', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
+                <div style={{ display: 'flex', height: 120, borderRadius: 24, overflow: 'hidden', boxShadow: 'inset 0 0 0 1px var(--border)' }}>
                   {colors.map((c, i) => (
                     <motion.button
                       key={c.hex + i}
@@ -195,13 +195,13 @@ export default function ImagePalette() {
                       transition={{ duration: 0.6, ease: EASE, delay: i * 0.04 }}
                       onHoverStart={() => setHovered(i)}
                       onHoverEnd={() => setHovered(null)}
-                      style={{ flexBasis: 0, border: 'none', background: c.hex, color: bestTextColor(c.rgb), display: 'flex', alignItems: 'flex-end', padding: 10, fontFamily: 'var(--font-mono)', fontSize: 11, minWidth: 0, overflow: 'hidden' }}
+                      style={{ flexBasis: 0, border: 'none', background: c.hex, color: bestTextColor(c.rgb), display: 'flex', alignItems: 'flex-end', padding: 12, fontFamily: 'var(--font-mono)', fontSize: 11, minWidth: 0, overflow: 'hidden' }}
                     >
                       {copied === c.hex ? t('Copied!', '¡Copiado!') : c.share > 0.07 ? `${Math.round(c.share * 100)}%` : ''}
                     </motion.button>
                   ))}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 190px), 1fr))', gap: 10, marginTop: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 190px), 1fr))', gap: 12, marginTop: 16 }}>
                   {colors.map((c, i) => {
                     const onWhite = contrastRatio(c.rgb, white), onBlack = contrastRatio(c.rgb, black);
                     return (
@@ -216,7 +216,7 @@ export default function ImagePalette() {
                         <span style={{ width: 44, height: 44, borderRadius: 12, background: c.hex, boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)' }} />
                         <span style={{ minWidth: 0 }}>
                           <span className="mono" style={{ fontSize: 14, fontWeight: 500 }}>{c.hex}</span>
-                          <span className="check-row-sub" style={{ display: 'flex', gap: 10 }}>
+                          <span className="check-row-sub" style={{ display: 'flex', gap: 12 }}>
                             <span title={t('Contrast with white text', 'Contraste con texto blanco')}>◻ {formatRatio(onWhite)}</span>
                             <span title={t('Contrast with black text', 'Contraste con texto negro')}>◼ {formatRatio(onBlack)}</span>
                           </span>
@@ -250,9 +250,9 @@ export default function ImagePalette() {
                 {passingPairs.length === 0 ? (
                   <p className="small muted">{t('No pair in this image reaches 4.5:1. Pair these colors with black or white text instead - see the ◻/◼ ratios above.', 'Ningún par de esta imagen llega a 4.5:1. Combina estos colores con texto negro o blanco; mira los ratios ◻/◼ de arriba.')}</p>
                 ) : (
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: 10 }}>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: 12 }}>
                     {passingPairs.slice(0, 12).map(({ a, b, r }) => (
-                      <motion.div key={a.hex + b.hex} whileHover={{ y: -4, rotate: -1 }} style={{ background: a.hex, color: b.hex, borderRadius: 18, padding: '18px 16px', boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.25)' }}>
+                      <motion.div key={a.hex + b.hex} whileHover={{ y: -4, rotate: -1 }} style={{ background: a.hex, color: b.hex, borderRadius: 20, padding: '20px 16px', boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.25)' }}>
                         <div style={{ fontFamily: 'var(--font-display)', fontSize: 28, lineHeight: 1 }}>Aa</div>
                         <div className="mono" style={{ fontSize: 11, marginTop: 8 }}>{b.hex} {t('on', 'sobre')} {a.hex}</div>
                         <div style={{ fontWeight: 600, fontSize: 13 }}>{formatRatio(r)}:1 {r >= 7 ? '· AAA' : '· AA'}</div>

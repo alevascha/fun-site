@@ -23,7 +23,7 @@ const RATIOS = [
 const FONTS = [
   { value: 'var(--font-display)', label: 'Crimson Pro', css: "'Crimson Pro', Georgia, serif" },
   { value: 'var(--font-body)', label: 'Inter', css: "'Inter', system-ui, sans-serif" },
-  { value: 'var(--font-label)', label: 'Hanken Grotesk', css: "'Hanken Grotesk', system-ui, sans-serif" },
+  { value: 'system-ui, -apple-system, sans-serif', label: 'System UI', css: 'system-ui, -apple-system, sans-serif' },
   { value: 'var(--font-mono)', label: 'JetBrains Mono', css: "'JetBrains Mono', ui-monospace, monospace" },
 ];
 
@@ -188,7 +188,7 @@ export default function TypeScale() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.4, ease: EASE }}
-                      style={{ display: 'grid', gridTemplateColumns: 'minmax(84px, 110px) minmax(0, 1fr)', gap: 16, alignItems: 'baseline', padding: '14px 0', borderBottom: '1px solid var(--border)' }}
+                      style={{ display: 'grid', gridTemplateColumns: 'minmax(84px, 110px) minmax(0, 1fr)', gap: 16, alignItems: 'baseline', padding: '16px 0', borderBottom: '1px solid var(--border)' }}
                     >
                       <div style={{ fontFamily: 'var(--font-label)' }}>
                         <div style={{ fontWeight: 600, fontSize: 14, color: s.step === 0 ? 'var(--focus)' : 'var(--text)' }}>{s.name}</div>

@@ -86,7 +86,7 @@ export default function ContrastChecker() {
         <div className="stack sticky-col">
           <Reveal className="card">
             <h2 className="eyebrow">{t('Colors', 'Colores')}</h2>
-            <div className="stack" style={{ gap: 14 }}>
+            <div className="stack" style={{ gap: 16 }}>
               <ColorField label={t('Text', 'Texto')} value={fg} onChange={hex => update(hex, bg)} />
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <motion.button
@@ -135,7 +135,7 @@ export default function ContrastChecker() {
                   </div>
                 </div>
                 <div
-                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '10px 16px', borderRadius: 999, border: `1.5px solid ${fg}`, fontWeight: 600 }}
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 16px', borderRadius: 999, border: `1.5px solid ${fg}`, fontWeight: 600 }}
                 >
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.span
@@ -151,15 +151,15 @@ export default function ContrastChecker() {
                   </AnimatePresence>
                 </div>
               </div>
-              <div style={{ marginTop: 'clamp(24px, 4vw, 40px)', display: 'grid', gap: 14 }}>
+              <div style={{ marginTop: 'clamp(24px, 4vw, 40px)', display: 'grid', gap: 16 }}>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 40px)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.03em' }}>
                   {t('Large text - the quick brown fox', 'Texto grande: el veloz murciélago hindú')}
                 </p>
                 <p style={{ fontSize: 16, lineHeight: 1.6, margin: 0, maxWidth: 620 }}>
                   {t('Normal body text at 16px. Good contrast keeps copy readable in sunlight, on cheap screens and for people with low vision.', 'Texto normal a 16px. Un buen contraste mantiene el texto legible bajo el sol, en pantallas baratas y para personas con baja visión.')}
                 </p>
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span style={{ padding: '10px 18px', borderRadius: 999, border: `2px solid ${fg}`, fontWeight: 600, fontSize: 14 }}>{t('Outlined button', 'Botón con borde')}</span>
+                <div style={{ display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
+                  <span style={{ padding: '12px 20px', borderRadius: 999, border: `2px solid ${fg}`, fontWeight: 600, fontSize: 14 }}>{t('Outlined button', 'Botón con borde')}</span>
                   <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke={fg} strokeWidth="2" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
                   <small style={{ fontSize: 12 }}>{t('Small caption · 12px', 'Texto pequeño · 12px')}</small>
                 </div>
@@ -207,7 +207,7 @@ export default function ContrastChecker() {
                         className="check-row"
                         style={{ border: 'none', textAlign: 'left', gridTemplateColumns: 'auto 1fr auto', color: 'var(--text)' }}
                       >
-                        <span style={{ width: 52, height: 52, borderRadius: 14, background: nextBg, color: nextFg, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-display)', fontSize: 22, boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)' }}>Aa</span>
+                        <span style={{ width: 52, height: 52, borderRadius: 16, background: nextBg, color: nextFg, display: 'grid', placeItems: 'center', fontFamily: 'var(--font-display)', fontSize: 24, boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)' }}>Aa</span>
                         <span>
                           <span className="check-row-label" style={{ display: 'block' }}>{f.side === 'text' ? t('Adjust text', 'Ajustar texto') : t('Adjust background', 'Ajustar fondo')}</span>
                           <span className="check-row-sub mono">{(f.side === 'text' ? fg : bg)} → {f.hex}</span>

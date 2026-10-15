@@ -22,14 +22,14 @@ export default function AnatomyBar({ groups }) {
           );
         })}
       </div>
-      <div style={{ display: 'flex', width: '100%', marginTop: 10 }}>
+      <div style={{ display: 'flex', width: '100%', marginTop: 12 }}>
         {groups.map(group => (
           <motion.div
             key={group.name}
             initial={false}
             animate={{ width: group.weight + '%' }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            style={{ fontSize: 12, color: 'var(--muted)', minWidth: 0, overflow: 'hidden', paddingRight: 6 }}
+            style={{ fontSize: 12, color: 'var(--muted)', minWidth: 0, overflow: 'hidden', paddingRight: 8 }}
           >
             <b style={{ display: 'block', color: 'var(--text)', fontSize: 13, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{localName(group.name, lang)}</b>
             {group.percentage}

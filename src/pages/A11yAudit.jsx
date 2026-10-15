@@ -153,7 +153,7 @@ export default function A11yAudit() {
                         <span className={'badge ' + sev.cls} style={sev.style}>{t(sev.label, sev.es)}</span>
                         <span className="check-row-label">{issue.message}</span>
                       </span>
-                      {issue.snippet && <code className="mono small muted" style={{ display: 'block', marginTop: 6, overflowWrap: 'anywhere' }}>{issue.snippet}</code>}
+                      {issue.snippet && <code className="mono small muted" style={{ display: 'block', marginTop: 8, overflowWrap: 'anywhere' }}>{issue.snippet}</code>}
                       <AnimatePresence initial={false}>
                         {active === issue.id && (
                           <motion.span initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ display: 'block', overflow: 'hidden' }}>

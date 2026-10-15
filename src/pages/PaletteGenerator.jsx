@@ -148,7 +148,7 @@ export default function PaletteGenerator() {
               </Reveal>
               <Reveal className="card" delay={0.2}>
                 <h2 className="eyebrow">{t('Compliance', 'Cumplimiento')}</h2>
-                <div className="stack" style={{ gap: 14 }}>
+                <div className="stack" style={{ gap: 16 }}>
                   <Segmented full label={t('WCAG level', 'Nivel WCAG')} value={level} onChange={setLevel} options={[{ value: 'AA', label: 'WCAG AA' }, { value: 'AAA', label: 'WCAG AAA' }]} />
                   <Segmented full label={t('Text size', 'Tamaño de texto')} value={textSize} onChange={setTextSize} options={[{ value: 'normal', label: t('Normal text', 'Texto normal') }, { value: 'large', label: t('Large / UI', 'Grande / UI') }]} />
                   <p className="small muted" style={{ margin: 0 }}>
@@ -163,7 +163,7 @@ export default function PaletteGenerator() {
 
         <PaletteResults groups={groups} setGroups={setGroups} refs={refs} threshold={threshold} level={level} />
 
-        <Reveal className="card" style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Reveal className="card" style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
             <h2 className="card-title">{t('Take it with you', 'Llévatela')}</h2>
             <p className="small muted" style={{ margin: 0 }}>{t('Copy every tone as JSON or CSS custom properties.', 'Copia todos los tonos como JSON o variables CSS.')}</p>

@@ -187,7 +187,7 @@ export default function GradientGenerator() {
     <ToolPage id="gradient-generator">
       <style>{`@keyframes gg-drift { from { background-position: 0% 0%; } to { background-position: 100% 100%; } }`}</style>
       <div className="stack">
-        <Reveal className="card" style={{ padding: 'clamp(10px, 1.2vw, 14px)' }}>
+        <Reveal className="card" style={{ padding: 'clamp(12px, 1.2vw, 16px)' }}>
           <div
             ref={boxRef}
             style={{
@@ -230,7 +230,7 @@ export default function GradientGenerator() {
               <Segmented full label={t('Gradient type', 'Tipo de degradado')} value={mode} onChange={m => { setMode(m); setSelected(null); }} options={[
                 { value: 'mesh', label: t('Mesh', 'Malla') }, { value: 'linear', label: t('Linear', 'Lineal') }, { value: 'radial', label: 'Radial' }, { value: 'conic', label: t('Conic', 'Cónico') },
               ]} />
-              <div className="stack" style={{ gap: 16, marginTop: 18 }}>
+              <div className="stack" style={{ gap: 16, marginTop: 20 }}>
                 <AnimatePresence initial={false}>
                   {(mode === 'linear' || mode === 'conic') && (
                     <motion.div key="angle" initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={{ overflow: 'hidden' }}>
@@ -270,7 +270,7 @@ export default function GradientGenerator() {
               {mode !== 'mesh' && (
                 <div
                   ref={barRef}
-                  style={{ position: 'relative', height: 28, borderRadius: 999, margin: '6px 14px 22px', background: `linear-gradient(90deg, ${[...stops].sort((a, b) => a.pos - b.pos).map(s => `${s.color} ${s.pos}%`).join(', ')})`, boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)' }}
+                  style={{ position: 'relative', height: 28, borderRadius: 999, margin: '8px 16px 24px', background: `linear-gradient(90deg, ${[...stops].sort((a, b) => a.pos - b.pos).map(s => `${s.color} ${s.pos}%`).join(', ')})`, boxShadow: 'inset 0 0 0 1px rgba(127,127,127,.3)' }}
                 >
                   {stops.map((s, i) => (
                     <Handle
@@ -286,7 +286,7 @@ export default function GradientGenerator() {
                   ))}
                 </div>
               )}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 230px), 1fr))', gap: 10 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 230px), 1fr))', gap: 12 }}>
                 <AnimatePresence initial={false}>
                   {items.map((it, i) => (
                     <motion.div
@@ -297,7 +297,7 @@ export default function GradientGenerator() {
                       exit={{ opacity: 0, scale: 0.9 }}
                       onClick={() => setSelected(it.id)}
                       className="check-row"
-                      style={{ gridTemplateColumns: '1fr', gap: 10, boxShadow: sel?.id === it.id ? 'inset 0 0 0 1.5px var(--focus)' : undefined }}
+                      style={{ gridTemplateColumns: '1fr', gap: 12, boxShadow: sel?.id === it.id ? 'inset 0 0 0 1.5px var(--focus)' : undefined }}
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <span className="check-row-label">{mode === 'mesh' ? t('Point', 'Punto') : t('Stop', 'Parada')} {i + 1}</span>
@@ -311,7 +311,7 @@ export default function GradientGenerator() {
                   ))}
                 </AnimatePresence>
               </div>
-              {mode === 'mesh' && <p className="small muted" style={{ margin: '14px 0 0' }}>{t('Tip: drag the dots on the preview (or focus one and use the arrow keys).', 'Consejo: arrastra los puntos en la vista previa (o enfoca uno y usa las flechas).')}</p>}
+              {mode === 'mesh' && <p className="small muted" style={{ margin: '16px 0 0' }}>{t('Tip: drag the dots on the preview (or focus one and use the arrow keys).', 'Consejo: arrastra los puntos en la vista previa (o enfoca uno y usa las flechas).')}</p>}
             </Reveal>
 
             <Reveal className="card">

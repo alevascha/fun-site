@@ -55,7 +55,7 @@ function page(p, slot, i) {
     body = frame(s[i], B(0.06, 0.06, 0.88, 0.88));
   }
   return `<!doctype html><html><head><meta charset="utf-8">
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
 <style>
   html,body{margin:0;width:${W}px;height:${H}px;background:transparent;overflow:hidden}
   .stage{position:relative;width:100%;height:100%}
@@ -64,7 +64,7 @@ function page(p, slot, i) {
     box-shadow:0 0 0 1.5px rgba(255,255,255,.16) inset, 0 40px 70px -36px rgba(10,8,14,.5)}
   .frame img{display:block;width:auto;height:auto;border-radius:18px;box-shadow:0 0 0 1px rgba(0,0,0,.08)}
   .chip{position:absolute;z-index:3;display:flex;align-items:center;gap:14px;padding:16px 28px;border-radius:999px;
-    font:600 30px/1 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#f7f7f7;
+    font:600 30px/1 'Inter',system-ui,sans-serif;letter-spacing:.06em;text-transform:uppercase;color:#f7f7f7;
     background:rgba(29,28,27,.82);box-shadow:0 0 0 1.5px rgba(255,255,255,.12) inset, 0 20px 40px -20px rgba(0,0,0,.6)}
   .chip i{width:16px;height:16px;border-radius:50%;background:${p.gradient || a}}
 </style></head><body><div class="stage">${body}</div></body></html>`;

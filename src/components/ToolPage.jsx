@@ -142,7 +142,7 @@ export default function ToolPage({ id, intro, children }) {
               ))}
             </div>
             {guide && (
-              <Link to={to(`/guides/${guide.slug}`)} className="btn btn-ghost btn-sm faq-guide" style={{ marginTop: 14 }}>
+              <Link to={to(`/guides/${guide.slug}`)} className="btn btn-ghost btn-sm faq-guide" style={{ marginTop: 16 }}>
                 <span>📖 {t('Read the guide', 'Lee la guía')}: {guide[lang].title}</span> <span className="arrow" aria-hidden="true">→</span>
               </Link>
             )}
