@@ -1,7 +1,8 @@
 /* Ale's motion layer for alevasquez.dev (Framer).
-   Self-contained: `npm run framer-snippet` bundles this file with Lenis into
-   framer/custom-code.html, which is pasted into Framer → Site Settings →
-   Custom Code (end of <body>). Nothing is loaded from other domains.
+   `npm run framer-snippet` bundles this file with Lenis into
+   public/portfolio-fx.js (served from fun.alevasquez.dev, cached across the
+   portfolio) and writes framer/custom-code.html, the small snippet pasted into
+   Framer → Site Settings → Custom Code (end of <body>) that loads it.
 
    Same interaction language as fun.alevasquez.dev, as plain DOM so it can sit
    on top of Framer's React tree without touching it:
@@ -117,7 +118,8 @@
   @media (prefers-color-scheme: light){:root:not([data-theme]) [data-avfx-banner]::after{content:"";position:absolute;inset:0;z-index:3;border-radius:inherit;padding:2px;pointer-events:none;background:conic-gradient(from var(--avfx-a,0deg),#CD57FF,#ff7ab6,#FFCE1F,#8b6cf0,#CD57FF);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:avfx-spin 6s linear infinite}:root:not([data-theme]) [data-avfx-banner]{box-shadow:0 30px 70px -34px rgba(205,87,255,.55)}}
   .avfx-ripple{position:fixed;z-index:2147483002;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;pointer-events:none;border:2px solid rgba(205,87,255,.8);background:radial-gradient(circle,rgba(255,206,31,.35),transparent 70%);animation:avfx-ripple .7s ${EASE} forwards}
   @keyframes avfx-ripple{to{transform:scale(7);opacity:0}}
-  .avfx-ld{position:fixed;inset:0;z-index:2147483647;background:#111011;color:#f7f7f7;overflow:hidden;cursor:pointer;transition:translate .85s cubic-bezier(.76,0,.24,1);font:500 12px/1.4 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase}
+  .avfx-ld{position:fixed;inset:0;z-index:2147483647;background:#111011;color:#f7f7f7;overflow:hidden;cursor:pointer;transition:translate .85s cubic-bezier(.76,0,.24,1);font:500 12px/1.4 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;animation:avfx-ld-fade .3s both}
+  @keyframes avfx-ld-fade{from{opacity:0}}
   .avfx-ld::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:linear-gradient(90deg,#CD57FF,#ff7ab6 50%,#FFCE1F);box-shadow:0 0 30px 6px rgba(205,87,255,.5);opacity:0;transition:opacity .3s}
   .avfx-ld.out{translate:0 -100%}.avfx-ld.out::after{opacity:1}
   .avfx-ld canvas{position:absolute;inset:0;width:100%;height:100%}
@@ -871,14 +873,12 @@
     }, 420);
   }, true);
 
-  // Framer wraps every page in <div id="main"> without a landmark role;
-  // screen readers (and audits) expect one main landmark per page.
-  const mainEl = document.getElementById('main');
-  if (mainEl && !document.querySelector('main, [role="main"]')) mainEl.setAttribute('role', 'main');
-
   /* ------------------------------------------------------- intro loader */
-  // First page view of a session only. The head snippet (framer/loader-head.html)
-  // paints a dark cover before anything else and adds html.avfx-loading; this
+  // First page view of a session, and only when the page is slow to arrive
+  // (like the Fun Lab's loader). The head snippet (framer/loader-head.html)
+  // adds html.avfx-loading and fades a dark cover in after 0.8 s. The inline
+  // part of the snippet (scripts/build-framer-snippet.mjs) drops the class
+  // when the page was parsed before that: fast load, no intro. Otherwise this
   // builds the show on top: tokens fly in and form a sphere, unfold into a
   // grid (a system) and fold back while a counter runs to 100 and the words
   // cycle, then they warp past the camera and the panel slides up to the site,
@@ -887,6 +887,7 @@
   const INTRO_MS = 2400; // + ~0.6 s warp out: about 3 s in all, longer only if the page is still loading
   const WORDS = ['Tokens', 'Components', 'Patterns', 'Systems', 'Experiences'];
   if (document.documentElement.classList.contains('avfx-loading')) {
+    document.documentElement.classList.add('avfx-intro');
     try { sessionStorage.setItem('avfx-intro', '1'); } catch {}
     covering = true;
     const el = document.createElement('div');
@@ -989,7 +990,7 @@
       el.classList.add('warp');
       setTimeout(() => {
         scrollTo(0, 0);
-        document.documentElement.classList.remove('avfx-loading');
+        document.documentElement.classList.remove('avfx-loading', 'avfx-intro');
         el.classList.add('out');
         window.__avfxLenis?.start();
         setTimeout(() => { covering = false; afterReveal.splice(0).forEach(fn => fn()); }, 150);

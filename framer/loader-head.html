@@ -1,11 +1,12 @@
 <!-- Ale's intro loader, part 1 (Framer → Custom Code → Start of <head>, all pages).
-     Paints a dark cover before the page does, on the first visit of a session;
-     the motion layer (end of <body>) builds the loader on top and removes it. -->
-<style>html.avfx-loading{overflow:hidden}html.avfx-loading::before{content:"";position:fixed;inset:0;z-index:2147483646;background:#111011}
+     First visit of a session only, and only when the page is slow: a dark
+     cover fades in after 0.8 s; if the page has been parsed by then, the
+     motion layer (end of <body>) drops the class and the site shows straight
+     away. Otherwise it builds the loader on top and removes it when ready. -->
+<style>html.avfx-loading{overflow:hidden}html.avfx-loading::before{content:"";position:fixed;inset:0;z-index:2147483646;background:#111011;opacity:0;animation:avfx-cover .3s .8s forwards}@keyframes avfx-cover{to{opacity:1}}
 /* While the intro covers the page, Framer's appear animations (which start
    at opacity 0.001, too faint for newer Chrome to count as painted) sit at
    full opacity underneath, so the largest paint is timed with the first
-   paint. Nobody sees it: the cover is on top. Repeat visits (no intro) keep
-   the appear animations as they are. */
-html.avfx-loading [data-framer-appear-id]{opacity:1!important}</style>
+   paint. Nobody sees it: the cover is on top. */
+html.avfx-intro [data-framer-appear-id]{opacity:1!important}</style>
 <script>try{if(!sessionStorage.getItem('avfx-intro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&!/bot|crawl|spider|slurp|facebookexternalhit|preview/i.test(navigator.userAgent))document.documentElement.classList.add('avfx-loading')}catch(e){}</script>
