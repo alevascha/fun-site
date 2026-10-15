@@ -1969,13 +1969,15 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 
 /* What you get: a list, each row tinted with its tool's accent. */
 .pro-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-.pro-item { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; padding: 18px 20px; border-radius: var(--radius-lg); background: linear-gradient(135deg, color-mix(in srgb, var(--item-accent) 14%, transparent), transparent 55%), var(--surface); box-shadow: var(--shadow-card); transition: box-shadow .3s; }
-.pro-item:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--item-accent) 60%, transparent), var(--shadow-card); }
+.pro-item { height: 100%; color: inherit; text-decoration: none; cursor: pointer; display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; align-items: start; padding: 18px 20px; border-radius: var(--radius-lg); background: linear-gradient(135deg, color-mix(in srgb, var(--item-accent) 14%, transparent), transparent 55%), var(--surface); box-shadow: var(--shadow-card); }
+.pro-item:hover { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--item-accent) 60%, transparent), var(--shadow-card); transform: translateY(-3px); }
+.pro-item { transition: box-shadow .3s, transform .3s; }
+.pro-item:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .pro-item-icon { grid-row: span 2; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 16px; font-size: 26px; background: color-mix(in srgb, var(--item-accent) 22%, var(--surface-2)); }
 .pro-item-text h3 { margin: 0; font-size: 18px; }
 .pro-item-text p { margin: 4px 0 0; font-size: 15px; line-height: 1.55; }
 .pro-item-link { grid-column: 2; font-size: 14px; font-weight: 600; color: var(--item-accent); text-decoration: none; }
-.pro-item-link:hover { text-decoration: underline; }
+.pro-item:hover .pro-item-link { text-decoration: underline; text-underline-offset: 3px; }
 .pro-next-label { margin: 28px 0 0; text-align: center; letter-spacing: .08em; text-transform: uppercase; }
 .pro-section .marquee { margin-top: 4px; }
 

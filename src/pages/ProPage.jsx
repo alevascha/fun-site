@@ -132,19 +132,24 @@ export default function ProPage() {
             {PRO_PLUGINS.map((p, i) => (
               <motion.li
                 key={p.en.name}
-                className="pro-item"
                 style={{ '--item-accent': accentFor(p.tool) }}
                 initial={{ opacity: 0, x: -24 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}
               >
-                <motion.span className="pro-item-icon" aria-hidden="true" whileHover={{ rotate: [0, -12, 12, 0], scale: 1.1 }}>{p.emoji}</motion.span>
-                <div className="pro-item-text">
-                  <h3>{p[lang].name}</h3>
-                  <p className="muted">{p[lang].pitch}</p>
-                </div>
-                <Link to={to(p.tool)} className="pro-item-link">{t('Free web version', 'Versión web gratis')} →</Link>
+                <motion.div whileHover="hover" whileTap={{ scale: 0.98 }} style={{ height: '100%' }}>
+                  <Link to={to(p.tool)} className="pro-item">
+                    <motion.span className="pro-item-icon" aria-hidden="true" variants={{ hover: { rotate: [0, -12, 12, 0], scale: 1.1 } }}>{p.emoji}</motion.span>
+                    <div className="pro-item-text">
+                      <h3>{p[lang].name}</h3>
+                      <p className="muted">{p[lang].pitch}</p>
+                    </div>
+                    <span className="pro-item-link">
+                      {t('Free web version', 'Versión web gratis')} <motion.span aria-hidden="true" style={{ display: 'inline-block' }} variants={{ hover: { x: 4 } }}>→</motion.span>
+                    </span>
+                  </Link>
+                </motion.div>
               </motion.li>
             ))}
           </ul>
