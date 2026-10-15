@@ -61,6 +61,36 @@ export const GUIDES = [
       "title": "Diseñar interfaces que sobrevivan a la traducción",
       "description": "Cuánto crece el texto al traducirlo, los patrones de CSS que se rompen y las alternativas resistentes, con pseudolocalización para detectar problemas a tiempo."
     }
+  },
+  {
+    "slug": "figma-font-tokens-to-css-variables",
+    "tool": "token-converter",
+    "date": "2026-10-14",
+    "minutes": 5,
+    "en": {
+      "title": "How to export font tokens from Figma to CSS variables",
+      "description": "Turn the typography in your Figma file (font families, sizes, weights and line heights) into design tokens and clean CSS custom properties, step by step."
+    },
+    "es": {
+      "slug": "tokens-de-tipografia-de-figma-a-css",
+      "title": "Cómo exportar tokens de tipografía de Figma a variables CSS",
+      "description": "Convierte la tipografía de tu archivo de Figma (familias, tamaños, pesos e interlineado) en design tokens y variables CSS limpias, paso a paso."
+    }
+  },
+  {
+    "slug": "color-matching-game",
+    "tool": "hue-hunt",
+    "date": "2026-10-14",
+    "minutes": 4,
+    "en": {
+      "title": "Color matching game: how to train your eye for color",
+      "description": "Why matching colors by eye is hard, the hue, saturation and lightness method designers use, and a free daily color game to practice it."
+    },
+    "es": {
+      "slug": "juego-para-igualar-colores",
+      "title": "Juego para igualar colores: cómo entrenar tu ojo",
+      "description": "Por qué cuesta igualar colores a ojo, el método de tono, saturación y luminosidad que usan los diseñadores y un juego diario gratis para practicarlo."
+    }
   }
 ];
 

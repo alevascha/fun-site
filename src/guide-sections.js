@@ -445,5 +445,195 @@ export const SECTIONS = {
         ]
       }
     ]
+  },
+  "figma-font-tokens-to-css-variables": {
+    "en": [
+      {
+        "p": "Colors usually make it from Figma to code without trouble. Typography is where design systems drift: a heading is 32px in Figma, 2rem in one component and 30px in another. Turning your type styles into tokens, and those tokens into CSS variables, gives design and code one source of truth."
+      },
+      {
+        "h": "1. Model typography as variables in Figma"
+      },
+      {
+        "p": "Figma text styles are not variables, so start by creating variables for the pieces a text style is made of. A common setup is one collection called `Typography` with:"
+      },
+      {
+        "list": [
+          "String variables for font families, such as `font/family/display` and `font/family/body`",
+          "Number variables for sizes, such as `font/size/sm`, `font/size/md`, `font/size/xl`",
+          "Number variables for weights (`font/weight/regular` = 400) and line heights (`font/line-height/tight` = 1.2)"
+        ]
+      },
+      {
+        "p": "Then bind those variables to your text styles in the Typography panel. Now a change to `font/size/md` updates every style that uses it."
+      },
+      {
+        "h": "2. Export the variables as design tokens"
+      },
+      {
+        "p": "Export the collection as JSON, ideally in the W3C design tokens format (`$value` and `$type` for each token). A variables export plugin or Tokens Studio can do it. A font size token looks like this:"
+      },
+      {
+        "code": "{\n  \"font\": {\n    \"size\": {\n      \"md\": { \"$type\": \"dimension\", \"$value\": \"16px\" }\n    },\n    \"family\": {\n      \"body\": { \"$type\": \"fontFamily\", \"$value\": [\"Inter\", \"sans-serif\"] }\n    }\n  }\n}"
+      },
+      {
+        "h": "3. Convert the tokens to CSS variables"
+      },
+      {
+        "p": "Paste or open the JSON in the Design Token Converter and choose CSS as the output. It names each variable from its path, adds px to unitless sizes, quotes multi-word font names, and splits typography composites into one variable per property:"
+      },
+      {
+        "code": ":root {\n  --font-family-body: Inter, sans-serif;\n  --font-size-md: 16px;\n  --font-weight-regular: 400;\n  --font-line-height-tight: 1.2;\n}"
+      },
+      {
+        "tip": "Keep aliases as references (for example `--font-size-body: var(--font-size-md)`) so changing a primitive updates every semantic token that points to it."
+      },
+      {
+        "h": "4. Use the variables in your components"
+      },
+      {
+        "p": "Reference the variables instead of raw values: `font: var(--font-weight-regular) var(--font-size-md)/var(--font-line-height-tight) var(--font-family-body)`. When the design changes, you re-export and convert again, and the code follows without hunting for hard-coded sizes."
+      },
+      {
+        "h": "Make it fluid"
+      },
+      {
+        "p": "If your sizes should grow with the screen, generate them with the Type Scale tool instead of fixed values: it outputs `clamp()` values for each step that you can drop into the same variables."
+      }
+    ],
+    "es": [
+      {
+        "p": "Los colores suelen pasar de Figma al código sin problema. La tipografía es donde los design systems se desordenan: un título mide 32px en Figma, 2rem en un componente y 30px en otro. Convertir tus estilos de texto en tokens, y esos tokens en variables CSS, le da a diseño y código una sola fuente de verdad."
+      },
+      {
+        "h": "1. Modela la tipografía como variables en Figma"
+      },
+      {
+        "p": "Los estilos de texto de Figma no son variables, así que empieza creando variables para las piezas que forman un estilo de texto. Una estructura común es una colección llamada `Typography` con:"
+      },
+      {
+        "list": [
+          "Variables de texto para las familias tipográficas, como `font/family/display` y `font/family/body`",
+          "Variables numéricas para los tamaños, como `font/size/sm`, `font/size/md`, `font/size/xl`",
+          "Variables numéricas para los pesos (`font/weight/regular` = 400) y el interlineado (`font/line-height/tight` = 1.2)"
+        ]
+      },
+      {
+        "p": "Luego vincula esas variables a tus estilos de texto en el panel de tipografía. Así, un cambio en `font/size/md` actualiza todos los estilos que lo usan."
+      },
+      {
+        "h": "2. Exporta las variables como design tokens"
+      },
+      {
+        "p": "Exporta la colección como JSON, idealmente en el formato de design tokens del W3C (`$value` y `$type` en cada token). Puede hacerlo un plugin de exportación de variables o Tokens Studio. Un token de tamaño se ve así:"
+      },
+      {
+        "code": "{\n  \"font\": {\n    \"size\": {\n      \"md\": { \"$type\": \"dimension\", \"$value\": \"16px\" }\n    },\n    \"family\": {\n      \"body\": { \"$type\": \"fontFamily\", \"$value\": [\"Inter\", \"sans-serif\"] }\n    }\n  }\n}"
+      },
+      {
+        "h": "3. Convierte los tokens en variables CSS"
+      },
+      {
+        "p": "Pega o abre el JSON en el Convertidor de Design Tokens y elige CSS como salida. Nombra cada variable según su ruta, agrega px a los tamaños sin unidad, pone comillas a las fuentes con varias palabras y separa los tokens compuestos de tipografía en una variable por propiedad:"
+      },
+      {
+        "code": ":root {\n  --font-family-body: Inter, sans-serif;\n  --font-size-md: 16px;\n  --font-weight-regular: 400;\n  --font-line-height-tight: 1.2;\n}"
+      },
+      {
+        "tip": "Mantén los alias como referencias (por ejemplo `--font-size-body: var(--font-size-md)`), así cambiar un valor base actualiza todos los tokens semánticos que apuntan a él."
+      },
+      {
+        "h": "4. Usa las variables en tus componentes"
+      },
+      {
+        "p": "Usa las variables en lugar de valores sueltos: `font: var(--font-weight-regular) var(--font-size-md)/var(--font-line-height-tight) var(--font-family-body)`. Cuando cambia el diseño, vuelves a exportar y convertir, y el código lo sigue sin buscar tamaños escritos a mano."
+      },
+      {
+        "h": "Hazla fluida"
+      },
+      {
+        "p": "Si tus tamaños deben crecer con la pantalla, genéralos con la herramienta de Escala tipográfica en lugar de valores fijos: entrega valores `clamp()` para cada paso que puedes poner en esas mismas variables."
+      }
+    ]
+  },
+  "color-matching-game": {
+    "en": [
+      {
+        "p": "Matching a color by eye sounds easy until you try it. Two colors that look identical next to each other can be far apart in numbers, and a small shift in lightness can make a match look completely wrong. Designers who pick colors quickly are not guessing: they break each color into three parts and adjust them one at a time."
+      },
+      {
+        "h": "Hue, saturation and lightness"
+      },
+      {
+        "list": [
+          "Hue is the color family: where it sits on the color wheel, from red through yellow, green, blue and back.",
+          "Saturation is how vivid it is, from gray to the most intense version of that hue.",
+          "Lightness is how close it is to black or white."
+        ]
+      },
+      {
+        "p": "Most people try to fix everything at once, so a near miss on lightness makes them change the hue, and the color drifts further away."
+      },
+      {
+        "h": "The method: lightness first"
+      },
+      {
+        "p": "Our eyes are far more sensitive to lightness than to the other two, so a match with the wrong lightness never looks right. Match it first, squinting helps because it hides the hue. Then find the hue, and finish with saturation, which is the hardest to judge and matters least."
+      },
+      {
+        "tip": "Compare colors side by side, not one after the other. Your eye adapts to a color within seconds, which is why a match that looked perfect can look off a moment later."
+      },
+      {
+        "h": "Practice with a daily color game"
+      },
+      {
+        "p": "Hue Hunt is a free color matching game built around this method. You get five target colors and three sliders: hue, saturation and lightness. Your score uses ΔE, the perceptual color distance that color science uses, so it rewards what you actually see rather than raw numbers. The daily challenge gives everyone the same five colors, so you can compare scores, and free play lets you keep going."
+      },
+      {
+        "h": "Why it helps in real work"
+      },
+      {
+        "p": "Training your eye pays off when you sample colors from a photo, rebuild a brand palette without the source file, or tweak a UI color that looks off in dark mode. The same three-step habit, lightness then hue then saturation, works in any color picker."
+      }
+    ],
+    "es": [
+      {
+        "p": "Igualar un color a ojo parece fácil hasta que lo intentas. Dos colores que se ven idénticos uno al lado del otro pueden estar lejos en números, y un pequeño cambio de luminosidad puede hacer que una coincidencia se vea totalmente mal. Los diseñadores que eligen colores rápido no adivinan: dividen cada color en tres partes y las ajustan una por una."
+      },
+      {
+        "h": "Tono, saturación y luminosidad"
+      },
+      {
+        "list": [
+          "El tono es la familia del color: dónde está en la rueda de color, del rojo al amarillo, verde, azul y de vuelta.",
+          "La saturación es qué tan intenso es, desde el gris hasta la versión más viva de ese tono.",
+          "La luminosidad es qué tan cerca está del negro o del blanco."
+        ]
+      },
+      {
+        "p": "La mayoría intenta corregir todo a la vez, así que un pequeño error de luminosidad los lleva a cambiar el tono, y el color se aleja todavía más."
+      },
+      {
+        "h": "El método: primero la luminosidad"
+      },
+      {
+        "p": "Nuestros ojos son mucho más sensibles a la luminosidad que a lo demás, así que una coincidencia con la luminosidad equivocada nunca se ve bien. Iguálala primero; entrecerrar los ojos ayuda porque oculta el tono. Después busca el tono y termina con la saturación, que es la más difícil de juzgar y la que menos importa."
+      },
+      {
+        "tip": "Compara los colores lado a lado, no uno después del otro. Tu ojo se adapta a un color en segundos, por eso una coincidencia que parecía perfecta puede verse distinta un momento después."
+      },
+      {
+        "h": "Practica con un juego de color diario"
+      },
+      {
+        "p": "Caza de color es un juego gratis para igualar colores basado en este método. Tienes cinco colores objetivo y tres controles: tono, saturación y luminosidad. Tu puntaje usa ΔE, la distancia perceptual que usa la ciencia del color, así que premia lo que realmente ves y no los números. El reto diario le da a todos los mismos cinco colores para comparar puntajes, y el juego libre te deja seguir practicando."
+      },
+      {
+        "h": "Por qué sirve en el trabajo real"
+      },
+      {
+        "p": "Entrenar el ojo rinde cuando tomas colores de una foto, reconstruyes una paleta de marca sin el archivo original o ajustas un color de interfaz que se ve raro en modo oscuro. El mismo hábito de tres pasos, luminosidad, tono y saturación, funciona en cualquier selector de color."
+      }
+    ]
   }
 };
