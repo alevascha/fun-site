@@ -100,7 +100,7 @@ export default function ToolPage({ id, intro, children }) {
           <Reveal as="section" className="tool-guide" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-labelledby="tool-howto-title">
             {seo.howTo?.length > 0 && (
               <div className="card">
-                <h2 id="tool-howto-title" className="card-title">{t(`How to use ${name(exp)}`, `Cómo usar ${name(exp)}`)}</h2>
+                <h2 id="tool-howto-title" className="card-title tool-card-title">{t(`How to use ${name(exp)}`, `Cómo usar ${name(exp)}`)}</h2>
                 <ol className="tool-steps">
                   {seo.howTo.map((step, i) => (
                     <motion.li key={step} initial={{ opacity: 0, x: -16 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}>
@@ -113,7 +113,7 @@ export default function ToolPage({ id, intro, children }) {
             )}
             {seo.about?.length > 0 && (
               <div className="card">
-                <h2 className="card-title">{t(`About ${name(exp)}`, `Sobre ${name(exp)}`)}</h2>
+                <h2 className="card-title tool-card-title">{t(`About ${name(exp)}`, `Sobre ${name(exp)}`)}</h2>
                 {seo.about.map(para => <p key={para.slice(0, 40)} className="muted tool-about-p">{para}</p>)}
               </div>
             )}
@@ -121,22 +121,22 @@ export default function ToolPage({ id, intro, children }) {
         )}
 
         {(seo.features?.length > 0 || seo.faq?.length > 0) && (
-          <Reveal as="section" className="grid-2" style={{ marginTop: 'clamp(48px, 8vw, 96px)' }} aria-label={t('About this tool', 'Sobre esta herramienta')}>
+          <Reveal as="section" className="grid-2" style={{ marginTop: seo.howTo?.length || seo.about?.length ? 'clamp(14px, 1.6vw, 20px)' : 'clamp(48px, 8vw, 96px)' }} aria-label={t('About this tool', 'Sobre esta herramienta')}>
             {seo.features?.length > 0 && (
               <div className="card">
-                <h2 className="card-title">{t('What it does', 'Qué hace')}</h2>
-                <ul className="muted" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
+                <h2 className="card-title tool-card-title">{t('What it does', 'Qué hace')}</h2>
+                <ul className="muted tool-features">
                   {seo.features.map(f => <li key={f}>{f}</li>)}
                 </ul>
               </div>
             )}
             {seo.faq?.length > 0 && (
               <div className="card">
-                <h2 className="card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
-                <div className="stack" style={{ gap: 8 }}>
+                <h2 className="card-title tool-card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
+                <div className="stack tool-faq-list" style={{ gap: 8 }}>
                   {seo.faq.map(f => (
                     <details key={f.q} className="faq">
-                      <summary>{f.q}</summary>
+                      <summary><h3 className="faq-q">{f.q}</h3></summary>
                       <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f.a}</p>
                     </details>
                   ))}

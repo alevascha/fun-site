@@ -188,7 +188,7 @@ export default function ProPage() {
           <div className="stack" style={{ gap: 8 }}>
             {PRO_FAQ.map(f => (
               <details key={f.en[0]} className="faq" onToggle={e => { if (e.currentTarget.open) track('Pro FAQ', { q: f.en[0] }); }}>
-                <summary>{f[lang][0]}</summary>
+                <summary><h3 className="faq-q">{f[lang][0]}</h3></summary>
                 <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f[lang][1]}</p>
               </details>
             ))}

@@ -2020,10 +2020,17 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .legal-doc a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
 
 /* "How to use" + "About" on tool pages */
-.tool-guide { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.tool-guide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 1.6vw, 20px); align-items: start; }
 /* Same rhythm as the FAQ card beside it: title, then 14-20px, then items. */
 .tool-steps { list-style: none; margin: clamp(14px, 1.6vw, 20px) 0 0; padding: 0; display: grid; gap: clamp(14px, 1.6vw, 18px); }
 .tool-steps li { display: grid; grid-template-columns: 30px 1fr; gap: 14px; align-items: start; color: var(--muted); font-size: 15px; line-height: 24px; }
+/* Content cards under each tool: bigger titles, one title-to-content gap. */
+.tool-card-title { font-size: clamp(26px, 3vw, 34px); margin: 0; letter-spacing: -0.01em; }
+.tool-features { margin: clamp(14px, 1.6vw, 20px) 0 0; padding-left: 18px; font-size: 15px; line-height: 1.7; }
+.tool-features li + li { margin-top: 4px; }
+.tool-faq-list { margin-top: clamp(14px, 1.6vw, 20px); }
+/* FAQ questions are h3 for the outline; they look like the summary text. */
+.faq-q { display: inline; margin: 0; font: inherit; letter-spacing: inherit; }
 .tool-about-p { margin: 12px 0 0; font-size: 15px; line-height: 1.7; }
 .tool-about-p:first-of-type { margin-top: clamp(14px, 1.6vw, 20px); }
 /* The 30px circle sits centred on the first 24px line of text. */
