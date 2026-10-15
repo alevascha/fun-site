@@ -203,10 +203,13 @@ export function toolBody(exp, lang = 'en') {
   const seo = getSeo(exp.id, lang);
   const features = seo.features?.length ? `<h2>${L(lang, 'What it does', 'Qué hace')}</h2><ul>${seo.features.map(f => `<li>${esc(f)}</li>`).join('')}</ul>` : '';
   const faq = seo.faq?.length ? `<h2>${L(lang, 'FAQ', 'Preguntas frecuentes')}</h2>${seo.faq.map(f => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join('')}` : '';
+  const name = toolName(exp, lang);
+  const howTo = seo.howTo?.length ? `<h2>${L(lang, `How to use ${esc(name)}`, `Cómo usar ${esc(name)}`)}</h2><ol>${seo.howTo.map(s => `<li>${esc(s)}</li>`).join('')}</ol>` : '';
+  const about = seo.about?.length ? `<h2>${L(lang, `About ${esc(name)}`, `Sobre ${esc(name)}`)}</h2>${seo.about.map(t => `<p>${esc(t)}</p>`).join('')}` : '';
   const guide = GUIDES.find(g => g.tool === exp.id);
   const guideLink = guide ? `<p><a href="${guidePath(guide, lang)}">📖 ${esc(guide[lang].title)}</a></p>` : '';
   const intro = lang === 'es' ? seo.intro : seo.description || exp.description;
-  return shell(lang, toolPath(exp, other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${esc(toolName(exp, lang))}</h1><p class="tool-desc">${esc(intro)}</p></header><main class="seo-static">${features}${faq}${guideLink}<h2>${L(lang, 'More free tools', 'Más herramientas gratuitas')}</h2>${toolLinks(lang, exp.id)}</main>`);
+  return shell(lang, toolPath(exp, other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${esc(toolName(exp, lang))}</h1><p class="tool-desc">${esc(intro)}</p></header><main class="seo-static">${howTo}${about}${features}${faq}${guideLink}<h2>${L(lang, 'More free tools', 'Más herramientas gratuitas')}</h2>${toolLinks(lang, exp.id)}</main>`);
 }
 
 export function staticBody(id, lang = 'en') {

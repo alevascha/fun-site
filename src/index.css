@@ -2018,3 +2018,10 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
 .legal-doc h2 { margin: 0 0 8px; font-family: var(--font-body, Inter, sans-serif); font-size: 19px; font-weight: 600; letter-spacing: 0; }
 .legal-doc p { margin: 0 0 12px; color: var(--muted); }
 .legal-doc a { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+
+/* "How to use" + "About" on tool pages */
+.tool-guide { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.tool-steps { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 14px; }
+.tool-steps li { display: grid; grid-template-columns: 32px 1fr; gap: 12px; align-items: start; color: var(--muted); line-height: 1.6; }
+.tool-step-num { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; font: 600 14px/1 var(--font-label); color: #111011; background: var(--accent-grad-linear); }
+@media (max-width: 900px) { .tool-guide { grid-template-columns: 1fr; } }

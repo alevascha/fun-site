@@ -9,6 +9,7 @@
 
 import { SEO } from './seo.js';
 import { ES, HOME_ES } from './seo-es.js';
+import { SEO_EXTRA } from './seo-extra.js';
 
 export const SITE = {
   name: "Ale's Fun Lab",
@@ -282,7 +283,10 @@ export const HOME_META = {
 };
 
 export function getSeo(id, lang = 'en') {
-  return (lang === 'es' ? ES[id] : SEO[id]) || {};
+  const base = (lang === 'es' ? ES[id] : SEO[id]) || {};
+  const extra = SEO_EXTRA[id]?.[lang === 'es' ? 'es' : 'en'];
+  if (!extra) return base;
+  return { ...base, howTo: extra.howTo, about: extra.about, faq: [...(base.faq || []), ...(extra.faq || [])] };
 }
 
 // Search results cut titles off around 60 characters, so the site name is
