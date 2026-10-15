@@ -1,0 +1,19 @@
+# Lab Pro license server. See README.md for setup.
+name = "lab-pro-licenses"
+main = "src/index.js"
+compatibility_date = "2026-10-01"
+
+# Linked Figma accounts per license key. Create with:
+#   npx wrangler kv namespace create LICENSES
+# and paste the id it prints below.
+[[kv_namespaces]]
+binding = "LICENSES"
+id = "70a65c849b334ef7a55dd9319e43696b"
+
+[vars]
+# Lemon Squeezy store ID (Settings → Stores). Empty = accept any store; set it before launch.
+STORE_ID = ""
+# Lemon Squeezy product or variant ID → "all" (Lab Pro) or a plugin slug.
+# Fill in once the products exist, e.g. {"123": "all", "456": "contrast-checker"}.
+PRODUCTS = "{}"
+MAX_ACCOUNTS = "2"
