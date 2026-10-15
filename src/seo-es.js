@@ -389,6 +389,8 @@ export const PAGE_PATHS = {
   '/': '/es',
   '/about': '/es/acerca-de',
   '/privacy': '/es/privacidad',
+  '/terms': '/es/terminos',
+  '/refunds': '/es/reembolsos',
   '/pro': '/es/pro',
   '/games': '/es/juegos',
   '/guides': '/es/guias',

@@ -114,6 +114,8 @@ export default function App() {
               }),
               <Route key={`${l}-about`} path={p('/about')} element={<StaticPage id="about" />} />,
               <Route key={`${l}-privacy`} path={p('/privacy')} element={<StaticPage id="privacy" />} />,
+              <Route key={`${l}-terms`} path={p('/terms')} element={<StaticPage id="terms" />} />,
+              <Route key={`${l}-refunds`} path={p('/refunds')} element={<StaticPage id="refunds" />} />,
               <Route key={`${l}-pro`} path={p('/pro')} element={<ProPage />} />,
               <Route key={`${l}-games`} path={p('/games')} element={<GamesIndex />} />,
               <Route key={`${l}-guides`} path={p('/guides')} element={<GuidesIndex />} />,

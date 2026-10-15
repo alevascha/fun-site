@@ -38,7 +38,9 @@ export default function StaticPage({ id }) {
               {s.body.map(p => <p key={p.slice(0, 40)} className="muted" style={{ lineHeight: 1.7, margin: '10px 0 0' }}>{p}</p>)}
               {s.links && (
                 <div className="chip-row" style={{ marginTop: 14 }}>
-                  {s.links.map(l => <a key={l.href} className="btn btn-ghost btn-sm" href={l.href} target="_blank" rel="noopener noreferrer">{l.label} <span aria-hidden="true">↗</span></a>)}
+                  {s.links.map(l => (l.href.startsWith('/')
+                    ? <Link key={l.href} className="btn btn-ghost btn-sm" to={l.href}>{l.label} <span aria-hidden="true">→</span></Link>
+                    : <a key={l.href} className="btn btn-ghost btn-sm" href={l.href} target="_blank" rel="noopener noreferrer">{l.label} <span aria-hidden="true">↗</span></a>))}
                 </div>
               )}
             </Reveal>

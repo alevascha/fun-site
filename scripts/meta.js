@@ -1,5 +1,6 @@
 import { experiments, getPageMeta, getSeo, HOME_META, HOME_META_ES, SITE, withSite } from '../src/experiments.js';
 import { STATIC_PAGES, STATIC_PAGES_ES } from '../src/pages-content.js';
+import { FREE_USES, PRO_CONTACT, PRO_FAQ, PRO_PLANS, PRO_PLUGINS } from '../src/pro-content.js';
 import { ES } from '../src/seo-es.js';
 import { GUIDES } from '../src/guides.js';
 import { SECTIONS } from '../src/guide-sections.js';
@@ -18,7 +19,7 @@ const toolPath = (exp, lang) => (lang === 'es' ? `/es/${ES[exp.id].slug}` : exp.
 const toolName = (exp, lang) => (lang === 'es' ? ES[exp.id].name : exp.title);
 const toolBlurb = (exp, lang) => (lang === 'es' ? ES[exp.id].card : exp.description);
 const guidePath = (g, lang) => (lang === 'es' ? `/es/guias/${g.es.slug}` : `/guides/${g.slug}`);
-const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/pro': '/es/pro', '/games': '/es/juegos', '/guides': '/es/guias', '/changelog': '/es/novedades', '/confirm': '/es/confirmar', '/unsubscribe': '/es/baja' };
+const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/terms': '/es/terminos', '/refunds': '/es/reembolsos', '/pro': '/es/pro', '/games': '/es/juegos', '/guides': '/es/guias', '/changelog': '/es/novedades', '/confirm': '/es/confirmar', '/unsubscribe': '/es/baja' };
 const page = (enPath, lang) => (lang === 'es' ? PAGE_ES[enPath] || enPath : enPath);
 
 /* ---------- <head> ---------- */
@@ -81,8 +82,8 @@ function simpleMeta(enPath, lang, title, description) {
 }
 
 export const PRO_META = lang => simpleMeta('/pro', lang,
-  L(lang, "Lab Pro for Figma — waitlist — Ale's Fun Lab", "Lab Pro para Figma — lista de espera — Ale's Fun Lab"),
-  L(lang, 'Figma plugins built on the lab’s tools: token sync with Variables, a one-click contrast fixer, palettes to Variables and motion tokens. Join the waitlist.', 'Plugins de Figma con las herramientas del lab: tokens sincronizados con Variables, contraste corregido en un clic y paletas a Variables. Únete a la lista.'));
+  L(lang, "Lab Pro: Figma plugins for designers — Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores — Ale's Fun Lab"),
+  L(lang, `The lab’s tools as Figma plugins: palettes to Variables, contrast fixes, type scales and color blindness previews. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como plugins de Figma: paletas a Variables, contraste, escalas tipográficas y simulación de daltonismo. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
 export const GUIDES_META = lang => simpleMeta('/guides', lang,
   L(lang, "Guides: color, accessibility, type & tokens — Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens — Ale's Fun Lab"),
   L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation — each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
@@ -185,7 +186,7 @@ const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'M
 const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> — ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
 const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> — ${esc(g[lang].description)}</li>`).join('')}</ul>`;
 
-const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></nav></footer>`;
+const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a><a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a><a href="${page('/refunds', lang)}">${L(lang, 'Refunds', 'Reembolsos')}</a></nav></footer>`;
 
 // .ssr-shell: readable by crawlers, hidden from people while the app boots (see index.html).
 const shell = (lang, otherPath, inner) => `<div class="ssr-shell"><div class="page"><div class="page-inner">${nav(lang, otherPath)}${inner}${footer(lang)}</div></div></div>`;
@@ -243,7 +244,13 @@ export function guideBody(g, lang = 'en') {
 }
 
 export function proBody(lang = 'en') {
-  return shell(lang, page('/pro', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">Lab Pro</h1><p class="tool-desc">${esc(PRO_META(lang).description)}</p></header>`);
+  const plugins = PRO_PLUGINS.map(p => `<li><a href="${toolPath(experiments.find(e => e.path === p.tool), lang)}">${esc(p[lang].name)}</a>: ${esc(p[lang].pitch)}</li>`).join('');
+  const plans = PRO_PLANS.map(p => `<li><strong>${esc(p[lang].name)}</strong>: ${p.launch ? `${p.launch} ${L(lang, 'launch price', 'precio de lanzamiento')} (${L(lang, 'regular', 'normal')} ${p.price})` : p.price} ${esc(p.note[lang])}. ${esc(p[lang].points.join('. '))}.</li>`).join('');
+  const faq = PRO_FAQ.map(f => `<h3>${esc(f[lang][0])}</h3><p>${esc(f[lang][1])}</p>`).join('');
+  return shell(lang, page('/pro', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">Lab Pro</h1><p class="tool-desc">${esc(PRO_META(lang).description)}</p></header>`
+    + `<h2>${L(lang, 'Launch plugins', 'Plugins de lanzamiento')}</h2><ul>${plugins}</ul>`
+    + `<h2>${L(lang, 'Pricing', 'Precios')}</h2><ul>${plans}</ul><p>${L(lang, 'Prices in USD. Taxes are calculated at checkout. Payments are processed by Lemon Squeezy, our merchant of record.', 'Precios en USD. Los impuestos se calculan al pagar. Los pagos los procesa Lemon Squeezy, nuestro merchant of record.')} <a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a> · <a href="${page('/refunds', lang)}">${L(lang, 'Refund Policy', 'Política de reembolso')}</a> · <a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></p>`
+    + `<h2>${L(lang, 'FAQ', 'Preguntas frecuentes')}</h2>${faq}<p>${L(lang, 'Contact', 'Contacto')}: <a href="mailto:${PRO_CONTACT}">${PRO_CONTACT}</a></p>`);
 }
 
 export function changelogBody(lang = 'en') {

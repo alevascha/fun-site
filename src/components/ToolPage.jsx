@@ -15,6 +15,18 @@ import Newsletter from './Newsletter';
 import Feedback from './Feedback';
 import { useLang } from '../i18n';
 import { GUIDES } from '../guides';
+import { FIGMA_PLUGINS } from '../pro-content';
+
+// Figma's logo mark, monochrome so it follows the text color.
+const FigmaMark = () => (
+  <svg width="12" height="18" viewBox="0 0 38 57" aria-hidden="true" fill="currentColor">
+    <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" opacity=".55" />
+    <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" opacity=".85" />
+    <path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" opacity=".7" />
+    <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" />
+    <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" opacity=".8" />
+  </svg>
+);
 
 export default function ToolPage({ id, intro, children }) {
   const exp = getExperiment(id);
@@ -69,6 +81,13 @@ export default function ToolPage({ id, intro, children }) {
           >
             {lang === 'es' ? seo.intro || seo.description : intro || exp.description}
           </motion.p>
+          {exp.category !== 'Games' && (
+            <motion.div variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } } }}>
+              {FIGMA_PLUGINS[id]
+                ? <a className="figma-chip" href={FIGMA_PLUGINS[id]} target="_blank" rel="noopener noreferrer"><FigmaMark /> {t('Open the Figma plugin', 'Abrir el plugin de Figma')} <span aria-hidden="true">↗</span></a>
+                : <Link className="figma-chip" to={to('/pro')}><FigmaMark /> {t('Figma plugin coming soon', 'Plugin de Figma muy pronto')} <span aria-hidden="true">→</span></Link>}
+            </motion.div>
+          )}
         </motion.header>
 
         <main>{children}</main>

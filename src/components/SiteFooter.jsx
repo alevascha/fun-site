@@ -12,6 +12,8 @@ export default function SiteFooter({ children }) {
         <Link to={to('/pro')}>Pro</Link>
         <Link to={to('/about')}>{t('About', 'Acerca de')}</Link>
         <Link to={to('/privacy')}>{t('Privacy', 'Privacidad')}</Link>
+        <Link to={to('/terms')}>{t('Terms', 'Términos')}</Link>
+        <Link to={to('/refunds')}>{t('Refunds', 'Reembolsos')}</Link>
         <a href={lang === 'es' ? '/es/rss.xml' : '/rss.xml'}>RSS</a>
         {children}
       </nav>

@@ -1,4 +1,4 @@
-// Static pages (About, Privacy). Plain data so the same text renders in the
+// Static pages (About, Privacy, Terms, Refunds). Plain data so the same text renders in the
 // React page and in the prerendered HTML (scripts/meta.js).
 
 export const STATIC_PAGES = [
@@ -42,7 +42,7 @@ export const STATIC_PAGES = [
     title: 'Privacy Policy',
     metaTitle: "Privacy Policy — Ale's Fun Lab",
     description: "How Ale's Fun Lab handles your data: in-browser tools, cookieless analytics, Google AdSense advertising and your choices.",
-    updated: '2026-10-02',
+    updated: '2026-10-14',
     sections: [
       {
         heading: 'The short version',
@@ -88,6 +88,13 @@ export const STATIC_PAGES = [
         ],
       },
       {
+        heading: 'Purchases and plugin licenses',
+        body: [
+          'Lab Pro purchases are handled by Lemon Squeezy, our Merchant of Record. Your payment details go to Lemon Squeezy, not to us; we receive your name, email, country and order details so we can deliver and support your license. The Figma plugins send your license key to Lemon Squeezy to check that it is valid, and store it in Figma’s plugin storage on your account. The plugins keep a count of your free uses in that same storage.',
+        ],
+        links: [{ label: 'Lemon Squeezy privacy policy', href: 'https://www.lemonsqueezy.com/privacy' }],
+      },
+      {
         heading: 'Hosting',
         body: [
           'The site is hosted by a static hosting provider, which may keep standard server logs (such as IP address and user agent) for security and reliability, under its own privacy policy.',
@@ -102,6 +109,105 @@ export const STATIC_PAGES = [
           { label: 'alevasquez.dev', href: 'https://www.alevasquez.dev/' },
           { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aledvascha/' },
         ],
+      },
+    ],
+  },
+  {
+    id: 'terms',
+    path: '/terms',
+    title: 'Terms of Service',
+    metaTitle: "Terms of Service — Ale's Fun Lab",
+    description: "The terms for using Ale's Fun Lab and for buying Lab Pro licenses for the lab's Figma plugins.",
+    updated: '2026-10-14',
+    sections: [
+      {
+        heading: 'Who we are',
+        body: [
+          "Ale's Fun Lab (fun.alevasquez.dev) is built and run by Alejandro Vasquez. The web tools on this site are free to use. Lab Pro is a paid license that unlocks the Figma plugins built from these tools.",
+        ],
+      },
+      {
+        heading: 'Payments and our reseller',
+        body: [
+          'Our order process is conducted by our online reseller Lemon Squeezy (Lemon Squeezy, LLC). Lemon Squeezy is the Merchant of Record for all our orders: it handles payments, taxes, invoices and customer service for orders, and its own terms of sale apply to your purchase.',
+          'Prices are shown in US dollars. Taxes (such as VAT or sales tax) are calculated at checkout based on your location.',
+        ],
+        links: [{ label: 'Lemon Squeezy buyer terms', href: 'https://www.lemonsqueezy.com/buyer-terms' }],
+      },
+      {
+        heading: 'What you can buy',
+        body: [
+          'Single plugin (one-time payment): unlocks the full version of one plugin, including its future updates.',
+          'Lab Pro yearly (subscription): unlocks the full version of every plugin, including plugins released while your subscription is active. It renews every year until you cancel. If you cancel, you keep access until the end of the period you paid for.',
+          'Lab Pro lifetime (one-time payment): unlocks the full version of every current and future plugin for as long as Lab Pro exists.',
+          'Every plugin can be installed for free from Figma Community and includes a limited number of free uses, so you can try it before buying.',
+        ],
+      },
+      {
+        heading: 'Your license',
+        body: [
+          'Each license is for one person. You can activate it on the Figma accounts and devices you personally use, up to the activation limit shown at checkout. Please do not share, resell or publish your license key; keys that are shared publicly may be deactivated.',
+          'Plugins check your license key with Lemon Squeezy when you activate it and from time to time after that. They need an internet connection for this check.',
+        ],
+      },
+      {
+        heading: 'Availability and changes',
+        body: [
+          'The plugins run inside Figma and depend on Figma’s platform. If Figma changes or removes something a plugin relies on, we will do our best to update the plugin, but we cannot guarantee that every feature will keep working forever.',
+          'We may improve, change or retire plugins over time. If Lab Pro is ever discontinued, we will give at least 60 days of notice and keep current versions working for as long as Figma allows.',
+        ],
+      },
+      {
+        heading: 'Refunds',
+        body: ['Refunds are covered by our Refund Policy.'],
+        links: [{ label: 'Refund Policy', href: '/refunds' }],
+      },
+      {
+        heading: 'Liability',
+        body: [
+          'The tools and plugins are provided “as is”. Always review the results before using them in production work (for example, check contrast results and generated styles). To the extent the law allows, our total liability for any claim is limited to the amount you paid for the license in the 12 months before the claim.',
+        ],
+      },
+      {
+        heading: 'Contact',
+        body: ['Questions about these terms or your license? Write to hi@alevasquez.dev.'],
+        links: [{ label: 'hi@alevasquez.dev', href: 'mailto:hi@alevasquez.dev' }],
+      },
+    ],
+  },
+  {
+    id: 'refunds',
+    path: '/refunds',
+    title: 'Refund Policy',
+    metaTitle: "Refund Policy — Ale's Fun Lab",
+    description: 'How refunds work for Lab Pro licenses and single Figma plugins from Ale’s Fun Lab.',
+    updated: '2026-10-14',
+    sections: [
+      {
+        heading: 'Try before you buy',
+        body: [
+          'Every plugin includes free uses before it asks for a license, so you can check that it works for your files first.',
+        ],
+      },
+      {
+        heading: '14-day refund',
+        body: [
+          'If a plugin doesn’t work for you, ask for a refund within 14 days of your purchase and you will get your money back. This applies to single plugins, Lab Pro lifetime and the first payment of Lab Pro yearly. You don’t need to give a reason, although it helps us improve.',
+          'When a refund is issued, the license key is deactivated.',
+        ],
+      },
+      {
+        heading: 'Subscription renewals',
+        body: [
+          'You can cancel Lab Pro yearly at any time from the link in your receipt or customer portal, and it will not renew. Renewal payments can be refunded if you ask within 14 days of the renewal date and have not used the Pro features since it renewed.',
+        ],
+      },
+      {
+        heading: 'How to ask for a refund',
+        body: [
+          'Email hi@alevasquez.dev with your order number or the email you used to buy. Refunds are processed by our reseller, Lemon Squeezy, to your original payment method and usually appear within 5 to 10 business days, depending on your bank.',
+        ],
+        links: [{ label: 'hi@alevasquez.dev', href: 'mailto:hi@alevasquez.dev' }],
       },
     ],
   },
@@ -178,6 +284,11 @@ export const STATIC_PAGES_ES = {
         body: ['El sitio guarda algunas preferencias en el almacenamiento local de tu navegador: tu tema claro/oscuro, tu idioma y qué experimentos ya abriste (para las etiquetas “Nuevo”). Nunca sale de tu dispositivo y puedes borrarlo cuando quieras desde la configuración de tu navegador.'],
       },
       {
+        heading: 'Compras y licencias de los plugins',
+        body: ['Las compras de Lab Pro las gestiona Lemon Squeezy, nuestro Merchant of Record. Tus datos de pago van a Lemon Squeezy, no a nosotros; recibimos tu nombre, correo, país y los detalles del pedido para entregar tu licencia y darte soporte. Los plugins de Figma envían tu clave de licencia a Lemon Squeezy para comprobar que es válida y la guardan en el almacenamiento de plugins de Figma de tu cuenta. Ahí mismo llevan la cuenta de tus usos gratis.'],
+        links: [{ label: 'Política de privacidad de Lemon Squeezy', href: 'https://www.lemonsqueezy.com/privacy' }],
+      },
+      {
         heading: 'Alojamiento',
         body: ['El sitio está alojado en un proveedor de hosting estático, que puede guardar registros estándar del servidor (como la dirección IP y el navegador) por seguridad y fiabilidad, según su propia política de privacidad.'],
       },
@@ -188,6 +299,91 @@ export const STATIC_PAGES_ES = {
           { label: 'alevasquez.dev', href: 'https://www.alevasquez.dev/' },
           { label: 'LinkedIn', href: 'https://www.linkedin.com/in/aledvascha/' },
         ],
+      },
+    ],
+  },
+  terms: {
+    path: '/es/terminos',
+    title: 'Términos de servicio',
+    metaTitle: "Términos de servicio — Ale's Fun Lab",
+    description: "Los términos para usar Ale's Fun Lab y para comprar licencias Lab Pro de los plugins de Figma del lab.",
+    sections: [
+      {
+        heading: 'Quiénes somos',
+        body: ["Ale's Fun Lab (fun.alevasquez.dev) lo construye y administra Alejandro Vasquez. Las herramientas web de este sitio son gratuitas. Lab Pro es una licencia de pago que desbloquea los plugins de Figma hechos a partir de estas herramientas."],
+      },
+      {
+        heading: 'Pagos y nuestro revendedor',
+        body: [
+          'Nuestro proceso de compra lo realiza nuestro revendedor en línea Lemon Squeezy (Lemon Squeezy, LLC). Lemon Squeezy es el Merchant of Record de todos nuestros pedidos: se encarga de los pagos, impuestos, facturas y atención de pedidos, y sus propios términos de venta aplican a tu compra.',
+          'Los precios se muestran en dólares estadounidenses. Los impuestos (como el IVA) se calculan al pagar según tu ubicación.',
+        ],
+        links: [{ label: 'Términos de compra de Lemon Squeezy', href: 'https://www.lemonsqueezy.com/buyer-terms' }],
+      },
+      {
+        heading: 'Qué puedes comprar',
+        body: [
+          'Un plugin (pago único): desbloquea la versión completa de un plugin, incluidas sus actualizaciones futuras.',
+          'Lab Pro anual (suscripción): desbloquea la versión completa de todos los plugins, incluidos los que salgan mientras tu suscripción esté activa. Se renueva cada año hasta que la canceles. Si cancelas, mantienes el acceso hasta el final del periodo que pagaste.',
+          'Lab Pro de por vida (pago único): desbloquea la versión completa de todos los plugins actuales y futuros mientras Lab Pro exista.',
+          'Cada plugin se instala gratis desde Figma Community e incluye una cantidad limitada de usos gratis, para que lo pruebes antes de comprar.',
+        ],
+      },
+      {
+        heading: 'Tu licencia',
+        body: [
+          'Cada licencia es para una persona. Puedes activarla en las cuentas de Figma y dispositivos que usas personalmente, hasta el límite de activaciones indicado al comprar. No compartas, revendas ni publiques tu clave de licencia; las claves compartidas públicamente pueden desactivarse.',
+          'Los plugins verifican tu clave con Lemon Squeezy al activarla y de vez en cuando después. Para eso necesitan conexión a internet.',
+        ],
+      },
+      {
+        heading: 'Disponibilidad y cambios',
+        body: [
+          'Los plugins funcionan dentro de Figma y dependen de su plataforma. Si Figma cambia o elimina algo que un plugin necesita, haremos lo posible por actualizarlo, pero no podemos garantizar que cada función siga funcionando para siempre.',
+          'Podemos mejorar, cambiar o retirar plugins con el tiempo. Si Lab Pro llegara a cerrar, avisaremos con al menos 60 días de anticipación y mantendremos funcionando las versiones actuales mientras Figma lo permita.',
+        ],
+      },
+      {
+        heading: 'Reembolsos',
+        body: ['Los reembolsos se rigen por nuestra Política de reembolso.'],
+        links: [{ label: 'Política de reembolso', href: '/es/reembolsos' }],
+      },
+      {
+        heading: 'Responsabilidad',
+        body: ['Las herramientas y plugins se ofrecen “tal cual”. Revisa siempre los resultados antes de usarlos en trabajo de producción (por ejemplo, los resultados de contraste y los estilos generados). En la medida en que la ley lo permita, nuestra responsabilidad total ante cualquier reclamo se limita a lo que pagaste por la licencia en los 12 meses anteriores al reclamo.'],
+      },
+      {
+        heading: 'Contacto',
+        body: ['¿Preguntas sobre estos términos o tu licencia? Escribe a hi@alevasquez.dev.'],
+        links: [{ label: 'hi@alevasquez.dev', href: 'mailto:hi@alevasquez.dev' }],
+      },
+    ],
+  },
+  refunds: {
+    path: '/es/reembolsos',
+    title: 'Política de reembolso',
+    metaTitle: "Política de reembolso — Ale's Fun Lab",
+    description: 'Cómo funcionan los reembolsos de las licencias Lab Pro y de los plugins de Figma individuales de Ale’s Fun Lab.',
+    sections: [
+      {
+        heading: 'Prueba antes de comprar',
+        body: ['Cada plugin incluye usos gratis antes de pedir una licencia, para que compruebes primero que funciona con tus archivos.'],
+      },
+      {
+        heading: 'Reembolso en 14 días',
+        body: [
+          'Si un plugin no te sirve, pide el reembolso dentro de los 14 días posteriores a tu compra y te devolvemos el dinero. Aplica a plugins individuales, a Lab Pro de por vida y al primer pago de Lab Pro anual. No necesitas dar un motivo, aunque nos ayuda a mejorar.',
+          'Al emitir un reembolso, la clave de licencia se desactiva.',
+        ],
+      },
+      {
+        heading: 'Renovaciones de la suscripción',
+        body: ['Puedes cancelar Lab Pro anual en cualquier momento desde el enlace de tu recibo o del portal de cliente, y no se renovará. Los pagos de renovación se pueden reembolsar si lo pides dentro de los 14 días posteriores a la renovación y no has usado las funciones Pro desde entonces.'],
+      },
+      {
+        heading: 'Cómo pedir un reembolso',
+        body: ['Escribe a hi@alevasquez.dev con tu número de pedido o el correo con el que compraste. Los reembolsos los procesa nuestro revendedor, Lemon Squeezy, a tu método de pago original, y normalmente aparecen en 5 a 10 días hábiles, según tu banco.'],
+        links: [{ label: 'hi@alevasquez.dev', href: 'mailto:hi@alevasquez.dev' }],
       },
     ],
   },
