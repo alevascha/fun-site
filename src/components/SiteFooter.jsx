@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLang } from '../i18n';
+import { track } from '../lib/analytics';
 
 export default function SiteFooter({ children }) {
   const { lang, t, to } = useLang();
@@ -9,7 +10,7 @@ export default function SiteFooter({ children }) {
       <nav aria-label={t('Footer', 'Pie de página')} className="footer-links">
         <Link to={to('/guides')}>{t('Guides', 'Guías')}</Link>
         <Link to={to('/changelog')}>{t("What's new", 'Novedades')}</Link>
-        <Link to={to('/pro')}>Pro</Link>
+        <Link to={to('/pro')} onClick={() => track('Pro link', { from: 'footer' })}>Pro</Link>
         <Link to={to('/about')}>{t('About', 'Acerca de')}</Link>
         <Link to={to('/privacy')}>{t('Privacy', 'Privacidad')}</Link>
         <Link to={to('/terms')}>{t('Terms', 'Términos')}</Link>

@@ -98,7 +98,7 @@ export default function SiteNav() {
         <Link to={to('/guides')} className="site-nav-link site-nav-link--hide-sm" aria-current={pathname.includes('/guides') || pathname.includes('/guias') ? 'page' : undefined}>
           {t('Guides', 'Guías')}
         </Link>
-        <Link to={to('/pro')} className="site-nav-link site-nav-link--hide-sm">Pro</Link>
+        <Link to={to('/pro')} className="site-nav-link site-nav-link--hide-sm" onClick={() => track('Pro link', { from: 'nav' })}>Pro</Link>
       </div>
       <div className="site-nav-actions">
         <CommandHint />
@@ -134,7 +134,7 @@ export default function SiteNav() {
             <ul>
               {links.map((l, i) => (
                 <motion.li key={l.to} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i }}>
-                  <Link to={to(l.to)} aria-current={l.current ? 'page' : undefined} onClick={() => setMenuOpen(false)}>
+                  <Link to={to(l.to)} aria-current={l.current ? 'page' : undefined} onClick={() => { setMenuOpen(false); if (l.to === '/pro') track('Pro link', { from: 'menu' }); }}>
                     {l.label} <span className="arrow" aria-hidden="true">→</span>
                   </Link>
                 </motion.li>

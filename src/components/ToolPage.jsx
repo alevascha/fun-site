@@ -16,6 +16,7 @@ import Feedback from './Feedback';
 import { useLang } from '../i18n';
 import { GUIDES } from '../guides';
 import { FIGMA_PLUGINS } from '../pro-content';
+import { track } from '../lib/analytics';
 
 // Figma's logo mark, monochrome so it follows the text color.
 const FigmaMark = () => (
@@ -84,8 +85,8 @@ export default function ToolPage({ id, intro, children }) {
           {exp.category !== 'Games' && (
             <motion.div variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } } }}>
               {FIGMA_PLUGINS[id]
-                ? <a className="figma-chip" href={FIGMA_PLUGINS[id]} target="_blank" rel="noopener noreferrer"><FigmaMark /> {t('Open the Figma plugin', 'Abrir el plugin de Figma')} <span aria-hidden="true">↗</span></a>
-                : <Link className="figma-chip" to={to('/pro')}><FigmaMark /> {t('Figma plugin coming soon', 'Plugin de Figma muy pronto')} <span aria-hidden="true">→</span></Link>}
+                ? <a className="figma-chip" href={FIGMA_PLUGINS[id]} target="_blank" rel="noopener noreferrer" onClick={() => track('Figma plugin click', { tool: id, state: 'live' })}><FigmaMark /> {t('Open the Figma plugin', 'Abrir el plugin de Figma')} <span aria-hidden="true">↗</span></a>
+                : <Link className="figma-chip" to={to('/pro')} onClick={() => track('Figma plugin click', { tool: id, state: 'soon' })}><FigmaMark /> {t('Figma plugin coming soon', 'Plugin de Figma muy pronto')} <span aria-hidden="true">→</span></Link>}
             </motion.div>
           )}
         </motion.header>

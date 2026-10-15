@@ -15,6 +15,7 @@ import { useLang } from '../i18n';
 import { EASE } from '../lib/motion';
 import { experiments } from '../experiments';
 import { FREE_USES, PRO_CONTACT, PRO_FAQ, PRO_NEXT, PRO_PLANS, PRO_PLUGINS, PRO_STEPS } from '../pro-content';
+import { track } from '../lib/analytics';
 
 const accentFor = path => experiments.find(e => e.path === path)?.accent || '#cd57ff';
 
@@ -61,12 +62,12 @@ export default function ProPage() {
             </motion.p>
             <motion.div className="hub-hero-actions" initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: EASE, delay: 0.4 }}>
               <Magnetic>
-                <motion.a href="#pricing" className="btn btn-primary" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                <motion.a href="#pricing" className="btn btn-primary" onClick={() => track('Pro CTA', { cta: 'see-pricing' })} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                   {t('See pricing', 'Ver precios')} <span className="arrow" aria-hidden="true">›</span>
                 </motion.a>
               </Magnetic>
               <Magnetic>
-                <motion.a href="#waitlist" className="btn btn-chip" whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
+                <motion.a href="#waitlist" className="btn btn-chip" onClick={() => track('Pro CTA', { cta: 'hero-waitlist' })} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }}>
                   <span className="gradient-dot" /> {t('Join the waitlist', 'Únete a la lista de espera')}
                 </motion.a>
               </Magnetic>
@@ -102,7 +103,7 @@ export default function ProPage() {
                   <ul className="pro-points">
                     {plan[lang].points.map(pt => <li key={pt}><span className="pro-check" aria-hidden="true">✓</span>{pt}</li>)}
                   </ul>
-                  <a href="#waitlist" className={'btn ' + (plan.featured ? 'btn-primary' : 'btn-ghost') + ' pro-plan-cta'}>
+                  <a href="#waitlist" className={'btn ' + (plan.featured ? 'btn-primary' : 'btn-ghost') + ' pro-plan-cta'} onClick={() => track('Pro CTA', { cta: 'plan', plan: plan.id })}>
                     {t('Join the waitlist', 'Únete a la lista de espera')}
                   </a>
                 </div>
@@ -186,7 +187,7 @@ export default function ProPage() {
           <h2 id="faq-title" className="card-title">{t('FAQ', 'Preguntas frecuentes')}</h2>
           <div className="stack" style={{ gap: 8 }}>
             {PRO_FAQ.map(f => (
-              <details key={f.en[0]} className="faq">
+              <details key={f.en[0]} className="faq" onToggle={e => { if (e.currentTarget.open) track('Pro FAQ', { q: f.en[0] }); }}>
                 <summary>{f[lang][0]}</summary>
                 <p className="muted" style={{ margin: '8px 0 0', lineHeight: 1.6 }}>{f[lang][1]}</p>
               </details>
