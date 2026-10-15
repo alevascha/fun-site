@@ -27,6 +27,9 @@
         }
         document.documentElement.dataset.theme = t;
         document.documentElement.classList.add('js');
+        // The boot loader plays once per session (like the portfolio intro);
+        // later loads in the same session skip it.
+        try { if (sessionStorage.getItem('funlab:intro')) document.documentElement.classList.add('intro-seen'); } catch (e) {}
       })();
     </script>
     <style>
@@ -48,10 +51,23 @@
         font-family: 'Crimson Pro', Georgia, serif;
         opacity: 0;
         animation: bl-in 0.35s ease 0.15s forwards; /* fast loads never show it */
-        transition: opacity 0.45s ease, visibility 0.45s ease;
+
       }
       html[data-theme='light'] #boot-loader { background: #f7f4f2; color: #111011; }
-      #boot-loader.done { opacity: 0 !important; visibility: hidden; animation: none; }
+      /* Leaving: the loader dissolves outward while the site rises into place
+         underneath (html.site-reveal), a crossfade instead of a cut. */
+      /* An exit animation, not a transition: removing the entry animation
+         would otherwise snap the loader away instead of fading it. */
+      #boot-loader.done { pointer-events: none; animation: bl-out 0.9s cubic-bezier(.16,1,.3,1) forwards; }
+      @keyframes bl-out { from { opacity: 1; transform: none; filter: none; } to { opacity: 0; transform: scale(1.06); filter: blur(10px); visibility: hidden; } }
+      /* Opacity on #root, movement only on the content: a transform on an
+         ancestor of the fixed nav/background would re-anchor them while it
+         runs and make them jump when it ends (a layout shift). */
+      .site-reveal #root { animation: site-fade 0.9s cubic-bezier(.16,1,.3,1) both; }
+      .site-reveal .page-inner > :not(.site-nav) { animation: site-rise 0.9s cubic-bezier(.16,1,.3,1) both; }
+      @keyframes site-fade { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes site-rise { from { transform: translateY(16px); } to { transform: none; } }
+      .intro-seen #boot-loader { display: none; }
       #boot-loader::before {
         content: ''; position: absolute; width: 60vmin; height: 60vmin; border-radius: 50%;
         background: radial-gradient(circle at 30% 30%, rgba(205,87,255,.35), rgba(139,108,240,.18) 45%, rgba(255,206,31,.12) 70%, transparent 72%);
@@ -89,6 +105,8 @@
       @keyframes bl-breathe { from { transform: scale(.9); opacity: .8; } to { transform: scale(1.08); opacity: 1; } }
       @media (prefers-reduced-motion: reduce) {
         #boot-loader *, #boot-loader::before { animation: none !important; }
+        @keyframes bl-out { from { opacity: 1; } to { opacity: 0; visibility: hidden; } }
+        .site-reveal .page-inner > :not(.site-nav) { animation: none; }
       }
     </style>
     <!-- analytics -->

@@ -1,5 +1,10 @@
-// Fades out the boot loader from index.html. Called once the first route
-// (including lazily loaded tool pages) has actually rendered.
+// Fades out the boot loader from index.html once the first route (including
+// lazily loaded tool pages) has rendered. On the first visit of a session it
+// stays at least INTRO_MS so the whole animation plays, like the portfolio
+// intro; if the app takes longer, it stays until the app is ready. Later
+// loads in the same session never show it (index.html hides it up front).
+const INTRO_MS = 2000;
+const KEY = 'funlab:intro';
 let dismissed = false;
 
 export function dismissBootLoader() {
@@ -7,8 +12,15 @@ export function dismissBootLoader() {
   dismissed = true;
   const el = document.getElementById('boot-loader');
   if (!el) return;
-  requestAnimationFrame(() => requestAnimationFrame(() => {
+  let seen = false;
+  try { seen = !!sessionStorage.getItem(KEY); } catch { /* storage blocked */ }
+  try { sessionStorage.setItem(KEY, '1'); } catch { /* storage blocked */ }
+  // performance.now() counts from the start of the page load.
+  const wait = seen ? 0 : Math.max(0, INTRO_MS - performance.now());
+  setTimeout(() => requestAnimationFrame(() => requestAnimationFrame(() => {
+    const root = document.documentElement;
     el.classList.add('done');
-    setTimeout(() => el.remove(), 600);
-  }));
+    root.classList.add('site-reveal');
+    setTimeout(() => { el.remove(); root.classList.remove('site-reveal'); }, 1000);
+  })), wait);
 }
