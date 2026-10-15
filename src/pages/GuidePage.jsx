@@ -54,6 +54,7 @@ export default function GuidePage() {
       <motion.div className="reading-progress" style={{ scaleX: progress }} aria-hidden="true" />
       <div className="page-inner">
         <SiteNav />
+        <main>
         <header className="tool-header guide-header">
           <Link to={to('/guides')} className="back-link"><span className="arrow" aria-hidden="true">←</span> {t('All guides', 'Todas las guías')}</Link>
           <SplitText key={lang + guide.slug} as="h1" className="tool-title guide-title" text={content.title} delay={0.1} stagger={0.012} />
@@ -83,6 +84,7 @@ export default function GuidePage() {
             ))}
           </div>
         </Reveal>
+        </main>
         <SiteFooter />
       </div>
     </div>

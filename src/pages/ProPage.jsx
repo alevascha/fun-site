@@ -41,6 +41,7 @@ export default function ProPage() {
       <Background />
       <div className="page-inner">
         <SiteNav />
+        <main>
 
         <header ref={heroRef} className="hub-hero pro-hero">
           <ParticleField className="hero-canvas" />
@@ -181,6 +182,7 @@ export default function ProPage() {
         <div id="waitlist" style={{ scrollMarginTop: 96 }}>
           <Newsletter source="pro" waitlist />
         </div>
+        </main>
         <SiteFooter />
       </div>
     </div>
