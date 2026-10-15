@@ -31,12 +31,15 @@
     </script>
     <style>
       /* The prerendered shell is for crawlers and no-JS visitors. With JS on,
-         keep it invisible while the app boots (React replaces it), but reveal
-         it after 4s in case the app fails to load. */
+         it paints at 1% opacity under the boot loader while the app boots
+         (React then replaces it with the same content and its animations).
+         Painted, not hidden, so the browser can time the first contentful
+         and largest paints without waiting for the app. Fully revealed after
+         4s in case the app fails to load. */
       html { background: #272625; }
       html[data-theme='light'] { background: #f7f4f2; }
-      .js .ssr-shell { visibility: hidden; animation: ssr-reveal 0s 4s forwards; }
-      @keyframes ssr-reveal { to { visibility: visible; } }
+      .js .ssr-shell { opacity: 0.01; animation: ssr-reveal 0s 4s forwards; }
+      @keyframes ssr-reveal { to { opacity: 1; } }
       /* ---- Boot loader (pure CSS so it paints before any JS) ---- */
       #boot-loader {
         position: fixed; inset: 0; z-index: 9999;

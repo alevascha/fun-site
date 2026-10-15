@@ -114,7 +114,7 @@ export default function ToolPage({ id, intro, children }) {
             {seo.about?.length > 0 && (
               <div className="card">
                 <h2 className="card-title">{t(`About ${name(exp)}`, `Sobre ${name(exp)}`)}</h2>
-                {seo.about.map(para => <p key={para.slice(0, 40)} className="muted" style={{ margin: '10px 0 0', lineHeight: 1.7 }}>{para}</p>)}
+                {seo.about.map(para => <p key={para.slice(0, 40)} className="muted tool-about-p">{para}</p>)}
               </div>
             )}
           </Reveal>
