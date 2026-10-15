@@ -133,7 +133,7 @@ export default function MultiSize() {
   const imageSrc = useMemo(() => (image instanceof HTMLCanvasElement ? image.toDataURL('image/jpeg', 0.7) : image?.src), [image]);
 
   return (
-    <ToolPage id="multi-size" intro="Write one message, see it laid out across social posts, stories and display-ad sizes at once — with the zones that platform UI covers marked in red. Drag the focal point to keep the important part of your image in frame, then export every size as PNG.">
+    <ToolPage id="multi-size" intro="Write one message, see it laid out across social posts, stories and display-ad sizes at once - with the zones that platform UI covers marked in red. Drag the focal point to keep the important part of your image in frame, then export every size as PNG.">
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
@@ -188,7 +188,7 @@ export default function MultiSize() {
                 />
               </div>
             ) : (
-              <p className="small muted" style={{ margin: 0 }}>{t('No image — layouts use the brand color as a glow instead.', 'Sin imagen: los diseños usan el color de marca como brillo.')}</p>
+              <p className="small muted" style={{ margin: 0 }}>{t('No image - layouts use the brand color as a glow instead.', 'Sin imagen: los diseños usan el color de marca como brillo.')}</p>
             )}
           </Reveal>
         </div>

@@ -31,7 +31,7 @@ function TokenPreview({ t }) {
     return <svg width="36" height="36" viewBox="-0.1 -0.3 1.2 1.6" style={{ flex: 'none' }} aria-hidden="true"><path d={`M0 1 C ${a} ${1 - b} ${c} ${1 - d} 1 0`} fill="none" stroke="var(--accent-c)" strokeWidth="0.08" /></svg>;
   }
   if (t.type === 'shadow') return <span style={{ width: 30, height: 30, margin: 3, flex: 'none', borderRadius: 8, background: 'var(--surface)', boxShadow: t.css, display: 'block' }} />;
-  return <span className="mono muted" style={{ width: 36, flex: 'none', fontSize: 11, textAlign: 'center' }}>{t.type?.slice(0, 4) || '—'}</span>;
+  return <span className="mono muted" style={{ width: 36, flex: 'none', fontSize: 11, textAlign: 'center' }}>{t.type?.slice(0, 4) || '-'}</span>;
 }
 
 export default function TokenConverter() {
@@ -65,7 +65,7 @@ export default function TokenConverter() {
   }
 
   return (
-    <ToolPage id="token-converter" intro="Paste W3C design tokens, a Tokens Studio file or a Figma Variables export. Aliases are resolved (and kept as references where the format allows), composites like typography are expanded, and you get CSS, SCSS, Tailwind v4, SwiftUI or flat JSON — all in your browser.">
+    <ToolPage id="token-converter" intro="Paste W3C design tokens, a Tokens Studio file or a Figma Variables export. Aliases are resolved (and kept as references where the format allows), composites like typography are expanded, and you get CSS, SCSS, Tailwind v4, SwiftUI or flat JSON - all in your browser.">
       <div className="grid-2">
         <Reveal className="card">
           <h2 className="eyebrow">

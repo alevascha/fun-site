@@ -169,7 +169,7 @@ export default function HueHunt() {
             <motion.div className="hh-total" initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ type: 'spring', stiffness: 260, damping: 18 }}>
               <span className="hh-grad">{total}</span><span className="muted">/{ROUNDS * 100}</span>
             </motion.div>
-            <p className="muted" style={{ margin: 0 }}>{total >= 450 ? t('Color-perfect. Designers fear you.', 'Color perfecto. Los diseñadores te temen.') : total >= 350 ? t('Sharp eye — a few hues away from perfect.', 'Buen ojo: a pocos tonos de la perfección.') : t('Lightness is the usual culprit. Try matching it first.', 'La luminosidad suele ser la culpable. Intenta igualarla primero.')}</p>
+            <p className="muted" style={{ margin: 0 }}>{total >= 450 ? t('Color-perfect. Designers fear you.', 'Color perfecto. Los diseñadores te temen.') : total >= 350 ? t('Sharp eye - a few hues away from perfect.', 'Buen ojo: a pocos tonos de la perfección.') : t('Lightness is the usual culprit. Try matching it first.', 'La luminosidad suele ser la culpable. Intenta igualarla primero.')}</p>
             <div className="hh-pairs">
               {results.map((r, i) => (
                 <div key={i} className="hh-pair" title={`ΔE ${r.d.toFixed(1)}`}>

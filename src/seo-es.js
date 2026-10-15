@@ -400,7 +400,7 @@ export const PAGE_PATHS = {
 };
 
 export const HOME_ES = {
-  title: "Herramientas gratuitas de diseño y accesibilidad — Ale's Fun Lab",
+  title: "Herramientas gratuitas de diseño y accesibilidad - Ale's Fun Lab",
   description: 'Herramientas gratis de diseño y accesibilidad: paletas, contraste WCAG, design tokens, escalas tipográficas, curvas de animación y más, por Alejandro Vasquez.',
 };
 

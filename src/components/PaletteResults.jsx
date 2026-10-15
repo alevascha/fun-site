@@ -36,8 +36,8 @@ function ToneCell({ tone, refs, threshold, level, onToneChange }) {
           const ratio = contrastRatio(bgRgb, fgRgb);
           const pass = ratio >= threshold;
           const label = t(
-            `${ref.name} text on ${tone.hex}: ${ratio.toFixed(2)}:1 — ${pass ? 'passes' : 'fails'} ${level} ${threshold}:1${pass ? '' : '. Click to fix.'}`,
-            `Texto ${localName(ref.name, lang).toLowerCase()} sobre ${tone.hex}: ${ratio.toFixed(2)}:1 — ${pass ? 'pasa' : 'falla'} ${level} ${threshold}:1${pass ? '' : '. Haz clic para corregir.'}`,
+            `${ref.name} text on ${tone.hex}: ${ratio.toFixed(2)}:1 - ${pass ? 'passes' : 'fails'} ${level} ${threshold}:1${pass ? '' : '. Click to fix.'}`,
+            `Texto ${localName(ref.name, lang).toLowerCase()} sobre ${tone.hex}: ${ratio.toFixed(2)}:1 - ${pass ? 'pasa' : 'falla'} ${level} ${threshold}:1${pass ? '' : '. Haz clic para corregir.'}`,
           );
           return (
             <motion.button

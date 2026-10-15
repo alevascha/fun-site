@@ -119,7 +119,7 @@ export default function pagesPlugin() {
 
       // 404: the app shell with a noindex robots tag.
       await fs.writeFile(path.join(outDir, '404.html'), render(
-        { title: `Page not found — ${SITE.name}`, description: SITE.description, path: '/404', image: '/og/home.png', lang: 'en' },
+        { title: `Page not found - ${SITE.name}`, description: SITE.description, path: '/404', image: '/og/home.png', lang: 'en' },
         notFoundBody(), '', { noindex: true },
       ));
 

@@ -39,7 +39,7 @@ function ResultCard({ item, result, onRemove, index }) {
           {!result ? (
             <motion.span key="busy" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>{t('Trimming…', 'Recortando…')}</motion.span>
           ) : result.empty ? (
-            <motion.span key="empty" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('Nothing left — the image is fully transparent.', 'No queda nada: la imagen es completamente transparente.')}</motion.span>
+            <motion.span key="empty" className="small muted" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{t('Nothing left - the image is fully transparent.', 'No queda nada: la imagen es completamente transparente.')}</motion.span>
           ) : compare ? (
             <motion.div key="before" style={{ position: 'relative', maxWidth: '100%', maxHeight: '100%', aspectRatio: `${result.origW} / ${result.origH}`, width: result.origW >= result.origH ? '92%' : 'auto', height: result.origW >= result.origH ? 'auto' : '92%' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
               <img src={item.url} alt={`${item.name}, ${t('original', 'original')}`} style={{ width: '100%', height: '100%', objectFit: 'contain', boxShadow: '0 0 0 1px rgba(127,127,127,.4)' }} />
@@ -141,7 +141,7 @@ export default function AutoTrim() {
   const ready = items.filter(i => results[i.id]?.blob).length;
 
   return (
-    <ToolPage id="auto-trim" intro="Drop in PNGs, WebPs or screenshots and get them back without the empty edges — transparent padding, or a solid background if you want. Works in bulk, everything stays in your browser, and you can download a single ZIP.">
+    <ToolPage id="auto-trim" intro="Drop in PNGs, WebPs or screenshots and get them back without the empty edges - transparent padding, or a solid background if you want. Works in bulk, everything stays in your browser, and you can download a single ZIP.">
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
@@ -161,7 +161,7 @@ export default function AutoTrim() {
               <div style={{ display: 'grid', gap: 8, justifyItems: 'center' }}>
                 <motion.span aria-hidden="true" style={{ fontSize: 40 }} animate={{ rotate: [0, -12, 12, 0] }} transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}>✂️</motion.span>
                 <strong>{t('Drop images here', 'Suelta imágenes aquí')}</strong>
-                <span className="small muted">{t('PNG, WebP, GIF, JPG — as many as you like', 'PNG, WebP, GIF, JPG, todas las que quieras')}</span>
+                <span className="small muted">{t('PNG, WebP, GIF, JPG - as many as you like', 'PNG, WebP, GIF, JPG, todas las que quieras')}</span>
               </div>
             </motion.div>
             <div className="chip-row" style={{ marginTop: 12 }}>

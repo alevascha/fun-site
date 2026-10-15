@@ -13,7 +13,7 @@ import { EASE, REVEAL_VIEWPORT } from '../lib/motion';
 export default function Changelog() {
   const { lang, t, to } = useLang();
   usePageMeta({
-    title: t("What's new — Ale's Fun Lab", "Novedades — Ale's Fun Lab"),
+    title: t("What's new - Ale's Fun Lab", "Novedades - Ale's Fun Lab"),
     description: t('New tools, guides and improvements in Ale’s Fun Lab, newest first.', 'Nuevas herramientas, guías y mejoras en Ale’s Fun Lab, de la más reciente a la más antigua.'),
     path: to('/changelog'),
     image: '/og/home.png',

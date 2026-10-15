@@ -20,14 +20,14 @@ export const STATIC_PAGES = [
       {
         heading: 'Who builds it',
         body: [
-          'I’m Alejandro Vasquez, a Design Systems Architect and UX & AI Interface Engineer with more than eight years of experience bridging design and engineering. These experiments are the fun side of that work — small tools I wished I had while building design systems.',
+          'I’m Alejandro Vasquez, a Design Systems Architect and UX & AI Interface Engineer with more than eight years of experience bridging design and engineering. These experiments are the fun side of that work - small tools I wished I had while building design systems.',
           'You can see my client work and case studies at alevasquez.dev.',
         ],
       },
       {
         heading: 'Get in touch',
         body: [
-          'Found a bug, have an idea for a new tool, or want to work together? Reach out through LinkedIn or my portfolio — links below.',
+          'Found a bug, have an idea for a new tool, or want to work together? Reach out through LinkedIn or my portfolio - links below.',
         ],
         links: [
           { label: 'alevasquez.dev', href: 'https://www.alevasquez.dev/' },
@@ -40,7 +40,7 @@ export const STATIC_PAGES = [
     id: 'privacy',
     path: '/privacy',
     title: 'Privacy Policy',
-    metaTitle: "Privacy Policy — Ale's Fun Lab",
+    metaTitle: "Privacy Policy - Ale's Fun Lab",
     description: "How Ale's Fun Lab handles your data: in-browser tools, cookieless analytics, Google AdSense advertising and your choices.",
     updated: '2026-10-14',
     sections: [
@@ -116,7 +116,7 @@ export const STATIC_PAGES = [
     id: 'terms',
     path: '/terms',
     title: 'Terms of Service',
-    metaTitle: "Terms of Service — Ale's Fun Lab",
+    metaTitle: "Terms of Service - Ale's Fun Lab",
     description: "The terms for using Ale's Fun Lab and for buying Lab Pro licenses for the lab's Figma plugins.",
     updated: '2026-10-14',
     sections: [
@@ -187,7 +187,7 @@ export const STATIC_PAGES = [
     id: 'refunds',
     path: '/refunds',
     title: 'Refund Policy',
-    metaTitle: "Refund Policy — Ale's Fun Lab",
+    metaTitle: "Refund Policy - Ale's Fun Lab",
     description: 'How refunds work for Lab Pro licenses and single Figma plugins from Ale’s Fun Lab.',
     updated: '2026-10-14',
     sections: [
@@ -255,7 +255,7 @@ export const STATIC_PAGES_ES = {
   privacy: {
     path: '/es/privacidad',
     title: 'Política de privacidad',
-    metaTitle: "Política de privacidad — Ale's Fun Lab",
+    metaTitle: "Política de privacidad - Ale's Fun Lab",
     description: "Cómo trata tus datos Ale's Fun Lab: herramientas en el navegador, analítica sin cookies, newsletter, publicidad de Google AdSense y tus opciones.",
     sections: [
       {
@@ -313,7 +313,7 @@ export const STATIC_PAGES_ES = {
   terms: {
     path: '/es/terminos',
     title: 'Términos de servicio',
-    metaTitle: "Términos de servicio — Ale's Fun Lab",
+    metaTitle: "Términos de servicio - Ale's Fun Lab",
     description: "Los términos para usar Ale's Fun Lab y para comprar licencias Lab Pro de los plugins de Figma del lab.",
     sections: [
       {
@@ -378,7 +378,7 @@ export const STATIC_PAGES_ES = {
   refunds: {
     path: '/es/reembolsos',
     title: 'Política de reembolso',
-    metaTitle: "Política de reembolso — Ale's Fun Lab",
+    metaTitle: "Política de reembolso - Ale's Fun Lab",
     description: 'Cómo funcionan los reembolsos de las licencias Lab Pro y de los plugins de Figma individuales de Ale’s Fun Lab.',
     sections: [
       {

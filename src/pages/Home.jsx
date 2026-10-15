@@ -172,7 +172,7 @@ export default function Home() {
             transition={{ duration: 0.7, ease: EASE }}
           >
             {t(
-              'Small, fun tools I build on the side — color, type and design-system experiments with accessibility baked in. Pick one and play.',
+              'Small, fun tools I build on the side - color, type and design-system experiments with accessibility baked in. Pick one and play.',
               'Herramientas pequeñas y divertidas que construyo por mi cuenta: experimentos de color, tipografía y design systems con la accesibilidad incluida. Elige una y juega.',
             )}
           </motion.p>

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
-/* Mirrors a tool's settings into the query string (debounced, replace — no
+/* Mirrors a tool's settings into the query string (debounced, replace - no
    history spam), so the current URL always reproduces what's on screen.
    `serialize` returns a plain object of string values; empty ones are
    dropped. The first render is skipped so a clean URL stays clean until the

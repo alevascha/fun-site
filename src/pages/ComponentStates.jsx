@@ -423,7 +423,7 @@ export default function ComponentStates() {
   const def = MATRIX[component];
 
   return (
-    <ToolPage id="component-states" intro="One accent in, a full set of interactive states out — with the micro-interactions that make them feel alive. Play with the live components, then inspect every state side by side with its WCAG checks (text 4.5:1; focus rings, borders and tracks 3:1).">
+    <ToolPage id="component-states" intro="One accent in, a full set of interactive states out - with the micro-interactions that make them feel alive. Play with the live components, then inspect every state side by side with its WCAG checks (text 4.5:1; focus rings, borders and tracks 3:1).">
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
@@ -465,7 +465,7 @@ export default function ComponentStates() {
 
         <div className="stack">
           <Reveal className="card">
-            <h2 className="eyebrow">{tr('Playground — click, type, tab through', 'Área de pruebas: haz clic, escribe, navega con Tab')}</h2>
+            <h2 className="eyebrow">{tr('Playground - click, type, tab through', 'Área de pruebas: haz clic, escribe, navega con Tab')}</h2>
             <div className="csx-root csx-playground" style={vars}>
               <div className="csx-play-col">
                 <div className="csx-play-row">

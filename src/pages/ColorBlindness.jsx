@@ -209,11 +209,11 @@ export default function ColorBlindness() {
           <Reveal className="card" delay={0.05}>
             <h2 className="eyebrow">{t('Takeaways', 'Conclusiones')}</h2>
             {worst.pairs.length === 0 ? (
-              <p className="muted" style={{ margin: 0 }}>{t('Nice — every color stays distinguishable under every simulation. 🎉', '¡Bien! Todos los colores siguen distinguiéndose en cada simulación. 🎉')}</p>
+              <p className="muted" style={{ margin: 0 }}>{t('Nice - every color stays distinguishable under every simulation. 🎉', '¡Bien! Todos los colores siguen distinguiéndose en cada simulación. 🎉')}</p>
             ) : (
               <ul className="muted" style={{ margin: 0, paddingLeft: 18, lineHeight: 1.7 }}>
                 <li><b style={{ color: 'var(--text)' }}>{vt(worst).label}</b> {t('is the hardest case:', 'es el caso más difícil:')} {worst.pairs.map(([a, b]) => `${colors[a]} ↔ ${colors[b]}`).join(', ')}.</li>
-                <li>{t('Don’t rely on color alone — add icons, labels or patterns to charts and status states (WCAG 1.4.1).', 'No dependas solo del color: añade iconos, etiquetas o patrones a gráficos y estados (WCAG 1.4.1).')}</li>
+                <li>{t('Don’t rely on color alone - add icons, labels or patterns to charts and status states (WCAG 1.4.1).', 'No dependas solo del color: añade iconos, etiquetas o patrones a gráficos y estados (WCAG 1.4.1).')}</li>
                 <li>{t('Vary lightness, not just hue: colors that differ in lightness survive every type of color blindness.', 'Varía la luminosidad, no solo el tono: los colores con distinta luminosidad resisten cualquier tipo de daltonismo.')}</li>
               </ul>
             )}

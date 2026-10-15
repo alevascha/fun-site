@@ -34,7 +34,7 @@ const TONE_ORDER = [
 /* Builds the 7-tone column (3 lighter, base, 3 darker) around hsl. Lighter
    tones interpolate toward white, darker toward black, and a cleanup pass
    guarantees every tone on each side is strictly lighter/darker than the
-   one closer to center — so nothing ever repeats. */
+   one closer to center - so nothing ever repeats. */
 export function buildToneColumn(hsl) {
   const tones = TONE_ORDER.map(o => {
     let l;

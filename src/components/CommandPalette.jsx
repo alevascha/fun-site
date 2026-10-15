@@ -10,7 +10,7 @@ import { track } from '../lib/analytics';
 
 const normalize = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 
-/* ⌘K / Ctrl+K / "/" — jump to any tool, guide or page, or run an action. */
+/* ⌘K / Ctrl+K / "/" - jump to any tool, guide or page, or run an action. */
 export default function CommandPalette() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');

@@ -78,7 +78,7 @@ export default function SiteNav() {
       <Link
         to={to('/')}
         className="site-nav-brand"
-        aria-label={onHome ? t("Ale's Fun Lab — back to top", "Ale's Fun Lab — volver arriba") : t("Ale's Fun Lab — home", "Ale's Fun Lab — inicio")}
+        aria-label={onHome ? t("Ale's Fun Lab - back to top", "Ale's Fun Lab - volver arriba") : t("Ale's Fun Lab - home", "Ale's Fun Lab - inicio")}
         // Already home: the logo works as "back to top" instead of a no-op.
         onClick={e => { if (onHome) { e.preventDefault(); glideToTop(); } }}
       >

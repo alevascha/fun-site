@@ -95,8 +95,8 @@ export default function Subscription({ action }) {
 
   useEffect(() => {
     document.title = action === 'confirm'
-      ? `${t('Confirm your subscription', 'Confirma tu suscripción')} — ${SITE.name}`
-      : `${t('Unsubscribe', 'Darte de baja')} — ${SITE.name}`;
+      ? `${t('Confirm your subscription', 'Confirma tu suscripción')} - ${SITE.name}`
+      : `${t('Unsubscribe', 'Darte de baja')} - ${SITE.name}`;
   }, [action, t]);
 
   useEffect(() => {

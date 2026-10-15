@@ -153,7 +153,7 @@ export default function ContrastChecker() {
               </div>
               <div style={{ marginTop: 'clamp(24px, 4vw, 40px)', display: 'grid', gap: 14 }}>
                 <p style={{ fontFamily: 'var(--font-display)', fontSize: 'clamp(28px, 4vw, 40px)', lineHeight: 1.1, margin: 0, letterSpacing: '-0.03em' }}>
-                  {t('Large text — the quick brown fox', 'Texto grande: el veloz murciélago hindú')}
+                  {t('Large text - the quick brown fox', 'Texto grande: el veloz murciélago hindú')}
                 </p>
                 <p style={{ fontSize: 16, lineHeight: 1.6, margin: 0, maxWidth: 620 }}>
                   {t('Normal body text at 16px. Good contrast keeps copy readable in sunlight, on cheap screens and for people with low vision.', 'Texto normal a 16px. Un buen contraste mantiene el texto legible bajo el sol, en pantallas baratas y para personas con baja visión.')}
@@ -222,7 +222,7 @@ export default function ContrastChecker() {
           </AnimatePresence>
 
           <Reveal className="card" delay={0.05} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
-            <p className="small muted" style={{ margin: 0 }}>{t('The URL updates as you go — share it to share this exact pair.', 'La URL se actualiza mientras editas: compártela para compartir esta combinación exacta.')}</p>
+            <p className="small muted" style={{ margin: 0 }}>{t('The URL updates as you go - share it to share this exact pair.', 'La URL se actualiza mientras editas: compártela para compartir esta combinación exacta.')}</p>
             <CopyButton
               className="btn btn-primary btn-sm"
               copied={copied === 'link'}

@@ -112,7 +112,7 @@ export default function TypeScale() {
   }, [scale, fluid, format, fontCss]);
 
   return (
-    <ToolPage id="type-scale" intro="Choose a base size and a ratio to get a modular type scale. Turn on fluid mode to use a tighter ratio on small screens and a bolder one on desktop — the output becomes clamp() values that scale smoothly in between.">
+    <ToolPage id="type-scale" intro="Choose a base size and a ratio to get a modular type scale. Turn on fluid mode to use a tighter ratio on small screens and a bolder one on desktop - the output becomes clamp() values that scale smoothly in between.">
       <div className="grid-sidebar">
         <div className="stack sticky-col">
           <Reveal className="card">
@@ -225,7 +225,7 @@ export default function TypeScale() {
                   <h3 style={{ fontFamily: font, fontSize: h1, lineHeight: lineHeightFor(h1), letterSpacing: trackingFor(h1), margin: '0 0 0.4em', fontWeight: font === 'var(--font-display)' ? 300 : 600, transition: 'font-size .4s var(--ease-out)' }}>{sample}</h3>
                   <h4 style={{ fontFamily: font, fontSize: h2, lineHeight: lineHeightFor(h2), letterSpacing: trackingFor(h2), margin: '0 0 0.6em', fontWeight: font === 'var(--font-display)' ? 300 : 600, transition: 'font-size .4s var(--ease-out)' }}>{t('A system that scales', 'Un sistema que escala')}</h4>
                   <p style={{ fontSize: body, lineHeight: 1.6, margin: 0, color: 'var(--muted)', fontFamily: 'var(--font-body)', transition: 'font-size .4s var(--ease-out)' }}>
-                    {t('A modular scale gives every heading a predictable relationship with the body text. Pick fewer, more distinct steps and your hierarchy reads at a glance — on a phone and on a 27-inch monitor.', 'Una escala modular da a cada título una relación predecible con el texto. Elige menos pasos y más distintos, y tu jerarquía se entiende de un vistazo, en un teléfono y en un monitor de 27 pulgadas.')}
+                    {t('A modular scale gives every heading a predictable relationship with the body text. Pick fewer, more distinct steps and your hierarchy reads at a glance - on a phone and on a 27-inch monitor.', 'Una escala modular da a cada título una relación predecible con el texto. Elige menos pasos y más distintos, y tu jerarquía se entiende de un vistazo, en un teléfono y en un monitor de 27 pulgadas.')}
                   </p>
                 </motion.article>
               );

@@ -216,7 +216,7 @@ extension Animation {
   };
 
   return (
-    <ToolPage id="motion-playground" intro="Shape a cubic-bezier by dragging its handles, tune a physical spring, and watch them race a linear timing side by side. Springs are exported as CSS linear() easings, so they run anywhere — no JavaScript needed.">
+    <ToolPage id="motion-playground" intro="Shape a cubic-bezier by dragging its handles, tune a physical spring, and watch them race a linear timing side by side. Springs are exported as CSS linear() easings, so they run anywhere - no JavaScript needed.">
       <div className="grid-2">
         <Reveal className="card">
           <h2 className="eyebrow">Cubic-bezier <span className="mono" style={{ textTransform: 'none', letterSpacing: 0 }}>{bezierCss}</span></h2>

@@ -14,8 +14,8 @@ import { getExperiment } from '../experiments';
 export default function GuidesIndex() {
   const { lang, t, to, name } = useLang();
   usePageMeta({
-    title: t("Guides: color, accessibility, type & tokens — Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens — Ale's Fun Lab"),
-    description: t('Short, practical guides on color contrast, fluid typography, design tokens and designing for translation — each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'),
+    title: t("Guides: color, accessibility, type & tokens - Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens - Ale's Fun Lab"),
+    description: t('Short, practical guides on color contrast, fluid typography, design tokens and designing for translation - each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'),
     path: to('/guides'),
     image: '/og/home.png',
     alternates: { en: '/guides', es: '/es/guias' },

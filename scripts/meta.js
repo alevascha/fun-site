@@ -82,16 +82,16 @@ function simpleMeta(enPath, lang, title, description) {
 }
 
 export const PRO_META = lang => simpleMeta('/pro', lang,
-  L(lang, "Lab Pro: Figma plugins for designers — Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores — Ale's Fun Lab"),
+  L(lang, "Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
   L(lang, `The lab’s tools as Figma plugins: palettes to Variables, contrast fixes, type scales and color blindness previews. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como plugins de Figma: paletas a Variables, contraste, escalas tipográficas y simulación de daltonismo. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
 export const GUIDES_META = lang => simpleMeta('/guides', lang,
-  L(lang, "Guides: color, accessibility, type & tokens — Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens — Ale's Fun Lab"),
-  L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation — each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
+  L(lang, "Guides: color, accessibility, type & tokens - Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens - Ale's Fun Lab"),
+  L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation - each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
 export const GAMES_META = lang => simpleMeta('/games', lang,
-  L(lang, "Games for designers: color & contrast — Ale's Fun Lab", "Juegos para diseñadores: color y contraste — Ale's Fun Lab"),
+  L(lang, "Games for designers: color & contrast - Ale's Fun Lab", "Juegos para diseñadores: color y contraste - Ale's Fun Lab"),
   L(lang, 'Quick, free browser games that train your eye for color and accessible contrast. Play on your phone or desktop.', 'Juegos rápidos y gratuitos en el navegador que entrenan tu ojo para el color y el contraste accesible. Juega en el teléfono o en la computadora.'));
 export const CHANGELOG_META = lang => simpleMeta('/changelog', lang,
-  L(lang, "What's new — Ale's Fun Lab", "Novedades — Ale's Fun Lab"),
+  L(lang, "What's new - Ale's Fun Lab", "Novedades - Ale's Fun Lab"),
   L(lang, 'New tools, guides and improvements in Ale’s Fun Lab, newest first.', 'Nuevas herramientas, guías y mejoras en Ale’s Fun Lab, de la más reciente a la más antigua.'));
 export const guideMeta = (g, lang) => ({
   title: withSite(g[lang].title), description: g[lang].description, path: guidePath(g, lang), image: `/og/${g.tool}.png`,
@@ -183,8 +183,8 @@ export function guideJsonLd(g, lang = 'en') {
 
 const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'Main', 'Principal')}"><a class="site-nav-brand" href="${page('/', lang)}"><span class="site-nav-logo">f</span><span class="site-nav-brand-text">${esc(SITE.name)}</span></a><span class="site-nav-links"><a class="site-nav-link" href="${page('/games', lang)}">${L(lang, 'Games', 'Juegos')}</a> <a class="site-nav-link" href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a> <a class="site-nav-link" href="${page('/pro', lang)}">Pro</a></span><a class="site-nav-link" href="${otherPath}" hreflang="${L(lang, 'es', 'en')}" lang="${L(lang, 'es', 'en')}">${L(lang, 'Español', 'English')}</a></nav>`;
 
-const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> — ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
-const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> — ${esc(g[lang].description)}</li>`).join('')}</ul>`;
+const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> - ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
+const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> - ${esc(g[lang].description)}</li>`).join('')}</ul>`;
 
 const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a><a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a><a href="${page('/refunds', lang)}">${L(lang, 'Refunds', 'Reembolsos')}</a></nav></footer>`;
 
@@ -220,7 +220,7 @@ export function staticBody(id, lang = 'en') {
 
 export function gamesBody(lang = 'en') {
   const games = active().filter(e => e.category === 'Games');
-  return shell(lang, page('/games', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${L(lang, 'Games', 'Juegos')}</h1><p class="tool-desc">${esc(GAMES_META(lang).description)}</p></header><main class="seo-static"><ul class="seo-links">${games.map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> — ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul></main>`);
+  return shell(lang, page('/games', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${L(lang, 'Games', 'Juegos')}</h1><p class="tool-desc">${esc(GAMES_META(lang).description)}</p></header><main class="seo-static"><ul class="seo-links">${games.map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> - ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul></main>`);
 }
 
 export function guidesBody(lang = 'en') {
@@ -261,8 +261,8 @@ export function changelogBody(lang = 'en') {
 // Newsletter confirm / unsubscribe landing pages (noindex; the app takes over).
 export const SUBSCRIPTION_META = (action, lang) => ({
   title: action === 'confirm'
-    ? L(lang, `Confirm your subscription — ${SITE.name}`, `Confirma tu suscripción — ${SITE.name}`)
-    : L(lang, `Unsubscribe — ${SITE.name}`, `Darte de baja — ${SITE.name}`),
+    ? L(lang, `Confirm your subscription - ${SITE.name}`, `Confirma tu suscripción - ${SITE.name}`)
+    : L(lang, `Unsubscribe - ${SITE.name}`, `Darte de baja - ${SITE.name}`),
   description: SITE.description,
   path: page(action === 'confirm' ? '/confirm' : '/unsubscribe', lang),
   image: '/og/home.png',

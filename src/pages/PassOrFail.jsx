@@ -227,7 +227,7 @@ export default function PassOrFail() {
                 <span className="hh-grad">{score}</span><span className="muted">/{ROUNDS}</span>
               </motion.div>
               <p className="muted" style={{ margin: 0 }}>
-                {score >= 18 ? t('Accessibility auditor energy.', 'Nivel auditor de accesibilidad.') : score >= 14 ? t('Good eye. The near-misses are the tricky ones.', 'Buen ojo. Los casos al límite son los difíciles.') : t('Contrast is hard to judge by eye — that’s why we measure it.', 'El contraste es difícil de juzgar a ojo: por eso se mide.')}
+                {score >= 18 ? t('Accessibility auditor energy.', 'Nivel auditor de accesibilidad.') : score >= 14 ? t('Good eye. The near-misses are the tricky ones.', 'Buen ojo. Los casos al límite son los difíciles.') : t('Contrast is hard to judge by eye - that’s why we measure it.', 'El contraste es difícil de juzgar a ojo: por eso se mide.')}
                 {' '}{t(`Avg. ${avg.toFixed(1)}s per call.`, `Promedio de ${avg.toFixed(1)} s por respuesta.`)}
               </p>
               <div className="pf-strip" aria-hidden="true">{answers.map((a, k) => <span key={k} className={a.correct ? 'is-ok' : 'is-bad'} />)}</div>

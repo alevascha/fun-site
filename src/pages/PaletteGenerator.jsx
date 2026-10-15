@@ -104,7 +104,7 @@ export default function PaletteGenerator() {
   }
 
   return (
-    <ToolPage id="palette-generator" intro="Pick a hue on the wheel, choose a harmony, set your text colors — every tone updates live with WCAG checks. Dots show which text colors are safe on each tone; click a dashed dot to fix it.">
+    <ToolPage id="palette-generator" intro="Pick a hue on the wheel, choose a harmony, set your text colors - every tone updates live with WCAG checks. Dots show which text colors are safe on each tone; click a dashed dot to fix it.">
       <div className="stack">
         <div className="grid-sidebar">
           <Reveal className="card sticky-col">

@@ -36,17 +36,17 @@ export default function Feedback({ tool }) {
           </motion.div>
         ) : sent ? (
           <motion.p key="thanks" role="status" className="feedback-row" initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}>
-            {t('Thank you — I read every suggestion. 💜', 'Gracias, leo cada sugerencia. 💜')}
+            {t('Thank you - I read every suggestion. 💜', 'Gracias, leo cada sugerencia. 💜')}
           </motion.p>
         ) : (
           <motion.form key="more" className="feedback-form" onSubmit={send} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
             <label htmlFor={`fb-${tool}`} className="feedback-row" style={{ display: 'block' }}>
               {vote === 'up'
-                ? t('Thanks! Anything you’d add — or a tool you wish existed?', '¡Gracias! ¿Algo que agregarías, o una herramienta que te gustaría que existiera?')
+                ? t('Thanks! Anything you’d add - or a tool you wish existed?', '¡Gracias! ¿Algo que agregarías, o una herramienta que te gustaría que existiera?')
                 : t('Sorry about that. What was missing?', 'Lo siento. ¿Qué faltó?')}
             </label>
             <div className="feedback-input-row">
-              <input id={`fb-${tool}`} className="input" value={text} maxLength={300} onChange={e => setText(e.target.value)} placeholder={t('Optional — no personal info, please', 'Opcional, sin datos personales')} />
+              <input id={`fb-${tool}`} className="input" value={text} maxLength={300} onChange={e => setText(e.target.value)} placeholder={t('Optional - no personal info, please', 'Opcional, sin datos personales')} />
               <button type="submit" className="btn btn-ghost" disabled={!text.trim()}>{t('Send', 'Enviar')}</button>
             </div>
           </motion.form>

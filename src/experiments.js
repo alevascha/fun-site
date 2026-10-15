@@ -25,7 +25,7 @@ export const SITE = {
   // no AdSense script, no ads.txt.
   adsenseClient: '',
   // Email signups. provider: 'kit' | 'buttondown' | 'formspree' | 'sheets' |
-  // 'brevo' — see src/lib/subscribe.js for what goes in `newsletter` and
+  // 'brevo' - see src/lib/subscribe.js for what goes in `newsletter` and
   // `waitlist` for each. Empty `newsletter` = signup hidden in production
   // (still visible in dev so it can be styled). `waitlist` falls back to
   // `newsletter` when empty.
@@ -75,7 +75,7 @@ export const experiments = [
     emoji: '👁️',
     accent: '#c792ff',
     title: 'Color Blindness Simulator',
-    description: 'See a palette through protanopia, deuteranopia, tritanopia and achromatopsia — and catch colors that collapse.',
+    description: 'See a palette through protanopia, deuteranopia, tritanopia and achromatopsia - and catch colors that collapse.',
     addedAt: '2026-10-01',
     active: true,
   },
@@ -97,7 +97,7 @@ export const experiments = [
     emoji: '🌈',
     accent: '#ff9ad5',
     title: 'Gradient & Mesh Generator',
-    description: 'Linear, radial, conic or blobby mesh gradients — drag the points, shuffle the colors, copy the CSS.',
+    description: 'Linear, radial, conic or blobby mesh gradients - drag the points, shuffle the colors, copy the CSS.',
     addedAt: '2026-10-01',
     active: true,
   },
@@ -108,7 +108,7 @@ export const experiments = [
     emoji: '🧩',
     accent: '#ffb072',
     title: 'Component States Explorer',
-    description: 'Buttons, inputs and cards in every state — hover, focus, pressed, disabled, error — side by side with contrast checks.',
+    description: 'Buttons, inputs and cards in every state - hover, focus, pressed, disabled, error - side by side with contrast checks.',
     addedAt: '2026-10-01',
     active: true,
   },
@@ -119,7 +119,7 @@ export const experiments = [
     emoji: '🧬',
     accent: '#8af0c4',
     title: 'Design Token Converter',
-    description: 'Paste W3C tokens, Tokens Studio or Figma Variables JSON and get CSS, SCSS, Tailwind v4 or SwiftUI — aliases included.',
+    description: 'Paste W3C tokens, Tokens Studio or Figma Variables JSON and get CSS, SCSS, Tailwind v4 or SwiftUI - aliases included.',
     addedAt: '2026-10-02',
     active: true,
   },
@@ -141,7 +141,7 @@ export const experiments = [
     emoji: '✂️',
     accent: '#ffce1f',
     title: 'Auto-Trim',
-    description: 'Drop in PNGs and get them back without the empty transparent edges — in bulk, in your browser, as one ZIP.',
+    description: 'Drop in PNGs and get them back without the empty transparent edges - in bulk, in your browser, as one ZIP.',
     addedAt: '2026-10-02',
     active: true,
   },
@@ -152,7 +152,7 @@ export const experiments = [
     emoji: '🌍',
     accent: '#7cc4ff',
     title: 'Text Expansion Stress Test',
-    description: 'See how a UI breaks in German, Spanish or pseudo-localized text — and which CSS fixes make it survive translation.',
+    description: 'See how a UI breaks in German, Spanish or pseudo-localized text - and which CSS fixes make it survive translation.',
     addedAt: '2026-10-02',
     active: true,
   },
@@ -273,7 +273,7 @@ export function getExperiment(id) {
 }
 
 export const HOME_META = {
-  title: `Free Design & Accessibility Tools — ${SITE.name}`,
+  title: `Free Design & Accessibility Tools - ${SITE.name}`,
   description: SITE.description,
   path: '/',
   image: '/og/home.png',
@@ -287,7 +287,7 @@ export function getSeo(id, lang = 'en') {
 
 // Search results cut titles off around 60 characters, so the site name is
 // only appended when the whole title still fits.
-export const withSite = title => (`${title} — ${SITE.name}`.length <= 65 ? `${title} — ${SITE.name}` : title);
+export const withSite = title => (`${title} - ${SITE.name}`.length <= 65 ? `${title} - ${SITE.name}` : title);
 
 export function getPageMeta(exp, lang = 'en') {
   const seo = getSeo(exp.id, lang);

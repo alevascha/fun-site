@@ -41,7 +41,7 @@ export const SECTIONS = {
         "list": [
           "Decide which side is allowed to move. Usually the text color moves and the background (your brand surface) stays.",
           "Keep the hue and saturation and change only the lightness. That keeps the color recognizably “yours”.",
-          "Move lightness the minimum amount needed to reach the target ratio — in the direction that increases contrast.",
+          "Move lightness the minimum amount needed to reach the target ratio - in the direction that increases contrast.",
           "Check the other states too: hover, pressed and disabled colors are often forgotten."
         ]
       },
@@ -56,7 +56,7 @@ export const SECTIONS = {
           "Placeholder text in inputs: it is real text and needs 4.5:1 if it carries meaning (better: don’t use placeholders as labels).",
           "Text on images or gradients: check the lightest area behind the text, or add a scrim.",
           "Light gray “secondary” text: #999 on white is only 2.85:1. #767676 is the lightest gray that passes 4.5:1 on white.",
-          "Hover states that lighten a button behind white text — contrast drops exactly when users interact."
+          "Hover states that lighten a button behind white text - contrast drops exactly when users interact."
         ]
       },
       {
@@ -129,7 +129,7 @@ export const SECTIONS = {
   "fluid-typography-with-clamp": {
     "en": [
       {
-        "p": "Breakpoint typography jumps: 32px on a phone, then suddenly 48px at 768px. Fluid typography grows smoothly with the viewport instead, so every screen width gets a size that fits — with less CSS."
+        "p": "Breakpoint typography jumps: 32px on a phone, then suddenly 48px at 768px. Fluid typography grows smoothly with the viewport instead, so every screen width gets a size that fits - with less CSS."
       },
       {
         "h": "The building block: clamp()"
@@ -245,7 +245,7 @@ export const SECTIONS = {
         "h": "2. Export"
       },
       {
-        "p": "Use a Variables export that preserves aliases and modes — either a plugin that writes the W3C Design Tokens format or one that exports collections and modes as JSON. Aliases matter: if surface points to paper/50, code should say so instead of copying the hex value."
+        "p": "Use a Variables export that preserves aliases and modes - either a plugin that writes the W3C Design Tokens format or one that exports collections and modes as JSON. Aliases matter: if surface points to paper/50, code should say so instead of copying the hex value."
       },
       {
         "h": "3. Know the W3C format"
@@ -339,7 +339,7 @@ export const SECTIONS = {
   "design-for-translation": {
     "en": [
       {
-        "p": "A button that reads “Save” in English becomes “Speichern” in German and “Guardar cambios” in Spanish. If your layout was designed around the English length, translation breaks it — usually after launch, in a market you can’t easily test."
+        "p": "A button that reads “Save” in English becomes “Speichern” in German and “Guardar cambios” in Spanish. If your layout was designed around the English length, translation breaks it - usually after launch, in a market you can’t easily test."
       },
       {
         "h": "How much does text grow?"
@@ -356,7 +356,7 @@ export const SECTIONS = {
           "white-space: nowrap combined with overflow: hidden, which silently cuts text off.",
           "Nav bars that assume every item fits on one line.",
           "Table headers with fixed column widths.",
-          "Building sentences from pieces (“You have ” + n + “ items”) — word order changes between languages."
+          "Building sentences from pieces (“You have ” + n + “ items”) - word order changes between languages."
         ]
       },
       {
@@ -368,7 +368,7 @@ export const SECTIONS = {
           "flex-wrap on navs and action rows; horizontally scrollable tab bars instead of squeezed tabs.",
           "overflow-wrap: anywhere plus hyphens: auto with the correct lang attribute, so long German compounds break cleanly.",
           "Stack labels above fields when space runs out instead of giving labels a fixed width.",
-          "Truncate with an ellipsis only for user data (names, file names) — and expose the full text."
+          "Truncate with an ellipsis only for user data (names, file names) - and expose the full text."
         ]
       },
       {
@@ -385,7 +385,7 @@ export const SECTIONS = {
       },
       {
         "list": [
-          "Dates, numbers and currencies change format by locale — use Intl.DateTimeFormat and Intl.NumberFormat.",
+          "Dates, numbers and currencies change format by locale - use Intl.DateTimeFormat and Intl.NumberFormat.",
           "Right-to-left languages mirror the layout; use logical properties (margin-inline-start) from day one.",
           "Set the lang attribute on the page (and on any mixed-language fragment) so screen readers pronounce text correctly."
         ]

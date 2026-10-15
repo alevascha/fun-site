@@ -22,7 +22,7 @@ const accentFor = path => experiments.find(e => e.path === path)?.accent || '#cd
 export default function ProPage() {
   const { lang, t, to } = useLang();
   usePageMeta({
-    title: t("Lab Pro: Figma plugins for designers — Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores — Ale's Fun Lab"),
+    title: t("Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
     description: t(`The lab’s tools as Figma plugins: palettes to Variables, contrast fixes, type scales and color blindness previews. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como plugins de Figma: paletas a Variables, contraste, escalas tipográficas y simulación de daltonismo. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`),
     path: to('/pro'),
     image: '/og/home.png',

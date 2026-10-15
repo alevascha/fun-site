@@ -268,7 +268,7 @@ export function toTailwind(tokens, opts) {
     lines.push(`  --${ns}-${twKey(t)}: ${value};`);
   }
   let out = `@import "tailwindcss";\n\n@theme {\n${lines.join('\n')}\n}\n`;
-  if (skipped.length) out += `\n/* No Tailwind namespace for: ${skipped.slice(0, 8).join(', ')}${skipped.length > 8 ? '…' : ''} — see the CSS tab. */\n`;
+  if (skipped.length) out += `\n/* No Tailwind namespace for: ${skipped.slice(0, 8).join(', ')}${skipped.length > 8 ? '…' : ''} - see the CSS tab. */\n`;
   return out;
 }
 

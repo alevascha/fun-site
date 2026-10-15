@@ -9,7 +9,7 @@ import { haptic } from '../lib/haptics';
 import { subscribe } from '../lib/subscribe';
 
 /* Email signup. The provider (Kit, Buttondown, Formspree, a Google Sheet or
-   Brevo — see lib/subscribe.js) stores the address and handles confirmation
+   Brevo - see lib/subscribe.js) stores the address and handles confirmation
    and unsubscribes; we only send the email. Most providers answer opaquely
    (no-cors), so success means "sent". */
 export default function Newsletter({ source, waitlist = false, compact = false }) {
@@ -49,7 +49,7 @@ export default function Newsletter({ source, waitlist = false, compact = false }
     ? t('Join the Lab Pro waitlist', 'Únete a la lista de espera de Lab Pro')
     : t('Get new experiments by email', 'Recibe los nuevos experimentos por email');
   const sub = waitlist
-    ? t('Be the first to try the Figma plugins — and get a launch discount.', 'Sé de los primeros en probar los plugins de Figma, con descuento de lanzamiento.')
+    ? t('Be the first to try the Figma plugins - and get a launch discount.', 'Sé de los primeros en probar los plugins de Figma, con descuento de lanzamiento.')
     : t('One short email when something new ships. No spam, unsubscribe anytime.', 'Un email corto cuando haya algo nuevo. Sin spam, te das de baja cuando quieras.');
 
   return (
@@ -61,7 +61,7 @@ export default function Newsletter({ source, waitlist = false, compact = false }
       <AnimatePresence mode="wait" initial={false}>
         {state === 'done' ? (
           <motion.p key="done" role="status" className="newsletter-done" initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ type: 'spring', stiffness: 400, damping: 22 }}>
-            <span aria-hidden="true">✓</span> {t('Almost there — check your inbox to confirm.', '¡Casi listo! Revisa tu correo para confirmar.')}
+            <span aria-hidden="true">✓</span> {t('Almost there - check your inbox to confirm.', '¡Casi listo! Revisa tu correo para confirmar.')}
           </motion.p>
         ) : (
           <motion.form key="form" className="newsletter-form" onSubmit={submit} noValidate initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -6 }} transition={{ duration: 0.25, ease: EASE }}>

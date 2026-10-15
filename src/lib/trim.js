@@ -1,6 +1,6 @@
 /* Trims empty edges from an image: transparent pixels (alpha ≤ threshold)
    and, optionally, a solid background matching the top-left pixel.
-   Returns a PNG blob plus the crop rectangle. Runs on a canvas — the file
+   Returns a PNG blob plus the crop rectangle. Runs on a canvas - the file
    never leaves the browser. */
 export async function trimImage(file, { alphaThreshold = 0, padding = 0, trimSolid = false, tolerance = 12 } = {}) {
   const bitmap = await createImageBitmap(file);

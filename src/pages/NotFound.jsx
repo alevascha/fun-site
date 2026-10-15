@@ -36,7 +36,7 @@ export default function NotFound() {
   const [query, setQuery] = useState('');
 
   useEffect(() => {
-    document.title = `${t('Page not found', 'Página no encontrada')} — ${SITE.name}`;
+    document.title = `${t('Page not found', 'Página no encontrada')} - ${SITE.name}`;
     let robots = document.head.querySelector('meta[name="robots"]');
     if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.appendChild(robots); }
     robots.content = 'noindex, follow';

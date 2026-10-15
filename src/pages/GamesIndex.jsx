@@ -14,7 +14,7 @@ import { ExpCard } from './Home';
 export default function GamesIndex() {
   const { lang, t, to } = useLang();
   usePageMeta({
-    title: t("Games for designers: color & contrast — Ale's Fun Lab", "Juegos para diseñadores: color y contraste — Ale's Fun Lab"),
+    title: t("Games for designers: color & contrast - Ale's Fun Lab", "Juegos para diseñadores: color y contraste - Ale's Fun Lab"),
     description: t('Quick, free browser games that train your eye for color and accessible contrast. Play on your phone or desktop.', 'Juegos rápidos y gratuitos en el navegador que entrenan tu ojo para el color y el contraste accesible. Juega en el teléfono o en la computadora.'),
     path: to('/games'),
     image: '/og/home.png',

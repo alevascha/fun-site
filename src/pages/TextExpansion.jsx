@@ -38,13 +38,13 @@ const localIssueName = (name, uiLang) => {
 const FIXES = {
   nav: 'Let nav items size to their content and wrap (flex-wrap), or move overflow into a “More” menu.',
   tab: 'Drop fixed tab widths; make the tab bar horizontally scrollable instead of squeezing labels.',
-  label: 'Don’t give labels a fixed width — stack the label above the field when space runs out.',
+  label: 'Don’t give labels a fixed width - stack the label above the field when space runs out.',
   button: 'Use min-width instead of width, and allow two-line labels (or shorter copy) on small screens.',
   badge: 'Pad badges instead of fixing their width.',
   heading: 'Let headings wrap; never put nowrap + overflow:hidden on content titles.',
   table: 'Let header cells wrap or use table-layout:auto; reserve truncation for user data with a tooltip.',
   toast: 'Allow the toast to wrap, and keep the action button from being squeezed.',
-  frame: 'Something has a fixed width larger than the container — look for width/min-width in px.',
+  frame: 'Something has a fixed width larger than the container - look for width/min-width in px.',
 };
 
 export default function TextExpansion() {
@@ -197,7 +197,7 @@ export default function TextExpansion() {
             <h2 className="eyebrow">{tr('What broke & how to fix it', 'Qué se rompió y cómo arreglarlo')}</h2>
             {issues.length === 0 ? (
               <p className="muted" style={{ margin: 0 }}>
-                {layout === 'resilient' ? tr('The resilient layout absorbs the longer text. 🎉', 'El diseño resistente absorbe el texto más largo. 🎉') : tr('Nothing is cut off at this width — try German, pseudo text or a narrower screen.', 'Nada se recorta con este ancho: prueba alemán, pseudotexto o una pantalla más angosta.')}
+                {layout === 'resilient' ? tr('The resilient layout absorbs the longer text. 🎉', 'El diseño resistente absorbe el texto más largo. 🎉') : tr('Nothing is cut off at this width - try German, pseudo text or a narrower screen.', 'Nada se recorta con este ancho: prueba alemán, pseudotexto o una pantalla más angosta.')}
               </p>
             ) : (
               <div className="check-list">

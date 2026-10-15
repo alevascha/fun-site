@@ -54,7 +54,7 @@ export const GUIDES = [
     "minutes": 5,
     "en": {
       "title": "Designing UI that survives translation",
-      "description": "How much text grows when translated, the CSS patterns that break, and the resilient alternatives — with pseudo-localization to catch problems early."
+      "description": "How much text grows when translated, the CSS patterns that break, and the resilient alternatives - with pseudo-localization to catch problems early."
     },
     "es": {
       "slug": "disenar-para-la-traduccion",

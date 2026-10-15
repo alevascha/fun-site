@@ -144,7 +144,7 @@ export function linearToSrgb(v) {
   return Math.round(c * 255);
 }
 
-// CIE L*a*b* (D65) — used for perceptual distance between colors.
+// CIE L*a*b* (D65) - used for perceptual distance between colors.
 export function rgbToLab(rgb) {
   const r = srgbToLinear(rgb.r), g = srgbToLinear(rgb.g), b = srgbToLinear(rgb.b);
   const x = (r * 0.4124 + g * 0.3576 + b * 0.1805) / 0.95047;

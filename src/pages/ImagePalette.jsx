@@ -82,7 +82,7 @@ export default function ImagePalette() {
 
   const handleFile = useCallback(file => {
     if (!file) return;
-    if (!file.type.startsWith('image/')) { setError(t('That doesn’t look like an image — try a PNG, JPG, WebP or GIF.', 'Eso no parece una imagen: prueba con un PNG, JPG, WebP o GIF.')); return; }
+    if (!file.type.startsWith('image/')) { setError(t('That doesn’t look like an image - try a PNG, JPG, WebP or GIF.', 'Eso no parece una imagen: prueba con un PNG, JPG, WebP o GIF.')); return; }
     setError('');
     const reader = new FileReader();
     reader.onload = () => { setSrc(reader.result); track('Image extracted', { source: 'upload' }); };
@@ -248,7 +248,7 @@ export default function ImagePalette() {
               <motion.div className="card" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: EASE, delay: 0.2 }}>
                 <h2 className="eyebrow">{t('Pairs that pass AA', 'Pares que pasan AA')} ({passingPairs.length})</h2>
                 {passingPairs.length === 0 ? (
-                  <p className="small muted">{t('No pair in this image reaches 4.5:1. Pair these colors with black or white text instead — see the ◻/◼ ratios above.', 'Ningún par de esta imagen llega a 4.5:1. Combina estos colores con texto negro o blanco; mira los ratios ◻/◼ de arriba.')}</p>
+                  <p className="small muted">{t('No pair in this image reaches 4.5:1. Pair these colors with black or white text instead - see the ◻/◼ ratios above.', 'Ningún par de esta imagen llega a 4.5:1. Combina estos colores con texto negro o blanco; mira los ratios ◻/◼ de arriba.')}</p>
                 ) : (
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 200px), 1fr))', gap: 10 }}>
                     {passingPairs.slice(0, 12).map(({ a, b, r }) => (
@@ -288,7 +288,7 @@ function FragmentRow({ row, colors }) {
               boxShadow: r >= 4.5 && !same ? 'inset 0 0 0 1.5px var(--pass)' : 'inset 0 0 0 1px var(--border)',
             }}
           >
-            {same ? '—' : formatRatio(r)}
+            {same ? '-' : formatRatio(r)}
           </span>
         );
       })}

@@ -78,7 +78,7 @@ export const SEO = {
     title: 'CSS Mesh Gradient Generator',
     description: 'Create linear, radial, conic and mesh gradients visually: drag color points, shuffle harmonious colors, add motion and copy the CSS.',
     features: [
-      'Mesh gradients built from layered radial gradients — no images needed',
+      'Mesh gradients built from layered radial gradients - no images needed',
       'Draggable color points and stops (mouse, touch or keyboard)',
       'Harmony-based color shuffle and presets',
       'Optional animated drift that respects reduced-motion preferences',
@@ -122,7 +122,7 @@ export const SEO = {
     features: [
       'Draggable cubic-bezier editor with presets (Material, back, anticipate…)',
       'Spring simulator with stiffness, damping and mass, settle time and overshoot',
-      'Springs exported as CSS linear() easing — no JavaScript required',
+      'Springs exported as CSS linear() easing - no JavaScript required',
       'Export to CSS, design tokens, Framer Motion and SwiftUI',
     ],
     faq: [
@@ -137,7 +137,7 @@ export const SEO = {
       'Bulk trimming of transparent or solid-color edges',
       'Adjustable alpha threshold, background tolerance and padding',
       'See exactly what was cropped before you download',
-      'Download one image or everything as a ZIP — nothing is uploaded',
+      'Download one image or everything as a ZIP - nothing is uploaded',
     ],
     faq: [
       { q: 'Are my images uploaded to a server?', a: 'No. Trimming happens on a canvas in your browser, so your files never leave your device.' },
@@ -168,7 +168,7 @@ export const SEO = {
       'Click an issue to highlight the element, with a suggested fix',
     ],
     faq: [
-      { q: 'Can automated tools find every accessibility issue?', a: 'No — automated checks catch roughly a third of real issues. Always test with a keyboard and a screen reader too.' },
+      { q: 'Can automated tools find every accessibility issue?', a: 'No - automated checks catch roughly a third of real issues. Always test with a keyboard and a screen reader too.' },
       { q: 'What is the minimum tap target size?', a: 'WCAG 2.2 AA (2.5.8) requires at least 24×24 CSS pixels; 44×44 is the enhanced AAA level and a comfortable size for touch.' },
     ],
   },
@@ -187,7 +187,7 @@ export const SEO = {
     ],
   },
   'mobile-preview': {
-    title: 'Mobile Website Preview — Test Any Site on iPhone, Android & iPad',
+    title: 'Mobile Website Preview - Test Any Site on iPhone, Android & iPad',
     description: 'See any website inside iPhone 16, iPhone SE, Pixel, Galaxy and iPad frames at real viewport sizes. Rotate to landscape or compare four devices side by side. Free.',
     features: [
       '7 devices at their real CSS viewport sizes, from iPhone SE to iPad Air',
@@ -202,7 +202,7 @@ export const SEO = {
     ],
   },
   'hue-hunt': {
-    title: 'Hue Hunt — Color Matching Game for Designers',
+    title: 'Hue Hunt - Color Matching Game for Designers',
     description: 'A free daily color game: match five colors by eye with hue, saturation and lightness sliders, scored by perceptual distance (ΔE). Share your result.',
     features: [
       'Daily challenge with the same five colors for everyone',
@@ -216,7 +216,7 @@ export const SEO = {
     ],
   },
   'pass-or-fail': {
-    title: 'Pass or Fail — WCAG Contrast Game',
+    title: 'Pass or Fail - WCAG Contrast Game',
     description: 'Test your eye for accessible color contrast: twenty timed rounds deciding whether text passes WCAG AA (4.5:1 normal, 3:1 large). Free, with explanations.',
     features: [
       'Pairs generated near the AA thresholds, never right on the line',
@@ -230,7 +230,7 @@ export const SEO = {
     ],
   },
   'optical-eye': {
-    title: 'Optical Eye — Layout Precision Game for Designers',
+    title: 'Optical Eye - Layout Precision Game for Designers',
     description: 'A free game that tests your eye for layout: center a play icon, even out padding, match spacing and size a circle against a square. Scored by pixel precision.',
     features: [
       'Seven layout flaws to fix with one slider each, no numbers',
@@ -244,7 +244,7 @@ export const SEO = {
     ],
   },
   'state-panic': {
-    title: 'State Panic — UI States Arcade Game',
+    title: 'State Panic - UI States Arcade Game',
     description: 'A fast arcade game about component states: pick hover, focus-visible, pressed, loading, error or disabled for each falling component before it hits the floor.',
     features: [
       'Six real UI states on buttons, inputs, toggles and cards',
@@ -258,7 +258,7 @@ export const SEO = {
     ],
   },
   'easing-golf': {
-    title: 'Easing Golf — Cubic-Bezier Animation Curve Game',
+    title: 'Easing Golf - Cubic-Bezier Animation Curve Game',
     description: 'Mini golf with animation curves: drag two cubic-bezier handles so the puck passes each flag at the right time, then putt. Six holes, par three each.',
     features: [
       'Six holes based on real easing curves, including overshoot and anticipation',
@@ -272,7 +272,7 @@ export const SEO = {
     ],
   },
   'contrast-survival': {
-    title: 'Contrast Survival — WCAG Contrast Reflex Game',
+    title: 'Contrast Survival - WCAG Contrast Reflex Game',
     description: 'The background keeps shifting color and lightness. Adjust the text lightness to keep passing WCAG AA (4.5:1), then AAA (7:1), and survive as long as you can.',
     features: [
       'Live WCAG contrast ratio while the background drifts',
@@ -286,7 +286,7 @@ export const SEO = {
     ],
   },
   'token-rush': {
-    title: 'Token Rush — Design Tokens Game',
+    title: 'Token Rush - Design Tokens Game',
     description: 'Replace hard-coded values in a component with the right semantic design tokens, against the clock. Then switch the theme and see what breaks.',
     features: [
       'Fourteen properties: color, spacing, radius and type',

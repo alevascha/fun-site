@@ -95,7 +95,7 @@ export function ColorField({ label, value, onChange, id: idProp, hideLabel = fal
       {label && <label className={hideLabel ? 'sr-only' : 'field-label'} htmlFor={id}>{label}</label>}
       <div className="color-field">
         <motion.div className="color-swatch" style={{ background: value }}>
-          <input type="color" aria-label={`${label || 'Color'} — picker`} value={value.toLowerCase()} onChange={e => onChange(e.target.value.toUpperCase())} />
+          <input type="color" aria-label={`${label || 'Color'} - picker`} value={value.toLowerCase()} onChange={e => onChange(e.target.value.toUpperCase())} />
         </motion.div>
         <input
           id={id}

@@ -3,7 +3,7 @@ import { contrastRatio } from './color';
 /* A small, honest accessibility linter. It runs against a rendered document
    (a sandboxed iframe with scripts disabled), so it can check real layout:
    tap-target sizes and text contrast, not just markup.
-   It catches common, mechanical problems — it is not a full WCAG audit. */
+   It catches common, mechanical problems - it is not a full WCAG audit. */
 
 const MAX_PER_RULE = 40;
 
@@ -144,7 +144,7 @@ export function audit(doc, lang = 'en') {
     if (isHidden(a)) return;
     const name = accessibleName(a);
     if (!a.hasAttribute('href')) {
-      if (a.getAttribute('role') !== 'button' && (a.getAttribute('onclick') || a.getAttribute('tabindex'))) add('link-href', 'warning', '2.1.1', L('Link without href — it can’t be reached by keyboard reliably.', 'Enlace sin href: no se puede alcanzar con el teclado de forma confiable.'), a, L('Use <button> for actions, or give the link a real href.', 'Usa <button> para acciones, o da al enlace un href real.'));
+      if (a.getAttribute('role') !== 'button' && (a.getAttribute('onclick') || a.getAttribute('tabindex'))) add('link-href', 'warning', '2.1.1', L('Link without href - it can’t be reached by keyboard reliably.', 'Enlace sin href: no se puede alcanzar con el teclado de forma confiable.'), a, L('Use <button> for actions, or give the link a real href.', 'Usa <button> para acciones, o da al enlace un href real.'));
       return;
     }
     if (!name) add('link-name', 'error', '2.4.4 · 4.1.2', L('Link has no accessible name.', 'El enlace no tiene nombre accesible.'), a, L('Add link text, or alt text to the image inside it.', 'Agrega texto al enlace, o texto alternativo a la imagen que contiene.'));
@@ -170,7 +170,7 @@ export function audit(doc, lang = 'en') {
   // Duplicate ids
   const seen = new Map();
   body.querySelectorAll('[id]').forEach(el => {
-    if (seen.has(el.id)) add('duplicate-id', 'warning', '4.1.1', L(`Duplicate id “${el.id}”.`, `id duplicado “${el.id}”.`), el, L('ids must be unique — labels and aria references break otherwise.', 'Los id deben ser únicos; si no, las etiquetas y referencias aria se rompen.'));
+    if (seen.has(el.id)) add('duplicate-id', 'warning', '4.1.1', L(`Duplicate id “${el.id}”.`, `id duplicado “${el.id}”.`), el, L('ids must be unique - labels and aria references break otherwise.', 'Los id deben ser únicos; si no, las etiquetas y referencias aria se rompen.'));
     else seen.set(el.id, el);
   });
   passed.add('Unique ids');
@@ -195,7 +195,7 @@ export function audit(doc, lang = 'en') {
     if (el.tagName === 'A' && win.getComputedStyle(el).display === 'inline' && textOf(el.parentElement).length > textOf(el).length + 3) return;
     const size = `${Math.round(r.width)}×${Math.round(r.height)}px`;
     if (r.width < 24 || r.height < 24) add('target-size', 'error', '2.5.8', L(`Tap target is only ${size}.`, `El objetivo táctil mide solo ${size}.`), el, L('Make it at least 24×24px (44×44 is better) with padding or min-height.', 'Hazlo de al menos 24×24px (mejor 44×44) con padding o min-height.'));
-    else if (r.width < 44 || r.height < 44) add('target-size-enhanced', 'notice', '2.5.5 (AAA)', L(`Tap target is ${size} — below the comfortable 44×44px.`, `El objetivo táctil mide ${size}, por debajo de los cómodos 44×44px.`), el, L('Consider 44×44px for touch, especially for primary actions.', 'Considera 44×44px para pantallas táctiles, sobre todo en acciones principales.'));
+    else if (r.width < 44 || r.height < 44) add('target-size-enhanced', 'notice', '2.5.5 (AAA)', L(`Tap target is ${size} - below the comfortable 44×44px.`, `El objetivo táctil mide ${size}, por debajo de los cómodos 44×44px.`), el, L('Consider 44×44px for touch, especially for primary actions.', 'Considera 44×44px para pantallas táctiles, sobre todo en acciones principales.'));
   });
   passed.add('Tap target size');
 
@@ -218,7 +218,7 @@ export function audit(doc, lang = 'en') {
     const large = px >= 24 || (px >= 18.66 && Number(cs.fontWeight) >= 700);
     const need = large ? 3 : 4.5;
     const disabled = el.closest('[disabled], [aria-disabled="true"]');
-    if (ratio < need && !disabled) add('contrast', 'error', '1.4.3', L(`Text contrast is ${ratio.toFixed(2)}:1 (needs ${need}:1).`, `El contraste del texto es ${ratio.toFixed(2)}:1 (requiere ${need}:1).`), el, L('Darken the text or lighten the background — try the Contrast Checker in the lab.', 'Oscurece el texto o aclara el fondo; prueba el Verificador de contraste del lab.'));
+    if (ratio < need && !disabled) add('contrast', 'error', '1.4.3', L(`Text contrast is ${ratio.toFixed(2)}:1 (needs ${need}:1).`, `El contraste del texto es ${ratio.toFixed(2)}:1 (requiere ${need}:1).`), el, L('Darken the text or lighten the background - try the Contrast Checker in the lab.', 'Oscurece el texto o aclara el fondo; prueba el Verificador de contraste del lab.'));
   }
   passed.add('Text contrast');
 

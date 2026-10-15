@@ -1,7 +1,7 @@
 /* Fonts are loaded from <link> tags in index.html (faster than @import). */
 
 /* =========================================================================
-   Tokens — mirrored from alevasquez.dev (warm charcoal, Crimson Pro display,
+   Tokens - mirrored from alevasquez.dev (warm charcoal, Crimson Pro display,
    Inter body, big radii, dark gradient pills, purple → yellow accent).
    Dark is the default; [data-theme="light"] is set by the theme toggle.
    ========================================================================= */
@@ -1332,7 +1332,7 @@ button.suggest-note:hover { transform: translateY(-1px); background: rgba(255, 1
     linear-gradient(-45deg, transparent 75%, #333230 75%);
 }
 
-/* Prerendered shell (scripts/meta.js) — shown until React mounts. */
+/* Prerendered shell (scripts/meta.js) - shown until React mounts. */
 .seo-static h2, .seo-links + h2 { font-size: clamp(26px, 3vw, 34px); margin: 32px 0 12px; }
 .seo-static h3 { font-family: var(--font-body); font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin: 18px 0 6px; }
 .seo-static p, .seo-static li, .seo-links li { color: var(--muted); line-height: 1.6; }

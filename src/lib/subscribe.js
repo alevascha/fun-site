@@ -39,7 +39,7 @@ export async function subscribe({ provider, target, email, lang, list, source, k
     }
     case 'brevo':
       body.append('EMAIL', email);
-      body.append('email_address_check', ''); // Brevo honeypot — must stay empty
+      body.append('email_address_check', ''); // Brevo honeypot - must stay empty
       body.append('locale', lang);
       return fetch(target, { method: 'POST', body, mode: 'no-cors' });
     default:

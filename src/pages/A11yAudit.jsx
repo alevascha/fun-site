@@ -122,7 +122,7 @@ export default function A11yAudit() {
                   <span className="badge badge-neutral" style={SEVERITY.warning.style}>{count('warning')} {t('warnings', 'advertencias')}</span>
                   <span className="badge badge-neutral">{count('notice')} {t('notices', 'avisos')}</span>
                 </div>
-                <p className="small muted" style={{ margin: 0 }}>{t('Automated checks catch roughly a third of real issues — still test with a keyboard and a screen reader.', 'Las verificaciones automáticas detectan cerca de un tercio de los problemas reales: prueba también con teclado y lector de pantalla.')}</p>
+                <p className="small muted" style={{ margin: 0 }}>{t('Automated checks catch roughly a third of real issues - still test with a keyboard and a screen reader.', 'Las verificaciones automáticas detectan cerca de un tercio de los problemas reales: prueba también con teclado y lector de pantalla.')}</p>
               </div>
             </div>
           </Reveal>
