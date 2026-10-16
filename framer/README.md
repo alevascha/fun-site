@@ -33,7 +33,7 @@ Edit `ga-deferred.html` or `loader-head.html`, commit, then paste the whole file
 
 - **Nothing loads before the first paint.** Third-party scripts go after load (see `ga-deferred.html`: it waits until the page is idle or a real tap, wheel or key press).
 - **Image Resolution stays on Auto** for project and card images: lower settings blur them on retina screens. Framer already serves AVIF.
-- **Logos and icons that are black or white** are vectors with the **Text** color style as fill, so they flip with light/dark mode (see `assets/`: the Cypress and Maestro logos). Don't use black PNG/SVG images for them.
+- **Logos and icons that are black or white** are vectors with the **Text** color style as fill, so they flip with light/dark mode (see `assets/`: the Cypress and Maestro logos). Don't use black PNG/SVG images for them. If one stays dark in dark mode although the panel says **Text**, it holds a stale link to the style: pick another color style, then **Text** again, on every sub-group of the vector (the footer's Figma icon had this).
 - **Animations stay.** The motion layer pauses them off screen and in background tabs instead of removing them.
 - After publishing anything structural, check mobile scores: `npm run perf` (or PageSpeed Insights, twice; runs vary).
 
@@ -41,7 +41,7 @@ Edit `ga-deferred.html` or `loader-head.html`, commit, then paste the whole file
 
 | Path | What it is |
 | --- | --- |
-| `assets/` | Source SVGs of tool logos made theme-safe (imported into Framer as vectors) |
+| `assets/` | Source SVGs of tool logos and footer icons made theme-safe (imported into Framer as vectors) |
 | `logo/` | AV logo and favicons |
 | `og/` | Open Graph images per page (`node scripts/og-portfolio.mjs`) |
 | `linkedin/` | LinkedIn banner (`node scripts/linkedin-banner.mjs`) |
