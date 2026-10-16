@@ -24,8 +24,8 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
       // Lite mode (weak devices): half the particles.
       const n = Math.min(isLite() ? Math.round(max / 2) : max, Math.round((w * h) / (isLite() ? density * 2 : density)));
       particles = Array.from({ length: n }, () => {
-        const c = COLORS[Math.floor(Math.random() * COLORS.length)];
-        return spawn({ r: 1 + Math.random() * 1.8, c, phase: Math.random() * Math.PI * 2 }, true);
+        const ci = Math.floor(Math.random() * COLORS.length);
+        return spawn({ r: 1 + Math.random() * 1.8, c: COLORS[ci], ci, phase: Math.random() * Math.PI * 2 }, true);
       });
     }
 
@@ -77,8 +77,16 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
       }
     }
 
+    // Links are batched by color and by one of LEVELS opacity steps: one
+    // stroke() per batch instead of one per line (hundreds), which keeps each
+    // frame short on slow CPUs. The steps are fine enough to look the same.
+    const LEVELS = 8;
+    const STYLES = COLORS.map(c => Array.from({ length: LEVELS }, (_, k) => `rgba(${c[0]},${c[1]},${c[2]},${((k + 0.5) / LEVELS) * 0.35})`));
+    const batches = COLORS.map(() => Array.from({ length: LEVELS }, () => []));
+
     function draw() {
       ctx.clearRect(0, 0, w, h);
+      ctx.lineWidth = 0.8;
       const link = 110;
       for (let i = 0; i < particles.length; i++) {
         const a = particles[i], la = alive(a);
@@ -88,10 +96,8 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
           const dx = a.x - b.x, dy = a.y - b.y;
           const d2 = dx * dx + dy * dy;
           if (d2 < link * link) {
-            const alpha = (1 - Math.sqrt(d2) / link) * 0.35 * la * alive(b);
-            ctx.strokeStyle = `rgba(${a.c[0]},${a.c[1]},${a.c[2]},${alpha})`;
-            ctx.lineWidth = 0.8;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            const k = Math.floor((1 - Math.sqrt(d2) / link) * la * alive(b) * LEVELS);
+            if (k > 0) batches[a.ci][Math.min(LEVELS - 1, k)].push(a.x, a.y, b.x, b.y);
           }
         }
         if (mouse.active && !touch) {
@@ -100,6 +106,17 @@ export default function ParticleField({ className, density = 9000, max = 150 }) 
             ctx.strokeStyle = `rgba(${a.c[0]},${a.c[1]},${a.c[2]},${(1 - d / 180) * 0.6 * la})`;
             ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
           }
+        }
+      }
+      for (let ci = 0; ci < batches.length; ci++) {
+        for (let k = 1; k < LEVELS; k++) {
+          const seg = batches[ci][k];
+          if (!seg.length) continue;
+          ctx.strokeStyle = STYLES[ci][k];
+          ctx.beginPath();
+          for (let q = 0; q < seg.length; q += 4) { ctx.moveTo(seg[q], seg[q + 1]); ctx.lineTo(seg[q + 2], seg[q + 3]); }
+          ctx.stroke();
+          seg.length = 0;
         }
       }
       for (const p of particles) {

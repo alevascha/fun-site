@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion, useMotionValue, useScroll, useSpring, useTransform, useVelocity } from 'framer-motion';
-import { useMemo, useRef, useState } from 'react';
+import { startTransition, useEffect, useMemo, useRef, useState } from 'react';
 import { experiments, HOME_META, HOME_META_ES } from '../experiments';
 import { useLang } from '../i18n';
 import { GUIDES } from '../guides';
@@ -118,6 +118,11 @@ export default function Home() {
   const [filter, setFilter] = useState('All');
   // Computed once per visit, so badges don't vanish mid-session.
   const [freshIds] = useState(() => new Set(experiments.filter(e => isNew(e)).map(e => e.id)));
+  // First render: the hero only. Everything below the fold (cards, guides,
+  // footer) follows as a transition, which React renders in small slices
+  // instead of one long task while the page boots.
+  const [full, setFull] = useState(false);
+  useEffect(() => { startTransition(() => setFull(true)); }, []);
 
   const active = experiments.filter(e => e.active);
   const categories = useMemo(() => ['All', ...new Set(active.map(e => e.category))], [active]);
@@ -125,8 +130,26 @@ export default function Home() {
 
   // Framer-style scroll choreography: the hero card shrinks and fades as it
   // leaves, while its orb rises; the section title drifts in from the side.
+  // Progress runs from the hero's top reaching the top of the viewport (0)
+  // to its bottom leaving it (1). Worked out from the page scroll and the
+  // hero's box (measured whenever its size changes), not with
+  // useScroll({ target }), whose native ViewTimeline forces a layout of the
+  // whole page while it boots.
   const heroRef = useRef(null);
-  const { scrollYProgress: heroProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroBox = useRef({ top: 0, height: 1 });
+  const { scrollY } = useScroll();
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      let top = 0;
+      for (let n = el; n; n = n.offsetParent) top += n.offsetTop;
+      heroBox.current = { top, height: Math.max(1, el.offsetHeight) };
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const heroProgress = useTransform(scrollY, y => Math.min(1, Math.max(0, (y - heroBox.current.top) / heroBox.current.height)));
   const heroScale = useTransform(heroProgress, [0, 1], [1, 0.9]);
   const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0.2]);
   const heroContentY = useTransform(heroProgress, [0, 1], [0, 120]);
@@ -138,7 +161,6 @@ export default function Home() {
   const titleX = useTransform(sectionProgress, [0, 1], [80, 0]);
 
   // The grid leans with scroll velocity, then settles.
-  const { scrollY } = useScroll();
   const gridSkew = useSpring(useTransform(useVelocity(scrollY), [-2500, 0, 2500], [2.5, 0, -2.5]), { stiffness: 300, damping: 40 });
 
   return (
@@ -225,11 +247,12 @@ export default function Home() {
 
           <motion.div layout className="card-grid" style={{ skewY: gridSkew }}>
             <AnimatePresence mode="popLayout">
-              {shown.map((exp, i) => <ExpCard key={exp.id} exp={exp} index={i} fresh={freshIds.has(exp.id)} />)}
+              {full && shown.map((exp, i) => <ExpCard key={exp.id} exp={exp} index={i} fresh={freshIds.has(exp.id)} />)}
             </AnimatePresence>
           </motion.div>
         </section>
 
+        {full && <>
         <section aria-label={t('Guides', 'Guías')} style={{ marginTop: 'clamp(48px, 8vw, 96px)' }}>
           <Reveal className="hub-section-head">
             <SplitText key={lang} as="h2" className="hub-section-title" text={t('Guides', 'Guías')} inView stagger={0.03} />
@@ -272,9 +295,10 @@ export default function Home() {
             </motion.a>
           </Magnetic>
         </Reveal>
+        </>}
         </main>
 
-        <SiteFooter />
+        {full && <SiteFooter />}
       </div>
     </div>
   );
