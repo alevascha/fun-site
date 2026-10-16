@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import path from 'node:path';
 import { getPageMeta, getSeo, SITE } from '../src/experiments.js';
 import { STATIC_PAGES, STATIC_PAGES_ES } from '../src/pages-content.js';
@@ -76,6 +77,7 @@ export default function pagesPlugin() {
         if (src && manifest[src]) walk(src);
         return { js: [...basePreloads, ...[...js].map(f => `/${f}`).filter(f => !basePreloads.includes(f))], css: [...css].map(f => `/${f}`) };
       };
+      const cssCache = new Map();
       const pascal = id => id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
       const render = (meta, body, ld, opts, src) => {
         const out = injectBody(injectMeta(html, meta, opts), body, ld);
@@ -85,7 +87,20 @@ export default function pagesPlugin() {
         // largest paint worse, since each tool's main UI only exists once the
         // app renders.
         const { js, css } = routeAssets(src);
-        const tags = [`<script type="module" crossorigin src="${entryTag[1]}"></script>`, ...js.map(f => `<link rel="modulepreload" crossorigin href="${f}">`), ...css.map(f => `<link rel="preload" as="style" crossorigin href="${f}">`)].join('\n    ');
+        // Small route CSS (under 2 KB, e.g. Lenis' few rules) goes inline: a
+        // separate high-priority request before the first paint costs a round
+        // trip on slow connections. Larger files keep their preload.
+        const inline = [], preload = [];
+        for (const f of css) {
+          const text = cssCache.get(f) ?? cssCache.set(f, fsSync.readFileSync(path.join(outDir, f), 'utf8')).get(f);
+          (text.length < 2048 ? inline : preload).push(text.length < 2048 ? text : f);
+        }
+        const tags = [
+          ...(inline.length ? [`<style>${inline.join('')}</style>`] : []),
+          `<script type="module" crossorigin src="${entryTag[1]}"></script>`,
+          ...js.map(f => `<link rel="modulepreload" crossorigin href="${f}">`),
+          ...preload.map(f => `<link rel="preload" as="style" crossorigin href="${f}">`),
+        ].join('\n    ');
         return out.replace('</head>', `    ${tags}\n  </head>`);
       };
 
