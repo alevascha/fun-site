@@ -33,6 +33,8 @@ Edit `ga-deferred.html` or `loader-head.html`, commit, then paste the whole file
 
 - **Nothing loads before the first paint.** Third-party scripts go after load (see `ga-deferred.html`: it waits until the page is idle or a real tap, wheel or key press).
 - **Image Resolution stays on Auto** for project and card images: lower settings blur them on retina screens. Framer already serves AVIF.
+- **Images below the fold must be lazy.** Framer lazy-loads them by itself, except inside components where a variable controls visibility (Framer's own documented exception). Those get the **LazyImage** code override (`LazyImage.tsx`, Framer → Assets → Code): select the image layers → Code overrides → File `LazyImage`, Override `withLazyImage`. It's on the project **Card** images (1, 2) and the **Babarogic Animation** banner images. Without it every card image downloaded up front, even on phones where they're hidden (about 1.2 MB; mobile LCP went from 6.9 s to 4.8 s). Check with: `curl -s https://www.alevasquez.dev/ | grep -o 'loading="lazy"' | wc -l` (17 on the home). Never use it on the hero.
+- **Canvas animations draw in batches** (`framer-fx.js`: orbit and particles): one path per colour and opacity step, not one `stroke()`/`fill()` per line or dot, and the boot (`enhance()`) yields between steps with `breathe()`. Keep both when adding effects, or each frame becomes a long task and Total Blocking Time goes up.
 - **Logos and icons that are black or white** are vectors with the **Text** color style as fill, so they flip with light/dark mode (see `assets/`: the Cypress and Maestro logos). Don't use black PNG/SVG images for them. If one stays dark in dark mode although the panel says **Text**, it holds a stale link to the style: pick another color style, then **Text** again, on every sub-group of the vector (the footer's Figma icon had this).
 - **Animations stay.** The motion layer pauses them off screen and in background tabs instead of removing them.
 - After publishing anything structural, check mobile scores: `npm run perf` (or PageSpeed Insights, twice; runs vary).
@@ -48,3 +50,4 @@ Edit `ga-deferred.html` or `loader-head.html`, commit, then paste the whole file
 | `portfolio-images/`, `about-photos/`, `ale-profile-800.jpg` | Image sources uploaded to Framer |
 | `tokens/` | Per-project brand tokens (fonts, colors, radii) used by the `DesignSystemShowcase` component |
 | `DesignSystemShowcase.tsx`, `Switcher.tsx` | Framer code components (paste into Framer's code editor) |
+| `LazyImage.tsx` | Code override `withLazyImage` (Framer → Assets → Code → LazyImage), see the lazy images rule above |

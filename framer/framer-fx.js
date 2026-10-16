@@ -600,30 +600,55 @@
     };
     // Phones fade the bottom out here instead of a CSS mask on a live canvas.
     const fade = y => (coarse ? Math.max(0, Math.min(1, (0.85 - y / h) / 0.4)) : 1);
+    // Batched like the orbit: one path per colour and opacity step, so a frame
+    // is a few dozen canvas calls instead of hundreds.
+    const STEPS = 24;
+    const add = (map, c, alpha) => {
+      const step = Math.round(Math.min(1, alpha) * STEPS);
+      if (!step) return null;
+      const key = COLORS.indexOf(c) * 64 + step;
+      let path = map.get(key);
+      if (!path) map.set(key, path = new Path2D());
+      return path;
+    };
+    const paint = (map, max, stroke) => {
+      for (const [key, path] of map) {
+        const style = `rgba(${COLORS[key >> 6]},${(key & 63) / STEPS * max})`;
+        if (stroke) { ctx.strokeStyle = style; ctx.stroke(path); } else { ctx.fillStyle = style; ctx.fill(path); }
+      }
+    };
     function draw() {
       ctx.clearRect(0, 0, w, h);
+      const lines = new Map(), pointer = new Map(), dots = new Map();
       for (let i = 0; i < list.length; i++) {
         const a = list[i], fa = fade(a.y) * alive(a);
         if (!fa) continue;
         for (let j = i + 1; j < list.length; j++) {
           const b = list[j], dx = a.x - b.x, dy = a.y - b.y, d2 = dx * dx + dy * dy;
           if (d2 < 12100) {
-            ctx.strokeStyle = `rgba(${a.c},${(1 - Math.sqrt(d2) / 110) * 0.35 * fa * alive(b)})`;
-            ctx.lineWidth = 0.8; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+            const path = add(lines, a.c, (1 - Math.sqrt(d2) / 110) * fa * alive(b));
+            if (path) { path.moveTo(a.x, a.y); path.lineTo(b.x, b.y); }
           }
         }
         if (local.on && !coarse) {
           const d = Math.hypot(a.x - local.x, a.y - local.y);
-          if (d < 180) { ctx.strokeStyle = `rgba(${a.c},${(1 - d / 180) * 0.6 * fa})`; ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(local.x, local.y); ctx.stroke(); }
+          const path = d < 180 && add(pointer, a.c, (1 - d / 180) * fa);
+          if (path) { path.moveTo(a.x, a.y); path.lineTo(local.x, local.y); }
         }
       }
+      ctx.lineWidth = 0.8;
+      paint(lines, 0.35, true);
+      paint(pointer, 0.6, true);
       for (const p of list) {
         const pulse = 0.6 + Math.sin(t * 6 + p.p) * 0.4;
         const fp = fade(p.y) * alive(p);
         if (!fp) continue;
-        ctx.fillStyle = `rgba(${p.c},${(0.55 + pulse * 0.4) * fp})`;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.r * (0.8 + pulse * 0.4), 0, 6.283); ctx.fill();
+        const path = add(dots, p.c, (0.55 + pulse * 0.4) * fp);
+        if (!path) continue;
+        const r = p.r * (0.8 + pulse * 0.4);
+        path.moveTo(p.x + r, p.y); path.arc(p.x, p.y, r, 0, 6.283);
       }
+      paint(dots, 1, false);
     }
     // 60 fps; if a phone can't keep up (frames > 22 ms on average), draw every
     // other frame and step twice, so the motion keeps its speed.
@@ -680,13 +705,14 @@
         sx: Math.cos(th) * rr, sy: y, sz: Math.sin(th) * rr,
         cx: Math.sin(c) * Math.cos(s) * 2.6, cy: Math.cos(c) * 2.6, cz: Math.sin(c) * Math.sin(s) * 2.6, // intro cloud
         gx: 0, gz: 0,
-        col: COLORS[i % 7 === 0 ? 2 : i % 5 === 0 ? 3 : i % 3 === 0 ? 1 : 0],
+        ci: i % 7 === 0 ? 2 : i % 5 === 0 ? 3 : i % 3 === 0 ? 1 : 0, // index into COLORS
         chip: i % 11 === 0, d: Math.random() * 500, bx: 0, by: 0,
       };
     });
     const cols = Math.ceil(Math.sqrt(N));
     pts.forEach((p, i) => { p.gx = ((i % cols) / (cols - 1) - 0.5) * 2.6; p.gz = (Math.floor(i / cols) / (cols - 1) - 0.5) * 2.6; });
     const NEAR = [8, 13, 21, 34], LINK = 1.7 * Math.sqrt(4 * Math.PI / N);
+    const LINE_STEPS = 10, DOT_STEPS = 24; // opacity steps for the batched drawing
     let size = 0, R = 0, raf = 0, running = false, visible = true;
     let rotY = 0, tiltX = 0.25, tiltY = 0, morph = 0;
     let born = performance.now();
@@ -751,9 +777,14 @@
         const depth = Math.max(0, Math.min(1, 0.5 - z2 / (2 * R))); // 1 front, 0 back
         proj[i] = { x: px, y: py, s, a: (0.18 + depth * 0.82) * Math.min(1, k * 1.5), x3: x, y3: y, z3: z };
       }
+      // Drawn in batches: one path per colour and opacity step instead of one
+      // stroke/fill per line and dot (~60 canvas calls a frame instead of
+      // ~1,700, which took 50+ ms a frame and showed up as long tasks).
+      // Opacity is rounded to small steps nobody can tell apart.
       // Lattice lines between near neighbours (Fibonacci offsets).
       ctx.lineWidth = 0.7;
       const lim = LINK * R * (1 + m * 0.4);
+      const lines = new Map();
       for (let i = 0; i < N; i++) {
         const a = proj[i];
         for (const o of NEAR) {
@@ -761,20 +792,37 @@
           if (!b) continue;
           const d = Math.hypot(a.x3 - b.x3, a.y3 - b.y3, a.z3 - b.z3);
           if (d > lim) continue;
-          ctx.strokeStyle = `rgba(${pts[i].col},${(1 - d / lim) * 0.28 * Math.min(a.a, b.a)})`;
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          const step = Math.round((1 - d / lim) * Math.min(a.a, b.a) * LINE_STEPS);
+          if (!step) continue;
+          const key = pts[i].ci * 64 + step;
+          let path = lines.get(key);
+          if (!path) lines.set(key, path = new Path2D());
+          path.moveTo(a.x, a.y); path.lineTo(b.x, b.y);
         }
       }
+      for (const [key, path] of lines) {
+        ctx.strokeStyle = `rgba(${COLORS[key >> 6]},${(key & 63) / LINE_STEPS * 0.28})`;
+        ctx.stroke(path);
+      }
       // Tokens: dots, and every 11th one a small rounded "chip".
+      const dots = new Map();
       for (let i = 0; i < N; i++) {
         const p = pts[i], q = proj[i], z = q.s;
-        ctx.fillStyle = `rgba(${p.col},${q.a})`;
+        const step = Math.round(q.a * DOT_STEPS);
+        if (!step) continue;
+        const key = p.ci * 64 + step;
+        let path = dots.get(key);
+        if (!path) dots.set(key, path = new Path2D());
         if (p.chip) {
           const w = 9 * z, hh = 5.5 * z;
-          ctx.beginPath(); ctx.roundRect ? ctx.roundRect(q.x - w / 2, q.y - hh / 2, w, hh, 2.5 * z) : ctx.rect(q.x - w / 2, q.y - hh / 2, w, hh); ctx.fill();
+          if (path.roundRect) path.roundRect(q.x - w / 2, q.y - hh / 2, w, hh, 2.5 * z); else path.rect(q.x - w / 2, q.y - hh / 2, w, hh);
         } else {
-          ctx.beginPath(); ctx.arc(q.x, q.y, 1.7 * z, 0, 6.283); ctx.fill();
+          path.moveTo(q.x + 1.7 * z, q.y); path.arc(q.x, q.y, 1.7 * z, 0, 6.283);
         }
+      }
+      for (const [key, path] of dots) {
+        ctx.fillStyle = `rgba(${COLORS[key >> 6]},${(key & 63) / DOT_STEPS})`;
+        ctx.fill(path);
       }
     }
     const loop = now => { raf = requestAnimationFrame(loop); draw(now); };
@@ -1134,7 +1182,21 @@
   /* -------------------------------------------------------- enhance */  /* -------------------------------------------------------- enhance */
   // Runs after Framer hydrates and again whenever it swaps DOM (client-side
   // navigation, breakpoint changes). Every step is idempotent.
+  // The steps are separated by breathe(), which hands the main thread back to
+  // the browser for a moment, so the boot never becomes one long task (that
+  // was ~325 ms of Total Blocking Time on a phone). Same effects, same order;
+  // they just finish a few milliseconds apart. One pass runs at a time; a
+  // request that arrives during a pass runs once more after it.
+  const breathe = () => (window.scheduler?.yield ? window.scheduler.yield() : new Promise(r => setTimeout(r, 0)));
+  let enhancing = null, enhanceAgain = false;
   function enhance() {
+    if (enhancing) { enhanceAgain = true; return; }
+    enhancing = runEnhance().catch(() => {}).finally(() => {
+      enhancing = null;
+      if (enhanceAgain) { enhanceAgain = false; enhance(); }
+    });
+  }
+  async function runEnhance() {
     document.querySelectorAll('[data-framer-name="Gradient Blur"]').forEach(pauseOffscreen);
     const main = document.getElementById('main') || document.body;
 
@@ -1161,6 +1223,7 @@
       if (!reduce) reactive.add(chars);
       whenShown(() => requestAnimationFrame(() => requestAnimationFrame(() => h.classList.add('avfx-in'))));
     });
+    await breathe();
 
     // 404 page: the big number gets the brand gradient and reactive letters.
     main.querySelectorAll('h1, h2, p').forEach(el => {
@@ -1171,24 +1234,32 @@
       requestAnimationFrame(() => requestAnimationFrame(() => el.classList.add('avfx-in')));
     });
 
-    // Section headings: words rise in on scroll.
-    main.querySelectorAll('h2').forEach(h => {
-      if (h.dataset.avfx || !h.offsetParent || h.textContent.length > 120) return;
+    await breathe();
+
+    // Section headings: words rise in on scroll (a few per step).
+    let split = 0;
+    for (const h of main.querySelectorAll('h2')) {
+      if (h.dataset.avfx || !h.offsetParent || h.textContent.length > 120) continue;
       h.dataset.avfx = '1';
-      if (reduce) return;
+      if (reduce) continue;
       splitWords(h);
       revealIO.observe(h);
-    });
+      if (++split % 4 === 0) await breathe();
+    }
+    await breathe();
 
     // Hero particles inside the rounded hero panel.
     const hero = main.querySelector('[data-framer-name="Hero Section"] > [data-framer-name="Wrapper"]');
     if (hero) particles(hero);
+    await breathe();
     // 3D token orbit around the hero's gradient ball.
     const ball = main.querySelector('[data-framer-name="Hero Section"] [data-framer-name="Ball"]');
     if (ball && ball.offsetWidth) orbit(ball);
+    await breathe();
     // Same constellation behind the contact panel.
     const contactPanel = main.querySelector('[data-framer-name="Contact panel"]');
     if (contactPanel) particles(contactPanel);
+    await breathe();
 
     // Cards: project cards, testimonials and any big rounded opaque panel.
     // The /projects page lists the same card component outside a "Project Cards"
@@ -1225,6 +1296,7 @@
         el.parentElement.style.perspective = '1200px';
       }
     });
+    await breathe();
 
     // Closing "Ready to connect" banner: Framer swaps its gray fill for a red
     // gradient on hover, but can't animate one gradient into another, so it
@@ -1236,6 +1308,7 @@
       offscreenIO.observe(el);
       if (getComputedStyle(el).position === 'static') el.style.position = 'relative';
     });
+    await breathe();
 
     // Magnetic buttons, nav logo, social links; springy tool icons.
     main.querySelectorAll('a[data-framer-name^="Primary"], a[data-framer-name="Logo"], [data-framer-name="social-media"] a, [data-framer-name="category"]').forEach(el => magnetic(el, 0.3));
@@ -1246,6 +1319,7 @@
     main.querySelectorAll('[aria-hidden="true"] :is(a[href], button, input, select, textarea, [tabindex])').forEach(el => {
       if (el.tabIndex >= 0) el.tabIndex = -1;
     });
+    await breathe();
 
     // Scroll parallax for large images in clipped frames.
     if (!reduce) main.querySelectorAll('img').forEach(img => {
@@ -1256,6 +1330,7 @@
       img.style.scale = '1.12';
       parallax.add(img);
     });
+    await breathe();
 
     // Case studies: scroll-scrubbed reveals on the big rounded images.
     if (!reduce && /^\/projects\/[^/]+/.test(location.pathname)) {
@@ -1269,6 +1344,7 @@
         scrubbed.add(img);
       });
       scrubRun();
+      await breathe();
     }
 
     // About page: the portrait tilts toward the cursor with a brand-gradient
@@ -1310,6 +1386,7 @@
         el.style.setProperty('--d', Math.min(sibs.indexOf(el), 4) * 90);
         revealIO.observe(el);
       });
+      await breathe();
       aboutColor(main);
     }
   }
