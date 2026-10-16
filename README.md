@@ -27,6 +27,7 @@ npm run perf      # PageSpeed-style mobile scores for the pages in scripts/perf-
 | About, Privacy, Terms, Refunds pages | `src/pages-content.js` |
 | The Pro page (plugins, prices, FAQ) | `src/pro-content.js` |
 | What's new (also the RSS feed) | `src/changelog.js` |
+| Footer links (both the app and the prerendered HTML) | `src/footer-links.js` |
 | Site name, analytics, newsletter, ads | `SITE` at the top of `src/experiments.js` |
 | Colors, radii, fonts, spacing for the whole site | tokens in `:root` (dark) and `:root[data-theme='light']` at the top of `src/index.css` |
 | Shared UI pieces (buttons, segmented control, cards, reveal) | `src/components/ui.jsx` |
