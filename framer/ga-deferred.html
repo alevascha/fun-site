@@ -4,7 +4,8 @@
      page has finished loading and the browser is idle, or right away on the
      first tap, wheel or key press, so nothing is lost. Not on "scroll": Lenis
      and the motion layer fire scroll events while the page boots, which
-     loaded gtag.js before the largest paint. Page views on Framer's
+     loaded gtag.js before the largest paint; and only trusted (real) input,
+     since Framer dispatches a synthetic pointerdown while it boots. Page views on Framer's
      client-side navigation are tracked by GA4's enhanced measurement
      ("Page changes based on browser history events", on by default). -->
 <script>
@@ -26,6 +27,10 @@
   function idle() { 'requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 4000 }) : setTimeout(load, 2500); }
   function afterLoad() { setTimeout(idle, 3000); }
   if (document.readyState === 'complete') afterLoad(); else addEventListener('load', afterLoad, { once: true });
-  ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(function (e) { addEventListener(e, load, { once: true, passive: true }); });
+  // Only real input counts: Framer's own script dispatches a synthetic
+  // pointerdown while it boots (isTrusted is false for those).
+  var INPUTS = ['pointerdown', 'keydown', 'wheel', 'touchstart'];
+  function onInput(e) { if (!e.isTrusted) return; INPUTS.forEach(function (t) { removeEventListener(t, onInput, true); }); load(); }
+  INPUTS.forEach(function (t) { addEventListener(t, onInput, { capture: true, passive: true }); });
 })();
 </script>
