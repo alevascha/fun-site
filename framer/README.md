@@ -46,5 +46,5 @@ Edit `ga-deferred.html` or `loader-head.html`, commit, then paste the whole file
 | `og/` | Open Graph images per page (`node scripts/og-portfolio.mjs`) |
 | `linkedin/` | LinkedIn banner (`node scripts/linkedin-banner.mjs`) |
 | `portfolio-images/`, `about-photos/`, `ale-profile-800.jpg` | Image sources uploaded to Framer |
-| `tokens/` | Per-project brand tokens (fonts, colors, radii) shown by the `DesignSystemShowcase` component on project pages |
+| `tokens/` | Per-project brand tokens (fonts, colors, radii) used by the `DesignSystemShowcase` component |
 | `DesignSystemShowcase.tsx`, `Switcher.tsx` | Framer code components (paste into Framer's code editor) |
