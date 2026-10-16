@@ -1,0 +1,18 @@
+{
+  "runs": 3,
+  "target": 90,
+  "pages": [
+    "https://fun.alevasquez.dev/",
+    "https://fun.alevasquez.dev/es",
+    "https://fun.alevasquez.dev/contrast-checker",
+    "https://fun.alevasquez.dev/guides/design-for-translation",
+    "https://fun.alevasquez.dev/games",
+    "https://fun.alevasquez.dev/hue-hunt",
+    "https://fun.alevasquez.dev/pro",
+    "https://www.alevasquez.dev/",
+    "https://www.alevasquez.dev/projects",
+    "https://www.alevasquez.dev/projects/mystrengthbook",
+    "https://www.alevasquez.dev/about",
+    "https://www.alevasquez.dev/contact"
+  ]
+}

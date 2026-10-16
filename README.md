@@ -1,54 +1,74 @@
-# Ale's Fun Lab — fun.alevasquez.dev
+# Ale's Fun Lab · fun.alevasquez.dev
 
-A playground of small design-engineering tools by Alejandro Vasquez. React 19 + Vite + Framer Motion, styled after [alevasquez.dev](https://www.alevasquez.dev/), deployed on Netlify.
+Free design and accessibility tools, games and guides by Alejandro Vasquez. React 19 + Vite + Framer Motion, in English and Spanish, published on GitHub Pages.
 
-## Experiments
+This repo also holds the code layer of the portfolio (www.alevasquez.dev, built in Framer): see [framer/README.md](framer/README.md).
 
-| Route | What it does |
+## Everyday commands
+
+```bash
+npm run dev       # local site at http://localhost:5173
+npm run build     # OG images + production build into dist/ (what gets published)
+npm run preview   # serve dist/ at http://localhost:4173 to check the real build
+npm run lint      # oxlint
+npm run perf      # PageSpeed-style mobile scores for the pages in scripts/perf-pages.json
+```
+
+**Publishing:** every push to `main` builds and publishes the site (GitHub Actions → GitHub Pages, `.github/workflows/deploy-ghpages.yml`, about 2 minutes). There is nothing to deploy by hand. `netlify.toml` is from the old host and isn't used.
+
+## Where things live
+
+| I want to change… | File |
 | --- | --- |
-| `/palette-generator` | Hue wheel + harmonies → full tonal palette with live WCAG AA/AAA checks and one-click fixes |
-| `/contrast-checker` | Two colors → ratio, every WCAG check, one-click fix for text or background, shareable URL |
-| `/image-palette` | Image → dominant colors (k-means, in-browser) → contrast matrix and passing pairs |
-| `/color-blindness` | Palette under protan/deutan/tritan/achromat simulation (Machado 2009), flags colors that collapse |
-| `/type-scale` | Modular type scale, static or fluid `clamp()`, CSS / design-token export |
-| `/gradient-generator` | Linear, radial, conic and draggable mesh gradients with CSS export |
-| `/component-states` | Button / input / toggle / checkbox / card in every state, derived from one accent, with WCAG checks |
-| `/token-converter` | W3C / Tokens Studio / Figma Variables JSON → CSS, SCSS, Tailwind v4, SwiftUI, flat JSON (aliases resolved or kept) |
-| `/motion-playground` | Cubic-bezier editor + spring simulator, racing preview, export as CSS `linear()`, tokens, Framer Motion, SwiftUI |
-| `/auto-trim` | Bulk-trim transparent (or solid) edges from images in the browser, download as ZIP |
-| `/text-expansion` | Sample UI in English / German / Spanish / pseudo-loc, fragile vs resilient CSS, detects clipped text |
-| `/a11y-audit` | Paste HTML → sandboxed render → alt text, labels, names, headings, tap targets, contrast |
-| `/multi-size` | One creative across social + IAB ad sizes with safe zones, focal point, PNG/ZIP export |
+| A tool's card (name, emoji, description, category, "New" date) | `src/experiments.js` |
+| A tool's search title/description (English) | `src/seo.js` |
+| A tool's Spanish name, slug and SEO copy | `src/seo-es.js` |
+| A guide (title, slug, summary) / its article text | `src/guides.js` / `src/guide-sections.js` |
+| About, Privacy, Terms, Refunds pages | `src/pages-content.js` |
+| The Pro page (plugins, prices, FAQ) | `src/pro-content.js` |
+| What's new (also the RSS feed) | `src/changelog.js` |
+| Site name, analytics, newsletter, ads | `SITE` at the top of `src/experiments.js` |
+| Colors, radii, fonts, spacing for the whole site | tokens in `:root` (dark) and `:root[data-theme='light']` at the top of `src/index.css` |
+| Shared UI pieces (buttons, segmented control, cards, reveal) | `src/components/ui.jsx` |
+| The page shell crawlers see (prerendered HTML) | `scripts/meta.js` |
+
+Everything else is derived from those: hub cards, routes, `<title>`/meta/Open Graph tags, prerendered `dist/<route>.html` pages, `sitemap.xml`, RSS and the OG images.
+
+## Adding things
+
+### A tool or a game
+1. Pick an `id` in kebab-case, e.g. `color-mixer`. Create `src/pages/ColorMixer.jsx`: **the file name must be the id in PascalCase**, because the build uses it to preload the page's code. Wrap the page in `<ToolPage id="color-mixer">` (copy a similar page as a start).
+2. In `src/App.jsx`, add `const ColorMixer = lazy(() => import('./pages/ColorMixer'));` and `'color-mixer': ColorMixer` to `TOOLS`.
+3. Add an entry to `experiments` in `src/experiments.js` (`category: 'Games'` puts it on /games), with `addedAt: 'YYYY-MM-DD'` for the **New** badge.
+4. Add its English SEO copy to `src/seo.js` and its Spanish slug, name and copy to `src/seo-es.js`.
+5. Write every visible string as `t('English', 'Español')` (from `useLang()`).
+6. `npm run build && npm run preview`, open the page in both languages, then push.
+
+### A guide
+Add it to `src/guides.js` (both languages) and its sections to `src/guide-sections.js`. It's listed on /guides and the home automatically.
+
+### A What's new entry
+Add it at the top of `src/changelog.js`.
+
+## Rules that keep the scores high
+
+These are why mobile PageSpeed is 90+. Breaking one usually costs 10 to 30 points.
+
+1. **The prerendered shell paints first.** Each page's HTML has a text version of the content (`.ssr-shell`, from `scripts/meta.js`) painted at 1% opacity under the boot loader, so the first and largest paints don't wait for JavaScript. Keep the shell's text a bit larger than the app's (`.js .ssr-shell p` in `index.html`), and keep system fonts in it.
+2. **Nothing heavy before the first paint.** No new blocking `<script>`, font or stylesheet in `<head>` of `index.html`. The only third-party script is Umami (3 KB, `defer`, injected by `scripts/vite-plugin-pages.js`); anything bigger should load after the page has loaded.
+3. **Small route CSS is inlined.** CSS under 2 KB that a page needs is put inside the HTML by the build (`scripts/vite-plugin-pages.js`); bigger CSS is preloaded.
+4. **Animations stay.** Pause them off screen and in background tabs (`src/lib/perf.js`) rather than removing them. Fade in from opacity 0.01, not 0.
+5. **Big pages render in two steps.** The home renders the hero first and the rest as a transition (`src/pages/Home.jsx`). Do the same if a page gets much bigger.
+6. **Check before pushing anything that touches loading:** `npm run perf -- https://fun.alevasquez.dev/<page>` after publishing, or PageSpeed Insights. Run it twice: single runs vary by several points.
 
 ## Languages
 
-Every page exists in English and Spanish. Spanish routes live under `/es` with translated slugs (`/es/verificador-de-contraste`), and the header has an EN/ES switch that keeps the current page (and its settings). Components translate inline with `t('English', 'Español')` from `useLang()` (`src/i18n.js`); Spanish SEO copy for each tool is in `src/seo-es.js`. The build prerenders both languages with `hreflang` alternates and a bilingual sitemap.
+Every page exists in English and Spanish. Spanish routes live under `/es` with translated slugs (`/es/verificador-de-contraste`); the EN/ES switch keeps the current page and its settings. Components translate inline with `t('English', 'Español')` from `useLang()` (`src/i18n.js`). The build prerenders both languages with `hreflang` alternates and a bilingual sitemap.
 
-## Content
+## Analytics and signups
 
-- **Guides** — `src/guides.js` (titles, slugs) + `src/guide-sections.js` (article bodies), both languages. Each guide links to its tool and gets `TechArticle` structured data.
-- **What's new** — `src/changelog.js`, published at `/changelog` and as `/rss.xml` (`/es/rss.xml`).
-- **Newsletter / Lab Pro waitlist** — Kit, Buttondown, Formspree, a Google Sheet or Brevo; set `SITE.newsletter` in `src/experiments.js` (see `src/lib/subscribe.js`).
+- **Umami Cloud** (cookieless): `SITE.umamiWebsiteId`. Custom events go through `track()` in `src/lib/analytics.js`.
+- **Newsletter / Pro waitlist:** `SITE.newsletter` (Kit, Buttondown, Formspree, Google Sheet or Brevo; see `src/lib/subscribe.js`).
+- **Ads:** `SITE.adsenseClient` and `SITE.adSlots` (empty = no ads and no AdSense script).
 
-## Adding an experiment
-
-1. Build the page in `src/pages/` and wrap it in `<ToolPage id="…">`.
-2. Add a `<Route>` in `src/App.jsx`.
-3. Add an entry to `src/experiments.js` (with `addedAt` so the hub shows a **New** badge to visitors who haven't opened it), its search copy to `src/seo.js` and its Spanish version (slug, name, copy) to `src/seo-es.js`.
-4. Wrap the page's strings in `t('…', '…')`.
-
-Everything else is derived from `experiments.js`: hub cards, `<title>`/meta/Open Graph tags, a prerendered `dist/<route>.html` (so link previews work on LinkedIn/X), `sitemap.xml` and the OG images (`scripts/og.mjs`, rendered at build time with bundled OFL fonts).
-
-## Analytics
-
-[Umami Cloud](https://cloud.umami.is) (free Hobby plan, cookieless). Paste the Website ID into `SITE.umamiWebsiteId` in `src/experiments.js`; when empty, no script is loaded. Custom events go through `track()` in `src/lib/analytics.js`.
-
-## Scripts
-
-```bash
-npm run dev     # local dev server
-npm run build   # OG images + production build into dist/
-npm run lint    # oxlint
-
-Press ⌘K / Ctrl+K (or /) anywhere for the command palette.
-```
+Press ⌘K / Ctrl+K (or /) anywhere on the site for the command palette.

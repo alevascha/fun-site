@@ -9,7 +9,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "og": "node scripts/og.mjs",
-    "framer-snippet": "node scripts/build-framer-snippet.mjs"
+    "framer-snippet": "node scripts/build-framer-snippet.mjs",
+    "perf": "node scripts/perf.mjs"
   },
   "dependencies": {
     "fflate": "^0.8.3",
