@@ -635,5 +635,301 @@ export const SECTIONS = {
         "p": "Entrenar el ojo rinde cuando tomas colores de una foto, reconstruyes una paleta de marca sin el archivo original o ajustas un color de interfaz que se ve raro en modo oscuro. El mismo hábito de tres pasos, luminosidad, tono y saturación, funciona en cualquier selector de color."
       }
     ]
+  },
+  "kerning-by-eye": {
+    "en": [
+      {
+        "p": "Kerning is the space between two specific letters. When it is off, a word looks like it has a hole in it, or like two letters are about to collide. In body text the font takes care of it, but in big headlines, logos and all-caps labels a bad pair is the first thing people notice, even if they can't say why."
+      },
+      {
+        "h": "Spacing, kerning and tracking"
+      },
+      {
+        "list": [
+          "Spacing (sidebearings): the default room the type designer builds around every letter.",
+          "Kerning: an adjustment for one specific pair, like AV or To, stored in the font's kerning table.",
+          "Tracking (letter-spacing): the same adjustment added to every pair in a run of text."
+        ]
+      },
+      {
+        "p": "So kerning fixes pairs and tracking changes texture. Mixing them up is the most common mistake: tightening the tracking of a whole headline to close one gap makes every other pair too tight."
+      },
+      {
+        "h": "The pairs that cause trouble"
+      },
+      {
+        "list": [
+          "Diagonal against diagonal: AV, VA, AW, WA, AY. The wedge between the strokes leaves a big triangle of white.",
+          "Overhangs: T, V, W, Y and F next to lowercase letters (To, Ty, Yo, Wa). The lowercase letter has to tuck under the top of the capital.",
+          "Round letters: o, c, e, O, C. They touch the gap at a single point, so they sit a little closer than straight letters like n or H.",
+          "Punctuation: periods, commas and quotes after T, V, W and Y (\"T.\", \"Y,\")."
+        ]
+      },
+      {
+        "h": "How to judge it"
+      },
+      {
+        "p": "Spacing is about area, not distance. The goal is that the white between every pair looks like the same amount of gray, even if the measured distances are different. Three habits help:"
+      },
+      {
+        "list": [
+          "Squint or blur the word: dark clumps and light holes jump out.",
+          "Flip it upside down: you stop reading the word and start seeing shapes.",
+          "Judge in threes: compare each letter with its neighbors on both sides, not one pair in isolation."
+        ]
+      },
+      {
+        "tip": "Fix the biggest hole first. Closing one gap often makes the next one look fine, and chasing every pair leaves the word looking cramped."
+      },
+      {
+        "h": "In Figma"
+      },
+      {
+        "p": "Figma applies the font's kerning automatically. To adjust one pair, select the first letter of the pair and change its Letter spacing, or press Option + ← / → on Mac (Alt + ← / → on Windows). Letter spacing on a single character adds or removes space after it, which is exactly a kerning adjustment. Do it at the size the text will be used: kerning that looks right at 24px can look loose at 120px."
+      },
+      {
+        "h": "In CSS"
+      },
+      {
+        "p": "Browsers apply the font's kerning table by default (`font-kerning: auto`, which some browsers switch off for small text). Keep it on, and only kern by hand in display text:"
+      },
+      {
+        "code": ".headline { font-kerning: normal; }\n\n/* one pair, e.g. the A in \"AVATAR\" */\n.headline .tight { letter-spacing: -0.06em; }"
+      },
+      {
+        "p": "Use `em`, not `px`, so the adjustment scales with the font size. Wrapping single letters in spans is fine for a logo or one hero headline; for anything that changes often, choose a font with good kerning instead."
+      },
+      {
+        "p": "Tracking is a separate decision: large headlines usually want slightly negative tracking (around -0.01em to -0.03em) and all-caps labels want positive tracking (around 0.05em to 0.1em)."
+      },
+      {
+        "h": "Practice"
+      },
+      {
+        "p": "Kern Me gives you six words with one bad pair each and compares your eye with the kerning the font's designer built in. It takes two minutes, and after a few rounds you start seeing loose pairs everywhere."
+      }
+    ],
+    "es": [
+      {
+        "p": "El kerning es el espacio entre dos letras concretas. Cuando está mal, la palabra parece tener un hueco, o dos letras parecen a punto de chocar. En el texto corrido la fuente se encarga, pero en titulares grandes, logos y etiquetas en mayúsculas un par mal espaciado es lo primero que se nota, aunque la gente no sepa explicar por qué."
+      },
+      {
+        "h": "Espaciado, kerning y tracking"
+      },
+      {
+        "list": [
+          "Espaciado (márgenes laterales): el espacio por defecto que el diseñador de la fuente pone alrededor de cada letra.",
+          "Kerning: un ajuste para un par concreto, como AV o To, guardado en la tabla de kerning de la fuente.",
+          "Tracking (letter-spacing): el mismo ajuste aplicado a todos los pares de un texto."
+        ]
+      },
+      {
+        "p": "El kerning corrige pares y el tracking cambia la textura. Confundirlos es el error más común: cerrar el tracking de todo un titular para tapar un hueco deja todos los demás pares demasiado juntos."
+      },
+      {
+        "h": "Los pares que dan problemas"
+      },
+      {
+        "list": [
+          "Diagonal contra diagonal: AV, VA, AW, WA, AY. La cuña entre los trazos deja un gran triángulo blanco.",
+          "Voladizos: T, V, W, Y y F junto a minúsculas (To, Ty, Yo, Wa). La minúscula tiene que meterse debajo de la parte superior de la mayúscula.",
+          "Letras redondas: o, c, e, O, C. Tocan el espacio en un solo punto, así que van un poco más juntas que las rectas como n o H.",
+          "Puntuación: puntos, comas y comillas después de T, V, W e Y (\"T.\", \"Y,\")."
+        ]
+      },
+      {
+        "h": "Cómo juzgarlo"
+      },
+      {
+        "p": "El espaciado es cuestión de área, no de distancia. La meta es que el blanco entre cada par se vea como la misma cantidad de gris, aunque las distancias medidas sean distintas. Tres hábitos ayudan:"
+      },
+      {
+        "list": [
+          "Entrecierra los ojos o desenfoca la palabra: los grupos oscuros y los huecos claros saltan a la vista.",
+          "Ponla de cabeza: dejas de leer la palabra y empiezas a ver formas.",
+          "Juzga de a tres: compara cada letra con sus vecinas de ambos lados, no un par aislado."
+        ]
+      },
+      {
+        "tip": "Corrige primero el hueco más grande. Cerrar uno suele hacer que el siguiente se vea bien, y perseguir cada par deja la palabra apretada."
+      },
+      {
+        "h": "En Figma"
+      },
+      {
+        "p": "Figma aplica el kerning de la fuente automáticamente. Para ajustar un par, selecciona la primera letra del par y cambia su Letter spacing, o presiona Option + ← / → en Mac (Alt + ← / → en Windows). El letter spacing de un solo carácter suma o resta espacio después de él, que es justo un ajuste de kerning. Hazlo al tamaño en que se usará el texto: un kerning que se ve bien a 24px puede verse suelto a 120px."
+      },
+      {
+        "h": "En CSS"
+      },
+      {
+        "p": "Los navegadores aplican la tabla de kerning de la fuente por defecto (`font-kerning: auto`, que algunos navegadores desactivan en texto pequeño). Mantenlo activo y ajusta a mano solo en textos grandes:"
+      },
+      {
+        "code": ".headline { font-kerning: normal; }\n\n/* un par, por ejemplo la A de \"AVATAR\" */\n.headline .tight { letter-spacing: -0.06em; }"
+      },
+      {
+        "p": "Usa `em` y no `px`, para que el ajuste escale con el tamaño de la fuente. Envolver letras sueltas en spans está bien para un logo o un titular principal; para textos que cambian seguido, elige mejor una fuente con buen kerning."
+      },
+      {
+        "p": "El tracking es otra decisión: los titulares grandes suelen pedir un tracking levemente negativo (de -0.01em a -0.03em, aprox.) y las etiquetas en mayúsculas uno positivo (de 0.05em a 0.1em, aprox.)."
+      },
+      {
+        "h": "Para practicar"
+      },
+      {
+        "p": "Ajusta el kerning te da seis palabras con un par mal espaciado cada una y compara tu ojo con el kerning que incluyó el diseñador de la fuente. Toma dos minutos, y después de unas rondas empiezas a ver pares sueltos en todas partes."
+      }
+    ]
+  },
+  "keyboard-focus-order": {
+    "en": [
+      {
+        "p": "Many people never touch a mouse: keyboard users, screen reader users, people using switch devices, and plenty of power users. They move through a page with Tab and Shift + Tab, and the order of those stops is part of your design, whether you planned it or not."
+      },
+      {
+        "h": "What WCAG asks for"
+      },
+      {
+        "p": "Success criterion 2.4.3 Focus Order (level A) says that if a page can be navigated in sequence and the order affects meaning or operation, focusable components get focus in an order that preserves meaning and operability. On most screens that simply means: focus follows the visual reading order."
+      },
+      {
+        "list": [
+          "2.4.3 Focus Order (A): the sequence makes sense.",
+          "2.4.7 Focus Visible (AA): you can always see where focus is.",
+          "2.4.11 Focus Not Obscured (AA, new in WCAG 2.2): sticky headers, chat bubbles and cookie banners don't hide the focused element.",
+          "2.1.1 Keyboard (A): everything that works with a mouse works with a keyboard."
+        ]
+      },
+      {
+        "h": "Where the order usually breaks"
+      },
+      {
+        "list": [
+          "Layouts reordered with CSS: `order`, `flex-direction: row-reverse` or `grid-auto-flow: column` change what people see, not where focus goes.",
+          "Positioned elements: a button that sits at the top of the screen but lives at the end of the HTML.",
+          "Positive tabindex: `tabindex=\"1\"` jumps ahead of everything else on the page and is almost never what you want.",
+          "Dialogs: focus has to move into the dialog when it opens, stay inside while it is open, and go back to the button that opened it when it closes.",
+          "No skip link: without one, keyboard users tab through the whole navigation on every single page."
+        ]
+      },
+      {
+        "h": "Designing the sequence"
+      },
+      {
+        "p": "Focus order is a design decision, so it belongs in the handoff, not only in QA:"
+      },
+      {
+        "list": [
+          "Number the focus stops on key screens and add them as an annotation layer in Figma.",
+          "Read the screen like text: top to bottom and left to right (right to left in RTL languages), group by group.",
+          "Finish a group before moving on: every field of a form row, every link of a menu.",
+          "Decide where focus lands after an action: after closing a dialog, deleting a row or loading new results."
+        ]
+      },
+      {
+        "tip": "If the visual order and the logical order disagree, change the layout or the HTML order, not the tabindex."
+      },
+      {
+        "h": "In code"
+      },
+      {
+        "code": "<!-- The first focusable element on every page -->\n<a class=\"skip-link\" href=\"#main\">Skip to content</a>\n\n<!-- tabindex: only 0 and -1 -->\n<div role=\"button\" tabindex=\"0\">Custom control</div>\n<h2 id=\"results\" tabindex=\"-1\">Results</h2> <!-- focused by script -->"
+      },
+      {
+        "p": "Keep the HTML in reading order and let CSS handle layout without reordering. Native buttons, links and form fields are focusable for free and come with the right keyboard behavior, so reach for them before custom elements."
+      },
+      {
+        "h": "How to test it"
+      },
+      {
+        "list": [
+          "Put the mouse away and Tab through the page, then Shift + Tab back.",
+          "Watch for focus disappearing (an element hidden or off screen) and for jumps that don't match what you see.",
+          "Open every dialog and menu: focus should go in, stay in, and come back.",
+          "Repeat at mobile widths: reflowed layouts are where the order breaks most."
+        ]
+      },
+      {
+        "h": "Practice"
+      },
+      {
+        "p": "Tab Order gives you five screens to number in Tab order, from a sign-in form to a settings page, and explains the rule behind each one."
+      }
+    ],
+    "es": [
+      {
+        "p": "Mucha gente nunca toca un mouse: personas que usan teclado, lectores de pantalla o dispositivos de conmutación, y muchos usuarios avanzados. Recorren la página con Tab y Shift + Tab, y el orden de esas paradas es parte de tu diseño, lo hayas planeado o no."
+      },
+      {
+        "h": "Qué pide WCAG"
+      },
+      {
+        "p": "El criterio 2.4.3 Orden del foco (nivel A) dice que si una página se puede recorrer en secuencia y el orden afecta el significado o el uso, los componentes que reciben foco deben hacerlo en un orden que conserve el significado y la operabilidad. En la mayoría de las pantallas eso significa simplemente que el foco sigue el orden visual de lectura."
+      },
+      {
+        "list": [
+          "2.4.3 Orden del foco (A): la secuencia tiene sentido.",
+          "2.4.7 Foco visible (AA): siempre se ve dónde está el foco.",
+          "2.4.11 Foco no oculto (AA, nuevo en WCAG 2.2): encabezados fijos, burbujas de chat y avisos de cookies no tapan el elemento enfocado.",
+          "2.1.1 Teclado (A): todo lo que funciona con mouse funciona con teclado."
+        ]
+      },
+      {
+        "h": "Dónde suele romperse el orden"
+      },
+      {
+        "list": [
+          "Diseños reordenados con CSS: `order`, `flex-direction: row-reverse` o `grid-auto-flow: column` cambian lo que se ve, no a dónde va el foco.",
+          "Elementos posicionados: un botón que se ve arriba en la pantalla pero está al final del HTML.",
+          "tabindex positivo: `tabindex=\"1\"` se adelanta a todo lo demás en la página y casi nunca es lo que quieres.",
+          "Diálogos: el foco tiene que entrar al diálogo cuando se abre, quedarse dentro mientras está abierto y volver al botón que lo abrió cuando se cierra.",
+          "Sin enlace para saltar: sin él, quien usa teclado recorre toda la navegación en cada página."
+        ]
+      },
+      {
+        "h": "Diseñar la secuencia"
+      },
+      {
+        "p": "El orden del foco es una decisión de diseño, así que va en la entrega a desarrollo, no solo en QA:"
+      },
+      {
+        "list": [
+          "Numera las paradas de foco en las pantallas clave y agrégalas como una capa de anotaciones en Figma.",
+          "Lee la pantalla como un texto: de arriba abajo y de izquierda a derecha (de derecha a izquierda en idiomas RTL), grupo por grupo.",
+          "Termina un grupo antes de pasar al siguiente: todos los campos de una fila del formulario, todos los enlaces de un menú.",
+          "Decide dónde queda el foco después de una acción: al cerrar un diálogo, borrar una fila o cargar nuevos resultados."
+        ]
+      },
+      {
+        "tip": "Si el orden visual y el lógico no coinciden, cambia el diseño o el orden del HTML, no el tabindex."
+      },
+      {
+        "h": "En código"
+      },
+      {
+        "code": "<!-- El primer elemento enfocable de cada página -->\n<a class=\"skip-link\" href=\"#main\">Saltar al contenido</a>\n\n<!-- tabindex: solo 0 y -1 -->\n<div role=\"button\" tabindex=\"0\">Control propio</div>\n<h2 id=\"results\" tabindex=\"-1\">Resultados</h2> <!-- enfocado por script -->"
+      },
+      {
+        "p": "Mantén el HTML en orden de lectura y deja que CSS se encargue del diseño sin reordenar. Los botones, enlaces y campos nativos reciben foco gratis y traen el comportamiento de teclado correcto, así que úsalos antes que elementos propios."
+      },
+      {
+        "h": "Cómo probarlo"
+      },
+      {
+        "list": [
+          "Aparta el mouse y recorre la página con Tab, luego vuelve con Shift + Tab.",
+          "Fíjate si el foco desaparece (un elemento oculto o fuera de la pantalla) o si salta a lugares que no coinciden con lo que ves.",
+          "Abre cada diálogo y menú: el foco debe entrar, quedarse dentro y volver.",
+          "Repite en anchos de móvil: los diseños que se reacomodan son donde más se rompe el orden."
+        ]
+      },
+      {
+        "h": "Para practicar"
+      },
+      {
+        "p": "Orden del Tab te da cinco pantallas para numerar en orden de Tab, desde un formulario de acceso hasta una página de ajustes, y explica la regla detrás de cada una."
+      }
+    ]
   }
 };

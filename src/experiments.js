@@ -267,6 +267,28 @@ export const experiments = [
     addedAt: '2026-10-06',
     active: true,
   },
+  {
+    id: 'kern-me',
+    category: 'Games',
+    path: '/kern-me',
+    emoji: '🔠',
+    accent: '#cd57ff',
+    title: 'Kern Me',
+    description: 'Space six words by eye. Each has one letter pair too tight or too loose; the answer is the font designer’s own kerning.',
+    addedAt: '2026-10-16',
+    active: true,
+  },
+  {
+    id: 'tab-order',
+    category: 'Games',
+    path: '/tab-order',
+    emoji: '⌨️',
+    accent: '#ffce1f',
+    title: 'Tab Order',
+    description: 'Tap a screen’s buttons, links and fields in the order the Tab key should visit them. Five screens, one WCAG rule.',
+    addedAt: '2026-10-16',
+    active: true,
+  },
 ];
 
 export function getExperiment(id) {

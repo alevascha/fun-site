@@ -33,6 +33,8 @@ const StatePanic = lazy(() => import('./pages/StatePanic'));
 const EasingGolf = lazy(() => import('./pages/EasingGolf'));
 const ContrastSurvival = lazy(() => import('./pages/ContrastSurvival'));
 const TokenRush = lazy(() => import('./pages/TokenRush'));
+const KernMe = lazy(() => import('./pages/KernMe'));
+const TabOrder = lazy(() => import('./pages/TabOrder'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const ProPage = lazy(() => import('./pages/ProPage'));
@@ -64,6 +66,8 @@ const TOOLS = {
   'easing-golf': EasingGolf,
   'contrast-survival': ContrastSurvival,
   'token-rush': TokenRush,
+  'kern-me': KernMe,
+  'tab-order': TabOrder,
 };
 
 export default function App() {

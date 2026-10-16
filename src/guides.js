@@ -91,6 +91,36 @@ export const GUIDES = [
       "title": "Juego para igualar colores: cómo entrenar tu ojo",
       "description": "Por qué cuesta igualar colores a ojo, el método de tono, saturación y luminosidad que usan los diseñadores y un juego diario gratis para practicarlo."
     }
+  },
+  {
+    "slug": "kerning-by-eye",
+    "tool": "kern-me",
+    "date": "2026-10-16",
+    "minutes": 5,
+    "en": {
+      "title": "Kerning by eye: how to space letters in headlines and logos",
+      "description": "What kerning is, how it differs from tracking, which letter pairs cause trouble, and a practical way to kern headlines and logos in Figma and CSS."
+    },
+    "es": {
+      "slug": "kerning-a-ojo",
+      "title": "Kerning a ojo: cómo espaciar letras en titulares y logos",
+      "description": "Qué es el kerning, en qué se diferencia del tracking, qué pares de letras dan problemas y una forma práctica de ajustar titulares y logos en Figma y CSS."
+    }
+  },
+  {
+    "slug": "keyboard-focus-order",
+    "tool": "tab-order",
+    "date": "2026-10-16",
+    "minutes": 6,
+    "en": {
+      "title": "Keyboard focus order: designing the Tab sequence (WCAG 2.4.3)",
+      "description": "What WCAG 2.4.3 asks for, the layouts that break focus order (grids, sidebars, dialogs, CSS reordering), and how to design and test the Tab sequence."
+    },
+    "es": {
+      "slug": "orden-del-foco-con-teclado",
+      "title": "Orden del foco con teclado: cómo diseñar la secuencia del Tab (WCAG 2.4.3)",
+      "description": "Qué pide WCAG 2.4.3, los diseños que rompen el orden del foco (grillas, barras laterales, diálogos, reordenar con CSS) y cómo diseñar y probar la secuencia del Tab."
+    }
   }
 ];
 

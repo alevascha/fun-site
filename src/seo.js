@@ -299,4 +299,34 @@ export const SEO = {
       { q: 'What are semantic tokens?', a: 'Tokens named by purpose (text-secondary, bg-surface) instead of by value (gray-400). They let a theme change values in one place while components keep their meaning.' },
     ],
   },
+  'kern-me': {
+    title: 'Kern Me - Kerning Game for Designers',
+    description: 'A free kerning game: space six words by eye, one letter pair at a time, and compare with the kerning the typeface designer built into the font.',
+    features: [
+      'Six words in a real display serif, one letter pair off in each',
+      'The answer is the font’s own kerning, measured in your browser',
+      'Diagonal, overhang and open-corner pairs, with the reason after each word',
+      'Shareable result with your precision per word',
+    ],
+    faq: [
+      { q: 'What is kerning?', a: 'Kerning adjusts the space between two specific letters, like A and V, so the gaps in a word look even. Tracking (letter-spacing) changes the space between all letters at once.' },
+      { q: 'Why do pairs like AV or To need kerning?', a: 'Letters are spaced by their boxes, but diagonals and overhangs leave empty space inside those boxes. Pulling the pair together makes that gap look as light as the rest of the word.' },
+      { q: 'Do fonts already include kerning?', a: 'Good fonts ship a kerning table with thousands of pairs, and browsers apply it by default (font-kerning: auto). Manual kerning is for logos and large headlines where a pair still looks off.' },
+    ],
+  },
+  'tab-order': {
+    title: 'Tab Order - Keyboard Focus Order Game (WCAG 2.4.3)',
+    description: 'A free accessibility game: tap the buttons, links and fields of five screens in the order the Tab key should visit them, then see the right order and why.',
+    features: [
+      'Five realistic screens: sign-in, header, checkout, product grid, settings',
+      'Tap to number the focus order, tap again to undo',
+      'Your order next to the right one, with the rule behind it',
+      'Works with a keyboard and a screen reader too',
+    ],
+    faq: [
+      { q: 'What does WCAG 2.4.3 Focus Order require?', a: 'When someone moves through a page with the keyboard, focus has to go in an order that preserves meaning and operability. On most screens that is the visual reading order.' },
+      { q: 'Should I use tabindex to fix the order?', a: 'Avoid positive tabindex values. Put elements in the right order in the HTML, use tabindex="0" only to make a custom control focusable and tabindex="-1" for elements you focus with script.' },
+      { q: 'Does CSS order or flex-direction change focus order?', a: 'No. CSS can change what people see, but focus follows the HTML order, so a visually reordered layout sends keyboard users jumping around.' },
+    ],
+  },
 };

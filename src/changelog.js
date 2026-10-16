@@ -1,6 +1,12 @@
 // "What's new" entries (newest first). Also published as /rss.xml.
 export const CHANGELOG = [
   {
+    date: '2026-10-16',
+    id: 'kern-me-tab-order',
+    en: { title: 'New: two games and two guides', body: 'Kern Me (space letters by eye against the font designer’s own kerning) and Tab Order (number a screen’s focus stops like a keyboard would), with guides on kerning and on keyboard focus order (WCAG 2.4.3).' },
+    es: { title: 'Nuevo: dos juegos y dos guías', body: 'Ajusta el kerning (espacia letras a ojo contra el kerning del diseñador de la fuente) y Orden del Tab (numera las paradas de foco de una pantalla como lo haría el teclado), con guías sobre kerning y sobre el orden del foco con teclado (WCAG 2.4.3).' },
+  },
+  {
     date: '2026-10-06',
     id: 'five-games',
     en: { title: 'New: five games', body: 'Optical Eye (layout precision), State Panic (UI states arcade), Easing Golf (cubic-bezier mini golf), Contrast Survival (WCAG reflexes) and Token Rush (design tokens against the clock).' },

@@ -382,6 +382,44 @@ export const ES = {
       { q: '¿Qué son los tokens semánticos?', a: 'Tokens nombrados por su propósito (text-secondary, bg-surface) y no por su valor (gray-400). Permiten que un tema cambie valores en un solo lugar sin que los componentes pierdan su significado.' },
     ],
   },
+  'kern-me': {
+    slug: 'ajusta-el-kerning',
+    name: 'Ajusta el kerning',
+    card: 'Espacia seis palabras a ojo. Cada una tiene un par de letras muy junto o muy separado; la respuesta es el kerning del diseñador de la fuente.',
+    title: 'Ajusta el kerning: juego de espaciado tipográfico',
+    description: 'Juego gratis de kerning: espacia seis palabras a ojo, un par de letras a la vez, y compáralo con el kerning que el diseñador incluyó en la fuente.',
+    intro: 'Seis palabras, cada una con un par de letras mal espaciado. Mueve la letra hasta que el espacio se vea bien. La respuesta es el kerning que el diseñador de la tipografía incluyó en la fuente.',
+    features: [
+      'Seis palabras en una serif de títulos real, con un par desajustado en cada una',
+      'La respuesta es el kerning de la propia fuente, medido en tu navegador',
+      'Pares diagonales, con voladizo y de esquinas abiertas, con la razón después de cada palabra',
+      'Resultado para compartir con tu precisión por palabra',
+    ],
+    faq: [
+      { q: '¿Qué es el kerning?', a: 'El kerning ajusta el espacio entre dos letras concretas, como A y V, para que los espacios de una palabra se vean parejos. El tracking (letter-spacing) cambia el espacio entre todas las letras a la vez.' },
+      { q: '¿Por qué pares como AV o To necesitan kerning?', a: 'Las letras se espacian por sus cajas, pero las diagonales y los voladizos dejan espacio vacío dentro de esas cajas. Acercar el par hace que ese hueco se vea tan liviano como el resto de la palabra.' },
+      { q: '¿Las fuentes ya traen kerning?', a: 'Las buenas fuentes incluyen una tabla de kerning con miles de pares, y los navegadores la aplican por defecto (font-kerning: auto). El kerning manual es para logos y titulares grandes donde un par todavía se ve mal.' },
+    ],
+  },
+  'tab-order': {
+    slug: 'orden-del-tab',
+    name: 'Orden del Tab',
+    card: 'Toca los botones, enlaces y campos de una pantalla en el orden en que debería recorrerlos la tecla Tab. Cinco pantallas, una regla de WCAG.',
+    title: 'Orden del Tab: juego de orden de foco (WCAG 2.4.3)',
+    description: 'Juego gratis de accesibilidad: toca los botones, enlaces y campos de cinco pantallas en el orden en que debería recorrerlos la tecla Tab, y mira el orden correcto y por qué.',
+    intro: 'Cinco pantallas pequeñas. Toca sus botones, enlaces y campos en el orden en que debería visitarlos la tecla Tab, y luego mira el orden correcto y por qué.',
+    features: [
+      'Cinco pantallas realistas: acceso, encabezado, pago, grilla de productos y ajustes',
+      'Toca para numerar el orden de foco y toca de nuevo para deshacer',
+      'Tu orden junto al correcto, con la regla detrás',
+      'También funciona con teclado y lector de pantalla',
+    ],
+    faq: [
+      { q: '¿Qué exige WCAG 2.4.3 Orden del foco?', a: 'Cuando alguien recorre una página con el teclado, el foco tiene que avanzar en un orden que conserve el significado y el uso. En la mayoría de las pantallas, ese es el orden visual de lectura.' },
+      { q: '¿Debo usar tabindex para corregir el orden?', a: 'Evita los valores positivos de tabindex. Pon los elementos en el orden correcto en el HTML, usa tabindex="0" solo para que un control propio reciba foco y tabindex="-1" para elementos que enfocas con script.' },
+      { q: '¿CSS order o flex-direction cambian el orden del foco?', a: 'No. CSS puede cambiar lo que se ve, pero el foco sigue el orden del HTML, así que un diseño reordenado visualmente hace saltar a quien usa teclado.' },
+    ],
+  },
 };
 
 // Non-tool pages: English path → Spanish path.
