@@ -28,8 +28,11 @@ const hash = crypto.createHash('sha1').update(bundle).digest('hex').slice(0, 8);
 // - Intro only when the page is slow: parsed within 800 ms (the delay before
 //   loader-head.html fades its cover in) means a fast load, so the intro is
 //   skipped and the site shows straight away.
+//   Otherwise html.avfx-intro goes on right here (not when the external
+//   motion layer arrives), so Framer's appear content is painted under the
+//   cover from this point and the largest paint is timed with it.
 // - Framer wraps each page in <div id="main"> with no landmark role.
-const inline = `(function(){var d=document.documentElement;if(d.classList.contains('avfx-loading')&&performance.now()<800)d.classList.remove('avfx-loading');var m=document.getElementById('main');if(m&&!document.querySelector('main,[role="main"]'))m.setAttribute('role','main')})()`;
+const inline = `(function(){var d=document.documentElement;if(d.classList.contains('avfx-loading')){if(performance.now()<800)d.classList.remove('avfx-loading');else d.classList.add('avfx-intro')}var m=document.getElementById('main');if(m&&!document.querySelector('main,[role="main"]'))m.setAttribute('role','main')})()`;
 
 const snippet = `<!-- Ale's motion layer · source: github.com/alevascha/fun-site/framer -->
 <script>${inline}</script>

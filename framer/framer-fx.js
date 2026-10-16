@@ -694,12 +694,17 @@
     whenShown(() => { born = performance.now(); });
     const ease = x => 1 - Math.pow(1 - x, 3);
 
+    // Sizes come from the ball's layout box (offsetWidth/Height), not its
+    // on-screen rect: the canvas lives inside the ball, and measuring while an
+    // appear or hover animation scales the ball would push the orbit off
+    // center. The rect is only used for where the ball sits on screen.
     const resize = () => {
+      const w = ball.offsetWidth, hh = ball.offsetHeight;
       const r = ball.getBoundingClientRect(), mid = r.left + r.width / 2;
-      size = Math.max(r.width, Math.min(r.width * 1.7, 2 * Math.min(mid, innerWidth - mid)));
-      R = r.width * 0.6;
+      size = Math.max(w, Math.min(w * 1.7, 2 * Math.min(mid, innerWidth - mid)));
+      R = w * 0.6;
       const dpr = Math.min(coarse ? 1.5 : 2, devicePixelRatio || 1);
-      Object.assign(canvas.style, { width: size + 'px', height: size + 'px', left: (r.width - size) / 2 + 'px', top: (r.height - size) / 2 + 'px' });
+      Object.assign(canvas.style, { width: size + 'px', height: size + 'px', left: (w - size) / 2 + 'px', top: (hh - size) / 2 + 'px' });
       canvas.width = Math.round(size * dpr); canvas.height = Math.round(size * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       draw(performance.now());
