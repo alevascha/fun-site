@@ -5,6 +5,7 @@ import { ES } from '../src/seo-es.js';
 import { GUIDES } from '../src/guides.js';
 import { SECTIONS } from '../src/guide-sections.js';
 import { CHANGELOG } from '../src/changelog.js';
+import { FOOTER_LINKS } from '../src/footer-links.js';
 
 /* Build-time HTML for every route, in English and Spanish: <head> tags
    (title, description, robots, canonical, hreflang, Open Graph), JSON-LD
@@ -186,7 +187,8 @@ const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'M
 const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> - ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
 const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> - ${esc(g[lang].description)}</li>`).join('')}</ul>`;
 
-const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}"><a href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a><a href="${page('/changelog', lang)}">${L(lang, "What's new", 'Novedades')}</a><a href="${page('/pro', lang)}">Pro</a><a href="${page('/about', lang)}">${L(lang, 'About', 'Acerca de')}</a><a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a><a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a><a href="${page('/refunds', lang)}">${L(lang, 'Refunds', 'Reembolsos')}</a></nav></footer>`;
+// Links from src/footer-links.js (shared with the app's SiteFooter).
+const footer = lang => `<footer class="site-footer"><span>${L(lang, 'Built by', 'Hecho por')} <a href="${SITE.authorUrl}">${esc(SITE.author)}</a>, Design Systems Architect · UX &amp; AI Interface Engineer.</span><nav class="footer-links" aria-label="${L(lang, 'Footer', 'Pie de página')}">${FOOTER_LINKS.map(l => `<a href="${l.path ? page(l.path, lang) : (lang === 'es' && l.hrefEs) || l.href}">${esc(L(lang, l.en, l.es))}</a>`).join('')}</nav></footer>`;
 
 // .ssr-shell: readable by crawlers; painted at 1% opacity under the boot loader while the app boots (see index.html).
 const shell = (lang, otherPath, inner) => `<div class="ssr-shell"><div class="page"><div class="page-inner">${nav(lang, otherPath)}${inner}${footer(lang)}</div></div></div>`;
