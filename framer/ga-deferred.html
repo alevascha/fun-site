@@ -1,8 +1,12 @@
 <!-- Google Analytics, deferred (Framer → Custom Code → End of <body>, all pages).
      Replaces Framer's built-in GA integration (Site Settings), which loads
-     gtag.js (~176 KB) while the page is still loading. This loads it once the
-     page has finished loading and the browser is idle, or right away on the
-     first tap, wheel or key press, so nothing is lost. Not on "scroll": Lenis
+     gtag.js (~176 KB) while the page is still loading. This loads it 8 s after
+     the page has finished loading (when the browser is idle), or right away on
+     the first tap, wheel or key press. The page view waits in dataLayer and is
+     sent as soon as gtag.js arrives. Trade-off chosen on 2026-10-16: visits
+     that leave within ~8 s without touching anything aren't counted; in
+     return gtag's ~200 ms of long tasks stay out of the page's load (about
+     +3-5 mobile PageSpeed points on the home). Not on "scroll": Lenis
      and the motion layer fire scroll events while the page boots, which
      loaded gtag.js before the largest paint; and only trusted (real) input,
      since Framer dispatches a synthetic pointerdown while it boots. Page views on Framer's
@@ -25,7 +29,7 @@
     document.head.appendChild(s);
   }
   function idle() { 'requestIdleCallback' in window ? requestIdleCallback(load, { timeout: 4000 }) : setTimeout(load, 2500); }
-  function afterLoad() { setTimeout(idle, 3000); }
+  function afterLoad() { setTimeout(idle, 8000); }
   if (document.readyState === 'complete') afterLoad(); else addEventListener('load', afterLoad, { once: true });
   // Only real input counts: Framer's own script dispatches a synthetic
   // pointerdown while it boots (isTrusted is false for those).
