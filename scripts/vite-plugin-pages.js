@@ -79,13 +79,20 @@ export default function pagesPlugin() {
       };
       const cssCache = new Map();
       const pascal = id => id.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join('');
+      const bootAfterPaint = src => `(function(){var d=document,done=0;function go(){if(done)return;done=1;var s=d.createElement('script');s.type='module';s.crossOrigin='';s.src=${JSON.stringify(src)};d.head.appendChild(s)}function later(){d.visibilityState==='visible'?requestAnimationFrame(function(){setTimeout(go,0)}):go()}d.readyState==='loading'?d.addEventListener('DOMContentLoaded',later):later()})()`;
       const render = (meta, body, ld, opts, src) => {
         const out = injectBody(injectMeta(html, meta, opts), body, ld);
         if (!entryTag) return out;
-        // Entry script and this route's chunks load right away (in <head>):
-        // deferring them until after the first paint was tried and made the
-        // largest paint worse, since each tool's main UI only exists once the
-        // app renders.
+        // Entry script and this route's chunks download right away (in
+        // <head>, as modulepreload): deferring the downloads until after the
+        // first paint was tried and made the largest paint worse, since each
+        // tool's main UI only exists once the app renders.
+        // The entry only *runs* after the browser has painted the prerendered
+        // page once (DOMContentLoaded, then one frame). A plain module script
+        // runs as soon as parsing ends, and when it arrived fast the browser
+        // ran the app before painting anything, so the first paint (and
+        // PageSpeed's FCP) swung between ~1.7 s and ~3 s from run to run.
+        // In a background tab (no frames) it runs right away.
         const { js, css } = routeAssets(src);
         // Small route CSS (under 2 KB, e.g. Lenis' few rules) goes inline: a
         // separate high-priority request before the first paint costs a round
@@ -97,7 +104,8 @@ export default function pagesPlugin() {
         }
         const tags = [
           ...(inline.length ? [`<style>${inline.join('')}</style>`] : []),
-          `<script type="module" crossorigin src="${entryTag[1]}"></script>`,
+          `<link rel="modulepreload" crossorigin href="${entryTag[1]}">`,
+          `<script>${bootAfterPaint(entryTag[1])}</script>`,
           ...js.map(f => `<link rel="modulepreload" crossorigin href="${f}">`),
           ...preload.map(f => `<link rel="preload" as="style" crossorigin href="${f}">`),
         ].join('\n    ');

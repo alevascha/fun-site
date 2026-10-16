@@ -56,11 +56,12 @@ Add it at the top of `src/changelog.js`.
 These are why mobile PageSpeed is 90+. Breaking one usually costs 10 to 30 points.
 
 1. **The prerendered shell paints first.** Each page's HTML has a text version of the content (`.ssr-shell`, from `scripts/meta.js`) painted at 1% opacity under the boot loader, so the first and largest paints don't wait for JavaScript. Keep the shell's text a bit larger than the app's (`.js .ssr-shell p` in `index.html`), and keep system fonts in it.
-2. **Nothing heavy before the first paint.** No new blocking `<script>`, font or stylesheet in `<head>` of `index.html`. The only third-party script is Umami (3 KB, `defer`, injected by `scripts/vite-plugin-pages.js`); anything bigger should load after the page has loaded.
-3. **Small route CSS is inlined.** CSS under 2 KB that a page needs is put inside the HTML by the build (`scripts/vite-plugin-pages.js`); bigger CSS is preloaded.
-4. **Animations stay.** Pause them off screen and in background tabs (`src/lib/perf.js`) rather than removing them. Fade in from opacity 0.01, not 0.
-5. **Big pages render in two steps.** The home renders the hero first and the rest as a transition (`src/pages/Home.jsx`). Do the same if a page gets much bigger.
-6. **Check before pushing anything that touches loading:** `npm run perf -- https://fun.alevasquez.dev/<page>` after publishing, or PageSpeed Insights. Run it twice: single runs vary by several points.
+2. **The app runs after the first paint.** The build (`bootAfterPaint` in `scripts/vite-plugin-pages.js`) downloads the app's JS right away (modulepreload) but starts it only once the browser has painted the page. Don't go back to a plain `<script type="module">`: it made the first paint swing between about 1.7 s and 3 s from one PageSpeed run to the next.
+3. **Nothing heavy before the first paint.** No new blocking `<script>`, font or stylesheet in `<head>` of `index.html`. The only third-party script is Umami (3 KB, `defer`, injected by `scripts/vite-plugin-pages.js`); anything bigger should load after the page has loaded.
+4. **Small route CSS is inlined.** CSS under 2 KB that a page needs is put inside the HTML by the build (`scripts/vite-plugin-pages.js`); bigger CSS is preloaded.
+5. **Animations stay.** Pause them off screen and in background tabs (`src/lib/perf.js`) rather than removing them. Fade in from opacity 0.01, not 0.
+6. **Big pages render in two steps.** The home renders the hero first and the rest as a transition (`src/pages/Home.jsx`). Do the same if a page gets much bigger.
+7. **Check before pushing anything that touches loading:** `npm run perf -- https://fun.alevasquez.dev/<page>` after publishing, or PageSpeed Insights. Run it twice: single runs vary by several points.
 
 ## Languages
 
