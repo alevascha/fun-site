@@ -15,7 +15,8 @@ import Newsletter from './Newsletter';
 import Feedback from './Feedback';
 import { useLang } from '../i18n';
 import { GUIDES } from '../guides';
-import { FIGMA_PLUGINS } from '../pro-content';
+import { FIGMA_PLUGINS, PRO_PLUGINS } from '../pro-content';
+import { PLUGIN_PAGES } from '../plugin-pages';
 import Steps from './Steps';
 import { track } from '../lib/analytics';
 
@@ -29,6 +30,9 @@ const FigmaMark = () => (
     <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" opacity=".8" />
   </svg>
 );
+
+// The plugin built from this tool, when there is one (its page has the details).
+const pluginFor = id => PRO_PLUGINS.find(p => p.tool === '/' + id)?.id;
 
 export default function ToolPage({ id, intro, children }) {
   const exp = getExperiment(id);
@@ -90,7 +94,7 @@ export default function ToolPage({ id, intro, children }) {
             <motion.div variants={{ hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: EASE } } }}>
               {FIGMA_PLUGINS[id]
                 ? <a className="figma-chip" href={FIGMA_PLUGINS[id]} target="_blank" rel="noopener noreferrer" onClick={() => track('Figma plugin click', { tool: id, state: 'live' })}><FigmaMark /> {t('Open the Figma plugin', 'Abrir el plugin de Figma')} <span aria-hidden="true">↗</span></a>
-                : <Link className="figma-chip" to={to('/pro')} onClick={() => track('Figma plugin click', { tool: id, state: 'soon' })}><FigmaMark /> {t('Figma plugin coming soon', 'Plugin de Figma muy pronto')} <span aria-hidden="true">→</span></Link>}
+                : <Link className="figma-chip" to={to(pluginFor(id) ? `/plugins/${PLUGIN_PAGES[pluginFor(id)].slug}` : '/pro')} onClick={() => track('Figma plugin click', { tool: id, state: 'soon' })}><FigmaMark /> {t('Figma plugin coming soon', 'Plugin de Figma muy pronto')} <span aria-hidden="true">→</span></Link>}
             </motion.div>
           )}
         </motion.header>

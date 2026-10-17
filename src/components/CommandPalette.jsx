@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { experiments } from '../experiments';
 import { GUIDES } from '../guides';
+import { PRO_PLUGINS } from '../pro-content';
+import { PLUGIN_PAGES } from '../plugin-pages';
 import { counterpart, useLang } from '../i18n';
 import { getTheme, setTheme } from '../lib/theme';
 import { EASE } from '../lib/motion';
@@ -25,12 +27,16 @@ export default function CommandPalette() {
     const tools = experiments.filter(e => e.active).map(e => ({
       id: e.id, group: t('Tools', 'Herramientas'), icon: e.emoji, label: name(e), hint: blurb(e), run: () => navigate(to(e.path)),
     }));
+    const plugins = PRO_PLUGINS.map(p => ({
+      id: `plugin-${p.id}`, group: t('Figma plugins', 'Plugins de Figma'), icon: p.emoji, label: p[lang].name, hint: p[lang].pitch, run: () => navigate(to(`/plugins/${PLUGIN_PAGES[p.id].slug}`)),
+    }));
     const guides = GUIDES.map(g => ({
       id: `guide-${g.slug}`, group: t('Guides', 'Guías'), icon: '📖', label: g[lang].title, hint: g[lang].description, run: () => navigate(to(`/guides/${g.slug}`)),
     }));
     const pages = [
       { id: 'home', icon: '🏠', label: t('All experiments', 'Todos los experimentos'), path: '/' },
       { id: 'guides', icon: '📚', label: t('Guides', 'Guías'), path: '/guides' },
+      { id: 'plugins', icon: '🧩', label: t('All Figma plugins', 'Todos los plugins de Figma'), path: '/plugins' },
       { id: 'pro', icon: '✦', label: t('Lab Pro for Figma (waitlist)', 'Lab Pro para Figma (lista de espera)'), path: '/pro' },
       { id: 'changelog', icon: '🗞️', label: t("What's new", 'Novedades'), path: '/changelog' },
       { id: 'about', icon: '👋', label: t('About', 'Acerca de'), path: '/about' },
@@ -41,7 +47,7 @@ export default function CommandPalette() {
       { id: 'lang', icon: '🌐', label: lang === 'es' ? 'Switch to English' : 'Cambiar a español', run: () => navigate(counterpart(window.location.pathname).path) },
       { id: 'portfolio', icon: '↗', label: t('Open my portfolio', 'Abrir mi portafolio'), run: () => window.open('https://www.alevasquez.dev/', '_blank', 'noopener') },
     ].map(a => ({ ...a, group: t('Actions', 'Acciones') }));
-    return [...tools, ...guides, ...pages, ...actions];
+    return [...tools, ...plugins, ...guides, ...pages, ...actions];
   }, [lang, t, to, name, blurb, navigate]);
 
   const results = useMemo(() => {

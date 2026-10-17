@@ -7,7 +7,7 @@ export const FREE_USES = 10;
 // Community pages). `tool` is the free web version, when there is one.
 export const PRO_PLUGINS = [
   {
-    emoji: '🎨', tool: '/palette-generator',
+    id: 'palette-generator', emoji: '🎨', tool: '/palette-generator',
     en: { name: 'Palette Generator', pitch: 'One brand color in, a full color system out: OKLCH scales, semantic Light and Dark tokens as Variables, and code.',
       features: [['Scales', ['OKLCH: Tailwind 50-950, Material, Radix 1-12 or custom steps', 'Steps solved for the contrast targets you set', 'Hue shift, your exact color kept on its step', 'A neutral tinted with your brand']],
         ['System', ['Semantic Light and Dark tokens aliased to the scale', 'Alpha ramps as real RGBA', 'Updates Variables in place, with a preview first']],
@@ -18,7 +18,7 @@ export const PRO_PLUGINS = [
         ['Revisión y código', ['Cuadrícula de contraste paso contra paso, WCAG y APCA', 'Vista con daltonismo y avisos', 'CSS, Tailwind v3 y v4, SCSS, tokens W3C, OKLCH y P3']]] },
   },
   {
-    emoji: '🌗', tool: '/contrast-checker',
+    id: 'contrast-checker', emoji: '🌗', tool: '/contrast-checker',
     en: { name: 'Contrast Checker', pitch: 'WCAG 2.2 and APCA for every text, border and icon, against what is really behind it, in every variable mode, fixed in place.',
       features: [['Measures', ['WCAG AA and AAA, never rounded up', 'APCA Lc side by side, or as the standard', 'Borders and icons at 3:1', 'Every variable mode: Light, Dark, high contrast']],
         ['Fixes', ['The closest passing color, same hue', 'The nearest passing token from your collection, rebound', 'Fix all in one undo step']],
@@ -29,7 +29,7 @@ export const PRO_PLUGINS = [
         ['A tu manera', ['Selección, página o todas las páginas', 'Modo de dos colores con selector de capas', 'Marcas en el lienzo, CSV y JSON']]] },
   },
   {
-    emoji: '🔠', tool: '/type-scale',
+    id: 'type-scale', emoji: '🔠', tool: '/type-scale',
     en: { name: 'Type Scale', pitch: 'A modular type scale as text styles and variables with Desktop, Tablet and Mobile modes, fluid clamp() for code.',
       features: [['Scale', ['Any ratio, rounding to 0.5, 1, even, 4pt or 8pt', 'Per-step overrides, baseline grid', 'Heading and body families']],
         ['Figma', ['Variables with a mode per breakpoint', 'Semantic aliases: Display, H1-H6, Body', 'A specimen per mode, updated in place', 'Audit the sizes in a file and snap them to the scale']],
@@ -40,7 +40,7 @@ export const PRO_PLUGINS = [
         ['Código', ['CSS, SCSS, Tailwind v3 y v4, tokens W3C', 'Escala de espaciado fluida', 'Alertas de legibilidad y vista al 200%']]] },
   },
   {
-    emoji: '👁️', tool: '/color-blindness',
+    id: 'color-blindness', emoji: '👁️', tool: '/color-blindness',
     en: { name: 'Color Blindness Simulator', pitch: 'Any frame, images included, as people with color blindness and low vision see it, with colors that collapse flagged.',
       features: [['Color vision', ['Protan, deutan and tritan, full and anomalous', 'Achromatopsia and achromatomaly', 'Severity slider, prevalence per type']],
         ['Low vision', ['Blur, cataract, contrast loss, bright light', 'Ghosting, tunnel vision, macular degeneration']],
@@ -51,7 +51,7 @@ export const PRO_PLUGINS = [
         ['Revisiones', ['Colores que se confunden, con una corrección', 'Texto cuyo contraste baja', 'Tableros junto al frame, actualizados en su lugar']]] },
   },
   {
-    emoji: '🧭', accent: '#5cc8a8',
+    id: 'token-drift', emoji: '🧭', accent: '#5cc8a8',
     en: { name: 'Token Drift', pitch: 'Finds every value that isn’t using your design system, across the whole file, and binds it to the closest token.',
       features: [['Finds', ['Colors, gradient stops, text and mixed runs', 'Effects, spacing, radius, stroke width, opacity', 'Detached instances, broken bindings, duplicate tokens']],
         ['Fixes', ['Closest token by role, with the distance shown', 'Bind every exact match in one undo step', 'Reattach instances keeping their text']],
@@ -62,7 +62,7 @@ export const PRO_PLUGINS = [
         ['Tus reglas', ['Todas las páginas, cualquier librería o colección', 'Valores ignorados y radios permitidos guardados en el archivo', 'Puntaje de cobertura y tendencia, CSV y Markdown']]] },
   },
   {
-    emoji: '🔁', accent: '#7aa7ff',
+    id: 'token-converter', emoji: '🔁', accent: '#7aa7ff', tool: '/token-converter',
     en: { name: 'Token Converter', pitch: 'Your variables and styles as code for any platform, on every Figma plan, with a changelog of what changed.',
       features: [['Outputs', ['CSS, SCSS, Tailwind v4 and v3, JS, TS, JSON', 'W3C tokens and Style Dictionary', 'SwiftUI, Android XML, Compose, Flutter', 'A Markdown table for docs and AI tools']],
         ['Control', ['Aliases kept or resolved, modes as selectors or media queries', 'Hex, RGB, HSL or OKLCH, rem with your base', 'Text, shadow and gradient styles as tokens', 'Saved profiles per platform']],
@@ -73,7 +73,7 @@ export const PRO_PLUGINS = [
         ['Ida y vuelta', ['Cambios desde la última exportación, incluidos los renombres', 'Importa tokens W3C de vuelta a variables', 'Funciona en Dev Mode']]] },
   },
   {
-    emoji: '♿', accent: '#ff9a6b',
+    id: 'a11y-handoff', emoji: '♿', accent: '#ff9a6b', tool: '/a11y-audit',
     en: { name: 'A11y Handoff', pitch: 'Drafts the accessibility spec for a screen: focus order with roles, headings, alt text, forms and motion, for web, iOS or Android.',
       features: [['Drafts', ['Focus order with ARIA, VoiceOver or TalkBack names', 'Headings, landmarks and alt text', 'Form labels, required fields, autocomplete, errors', 'Motion that needs a reduced-motion note']],
         ['Checks', ['Touch targets for web, iOS and Android', 'Icon-only controls, heading jumps, small text', 'Violations, to review and passed']],
@@ -84,7 +84,7 @@ export const PRO_PLUGINS = [
         ['Entrega', ['Anotaciones en el lienzo, una capa por tipo', 'Anotaciones nativas de Dev Mode', 'Recorre el orden con Tab, exporta en Markdown']]] },
   },
   {
-    emoji: '🌍', accent: '#ffce1f',
+    id: 'text-stress', emoji: '🌍', accent: '#ffce1f', tool: '/text-expansion',
     en: { name: 'Text Stress Test', pitch: 'Your UI in German, Japanese, right-to-left and 11 more before it ships, with everything that breaks listed in pixels.',
       features: [['Languages', ['9 European languages, Russian, Chinese, Japanese, Korean', 'Pseudo-locale, right-to-left with mirrored layout', 'Tall scripts like Thai and Vietnamese']],
         ['Finds', ['Cut off, clipped, spilling, truncated, in pixels', 'Compound words wider than their box', 'Line heights too tight, frames that grow']],

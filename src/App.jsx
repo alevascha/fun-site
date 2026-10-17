@@ -38,6 +38,8 @@ const TabOrder = lazy(() => import('./pages/TabOrder'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const StaticPage = lazy(() => import('./pages/StaticPage'));
 const ProPage = lazy(() => import('./pages/ProPage'));
+const PluginsIndex = lazy(() => import('./pages/PluginsIndex'));
+const PluginPage = lazy(() => import('./pages/PluginPage'));
 const GuidesIndex = lazy(() => import('./pages/GuidesIndex'));
 const GamesIndex = lazy(() => import('./pages/GamesIndex'));
 const GuidePage = lazy(() => import('./pages/GuidePage'));
@@ -121,6 +123,8 @@ export default function App() {
               <Route key={`${l}-terms`} path={p('/terms')} element={<StaticPage id="terms" />} />,
               <Route key={`${l}-refunds`} path={p('/refunds')} element={<StaticPage id="refunds" />} />,
               <Route key={`${l}-pro`} path={p('/pro')} element={<ProPage />} />,
+              <Route key={`${l}-plugins`} path={p('/plugins')} element={<PluginsIndex />} />,
+              <Route key={`${l}-plugin`} path={`${p('/plugins')}/:slug`} element={<PluginPage />} />,
               <Route key={`${l}-games`} path={p('/games')} element={<GamesIndex />} />,
               <Route key={`${l}-guides`} path={p('/guides')} element={<GuidesIndex />} />,
               <Route key={`${l}-guide`} path={`${p('/guides')}/:slug`} element={<GuidePage />} />,

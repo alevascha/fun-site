@@ -425,6 +425,7 @@ export const ES = {
 // Non-tool pages: English path → Spanish path.
 export const PAGE_PATHS = {
   '/': '/es',
+  '/plugins': '/es/plugins',
   '/about': '/es/acerca-de',
   '/privacy': '/es/privacidad',
   '/terms': '/es/terminos',

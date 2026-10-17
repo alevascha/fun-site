@@ -5,9 +5,10 @@ import { getPageMeta, getSeo, SITE } from '../src/experiments.js';
 import { STATIC_PAGES, STATIC_PAGES_ES } from '../src/pages-content.js';
 import { ES } from '../src/seo-es.js';
 import { GUIDES } from '../src/guides.js';
+import { PRO_PLUGINS } from '../src/pro-content.js';
 import {
   absolute, active, CHANGELOG_META, SUBSCRIPTION_META, subscriptionBody, changelogBody, guideBody, guideJsonLd, guideMeta, GUIDES_META, guidesBody, GAMES_META, gamesBody, guidePath,
-  homeBody, homeJsonLd, homeMeta, injectBody, injectMeta, notFoundBody, page, PRO_META, proBody, rss, staticBody, staticMeta,
+  homeBody, homeJsonLd, homeMeta, injectBody, pluginBody, pluginJsonLd, pluginMeta, pluginPath, PLUGINS_META, pluginsBody, injectMeta, notFoundBody, page, PRO_META, proBody, rss, staticBody, staticMeta,
   toolBody, toolJsonLd, toolName, toolPath,
 } from './meta.js';
 
@@ -126,6 +127,10 @@ export default function pagesPlugin() {
           await write(lang === 'es' ? STATIC_PAGES_ES[p.id].path : p.path, render(staticMeta(p.id, lang), staticBody(p.id, lang), '', undefined, 'src/pages/StaticPage.jsx'));
         }
         await write(page('/pro', lang), render(PRO_META(lang), proBody(lang), '', undefined, 'src/pages/ProPage.jsx'));
+        await write(page('/plugins', lang), render(PLUGINS_META(lang), pluginsBody(lang), '', undefined, 'src/pages/PluginsIndex.jsx'));
+        for (const p of PRO_PLUGINS) {
+          await write(pluginPath(p.id, lang), render(pluginMeta(p, lang), pluginBody(p, lang), pluginJsonLd(p, lang), undefined, 'src/pages/PluginPage.jsx'));
+        }
         await write(page('/games', lang), render(GAMES_META(lang), gamesBody(lang), '', undefined, 'src/pages/GamesIndex.jsx'));
         await write(page('/guides', lang), render(GUIDES_META(lang), guidesBody(lang), '', undefined, 'src/pages/GuidesIndex.jsx'));
         await write(page('/changelog', lang), render(CHANGELOG_META(lang), changelogBody(lang), '', undefined, 'src/pages/Changelog.jsx'));
@@ -143,6 +148,8 @@ export default function pagesPlugin() {
       for (const g of GUIDES) sitemap.push({ en: guidePath(g, 'en'), es: guidePath(g, 'es'), lastmod: g.date, priority: '0.7' });
       sitemap.push({ en: '/games', es: '/es/juegos', lastmod: today, priority: '0.6' });
       sitemap.push({ en: '/guides', es: '/es/guias', lastmod: today, priority: '0.6' });
+      sitemap.push({ en: '/plugins', es: '/es/plugins', lastmod: today, priority: '0.7' });
+      for (const p of PRO_PLUGINS) sitemap.push({ en: pluginPath(p.id, 'en'), es: pluginPath(p.id, 'es'), lastmod: today, priority: '0.7' });
       sitemap.push({ en: '/pro', es: '/es/pro', lastmod: today, priority: '0.5' });
       sitemap.push({ en: '/changelog', es: '/es/novedades', lastmod: today, priority: '0.4' });
       for (const p of STATIC_PAGES) sitemap.push({ en: p.path, es: STATIC_PAGES_ES[p.id].path, lastmod: p.updated, priority: '0.3' });
@@ -179,6 +186,10 @@ export default function pagesPlugin() {
         '## Tools',
         '',
         ...active().map(e => `- [${e.title}](${SITE.url}${e.path}): ${getSeo(e.id).description || e.description}`),
+        '',
+        '## Figma plugins',
+        '',
+        ...PRO_PLUGINS.map(p => `- [${p.en.name}](${absolute(pluginPath(p.id, 'en'))}): ${p.en.pitch}`),
         '',
         '## Guides',
         '',

@@ -6,6 +6,7 @@ import { GUIDES } from '../src/guides.js';
 import { SECTIONS } from '../src/guide-sections.js';
 import { CHANGELOG } from '../src/changelog.js';
 import { FOOTER_LINKS } from '../src/footer-links.js';
+import { PLUGIN_PAGES, pluginPath } from '../src/plugin-pages.js';
 
 /* Build-time HTML for every route, in English and Spanish: <head> tags
    (title, description, robots, canonical, hreflang, Open Graph), JSON-LD
@@ -20,7 +21,7 @@ const toolPath = (exp, lang) => (lang === 'es' ? `/es/${ES[exp.id].slug}` : exp.
 const toolName = (exp, lang) => (lang === 'es' ? ES[exp.id].name : exp.title);
 const toolBlurb = (exp, lang) => (lang === 'es' ? ES[exp.id].card : exp.description);
 const guidePath = (g, lang) => (lang === 'es' ? `/es/guias/${g.es.slug}` : `/guides/${g.slug}`);
-const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/terms': '/es/terminos', '/refunds': '/es/reembolsos', '/pro': '/es/pro', '/games': '/es/juegos', '/guides': '/es/guias', '/changelog': '/es/novedades', '/confirm': '/es/confirmar', '/unsubscribe': '/es/baja' };
+const PAGE_ES = { '/': '/es', '/about': '/es/acerca-de', '/privacy': '/es/privacidad', '/terms': '/es/terminos', '/refunds': '/es/reembolsos', '/pro': '/es/pro', '/plugins': '/es/plugins', '/games': '/es/juegos', '/guides': '/es/guias', '/changelog': '/es/novedades', '/confirm': '/es/confirmar', '/unsubscribe': '/es/baja' };
 const page = (enPath, lang) => (lang === 'es' ? PAGE_ES[enPath] || enPath : enPath);
 
 /* ---------- <head> ---------- */
@@ -94,6 +95,14 @@ export const GAMES_META = lang => simpleMeta('/games', lang,
 export const CHANGELOG_META = lang => simpleMeta('/changelog', lang,
   L(lang, "What's new - Ale's Fun Lab", "Novedades - Ale's Fun Lab"),
   L(lang, 'New tools, guides and improvements in Ale’s Fun Lab, newest first.', 'Nuevas herramientas, guías y mejoras en Ale’s Fun Lab, de la más reciente a la más antigua.'));
+export const PLUGINS_META = lang => simpleMeta('/plugins', lang,
+  L(lang, "Figma plugins for design systems and accessibility - Ale's Fun Lab", "Plugins de Figma para design systems y accesibilidad - Ale's Fun Lab"),
+  L(lang, `Eight Figma plugins: palettes, contrast, type scales, color blindness, token drift, token export, accessibility handoff and text expansion. ${FREE_USES} free uses each.`, `Ocho plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, deriva y exportación de tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno.`));
+export const pluginMeta = (p, lang) => ({
+  title: L(lang, `${p.en.name}: Figma plugin - Ale's Fun Lab`, `${p.es.name}: plugin de Figma - Ale's Fun Lab`), description: p[lang].pitch, path: pluginPath(p.id, lang), image: `/plugin-assets/${p.id}/og.png`,
+  lang, alternates: { en: pluginPath(p.id, 'en'), es: pluginPath(p.id, 'es') },
+});
+export { pluginPath };
 export const guideMeta = (g, lang) => ({
   title: withSite(g[lang].title), description: g[lang].description, path: guidePath(g, lang), image: `/og/${g.tool}.png`,
   lang, ogType: 'article', alternates: { en: guidePath(g, 'en'), es: guidePath(g, 'es') },
@@ -182,7 +191,7 @@ export function guideJsonLd(g, lang = 'en') {
 
 /* ---------- static body shells ---------- */
 
-const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'Main', 'Principal')}"><a class="site-nav-brand" href="${page('/', lang)}"><span class="site-nav-logo">f</span><span class="site-nav-brand-text">${esc(SITE.name)}</span></a><span class="site-nav-links"><a class="site-nav-link" href="${page('/games', lang)}">${L(lang, 'Games', 'Juegos')}</a> <a class="site-nav-link" href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a> <a class="site-nav-link" href="${page('/pro', lang)}">Pro</a></span><a class="site-nav-link" href="${otherPath}" hreflang="${L(lang, 'es', 'en')}" lang="${L(lang, 'es', 'en')}">${L(lang, 'Español', 'English')}</a></nav>`;
+const nav = (lang, otherPath) => `<nav class="site-nav" aria-label="${L(lang, 'Main', 'Principal')}"><a class="site-nav-brand" href="${page('/', lang)}"><span class="site-nav-logo">f</span><span class="site-nav-brand-text">${esc(SITE.name)}</span></a><span class="site-nav-links"><a class="site-nav-link" href="${page('/games', lang)}">${L(lang, 'Games', 'Juegos')}</a> <a class="site-nav-link" href="${page('/guides', lang)}">${L(lang, 'Guides', 'Guías')}</a> <a class="site-nav-link" href="${page('/plugins', lang)}">Plugins</a> <a class="site-nav-link" href="${page('/pro', lang)}">Pro</a></span><a class="site-nav-link" href="${otherPath}" hreflang="${L(lang, 'es', 'en')}" lang="${L(lang, 'es', 'en')}">${L(lang, 'Español', 'English')}</a></nav>`;
 
 const toolLinks = (lang, exclude) => `<ul class="seo-links">${active().filter(e => e.id !== exclude).map(e => `<li><a href="${toolPath(e, lang)}">${esc(toolName(e, lang))}</a> - ${esc(toolBlurb(e, lang))}</li>`).join('')}</ul>`;
 const guideLinks = (lang, exclude) => `<ul class="seo-links">${GUIDES.filter(g => g.slug !== exclude).map(g => `<li><a href="${guidePath(g, lang)}">${esc(g[lang].title)}</a> - ${esc(g[lang].description)}</li>`).join('')}</ul>`;
@@ -260,6 +269,45 @@ export function proBody(lang = 'en') {
     + `<h2>${L(lang, 'The plugins', 'Los plugins')}</h2><ul>${plugins}</ul>`
     + `<h2>${L(lang, 'Pricing', 'Precios')}</h2><ul>${plans}</ul><p>${L(lang, 'Prices in USD. Taxes are calculated at checkout. Payments are processed by Lemon Squeezy, our merchant of record.', 'Precios en USD. Los impuestos se calculan al pagar. Los pagos los procesa Lemon Squeezy, nuestro merchant of record.')} <a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a> · <a href="${page('/refunds', lang)}">${L(lang, 'Refund Policy', 'Política de reembolso')}</a> · <a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></p>`
     + `<h2>${L(lang, 'FAQ', 'Preguntas frecuentes')}</h2>${faq}<p>${L(lang, 'Contact', 'Contacto')}: <a href="mailto:${PRO_CONTACT}">${PRO_CONTACT}</a></p>`);
+}
+
+export function pluginsBody(lang = 'en') {
+  const items = PRO_PLUGINS.map(p => `<li><a href="${pluginPath(p.id, lang)}">${esc(p[lang].name)}</a> - ${esc(p[lang].pitch)}</li>`).join('');
+  return shell(lang, page('/plugins', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">${L(lang, 'Figma plugins', 'Plugins de Figma')}</h1><p class="tool-desc">${esc(PLUGINS_META(lang).description)}</p></header><ul class="seo-links">${items}</ul><p><a href="${page('/pro', lang)}">${L(lang, 'Pricing and Lab Pro', 'Precios y Lab Pro')} →</a></p>`);
+}
+export function pluginBody(p, lang = 'en') {
+  const c = p[lang], copy = PLUGIN_PAGES[p.id][lang];
+  const tool = p.tool && active().find(e => e.path === p.tool);
+  const shots = copy.shots.map(([h, cap]) => `<li><h3>${esc(h)}</h3><p>${esc(cap)}</p></li>`).join('');
+  const feats = c.features.map(([g, list]) => `<h3>${esc(g)}</h3><ul>${list.map(x => `<li>${esc(x)}</li>`).join('')}</ul>`).join('');
+  const more = PRO_PLUGINS.filter(o => o.id !== p.id).map(o => `<li><a href="${pluginPath(o.id, lang)}">${esc(o[lang].name)}</a></li>`).join('');
+  return shell(lang, pluginPath(p.id, other(lang)), `<header class="tool-header"><a class="back-link" href="${page('/plugins', lang)}">← ${L(lang, 'All plugins', 'Todos los plugins')}</a><h1 class="tool-title">${esc(c.name)}</h1><p class="tool-desc">${esc(c.pitch)}</p>${tool ? `<p><a href="${toolPath(tool, lang)}">${L(lang, 'Try the free web version', 'Prueba la versión web gratis')}: ${esc(toolName(tool, lang))} →</a></p>` : ''}</header>`
+    + `<h2>${L(lang, 'What it does', 'Qué hace')}</h2>${copy.description.map(d => `<p>${esc(d)}</p>`).join('')}<ol>${shots}</ol>`
+    + `<h2>${L(lang, 'Everything it does', 'Todo lo que hace')}</h2>${feats}`
+    + `<p>${L(lang, `${FREE_USES} free uses, then one license or Lab Pro.`, `${FREE_USES} usos gratis, luego una licencia o Lab Pro.`)} <a href="${page('/pro', lang)}">${L(lang, 'See pricing', 'Ver precios')} →</a></p>`
+    + `<h2>${L(lang, 'More plugins', 'Más plugins')}</h2><ul class="seo-links">${more}</ul>`);
+}
+export function pluginJsonLd(p, lang = 'en') {
+  const c = p[lang];
+  return jsonLd([
+    website,
+    person,
+    {
+      '@type': 'SoftwareApplication',
+      name: c.name,
+      url: absolute(pluginPath(p.id, lang)),
+      description: c.pitch,
+      inLanguage: lang,
+      applicationCategory: 'DesignApplication',
+      applicationSubCategory: 'Figma plugin',
+      operatingSystem: 'Figma (macOS, Windows, web)',
+      image: SITE.url + `/plugin-assets/${p.id}/og.png`,
+      author: { '@id': person['@id'] },
+      featureList: c.features.flatMap(([, list]) => list),
+      offers: { '@type': 'Offer', price: '9', priceCurrency: 'USD', description: L(lang, `${FREE_USES} free uses, then $9 one-time or Lab Pro`, `${FREE_USES} usos gratis, luego $9 una vez o Lab Pro`) },
+    },
+    crumbs(lang, [{ name: 'Plugins', path: page('/plugins', lang) }, { name: c.name, path: pluginPath(p.id, lang) }]),
+  ]);
 }
 
 export function changelogBody(lang = 'en') {

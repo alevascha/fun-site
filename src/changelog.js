@@ -1,6 +1,12 @@
 // "What's new" entries (newest first). Also published as /rss.xml.
 export const CHANGELOG = [
   {
+    date: '2026-10-17',
+    id: 'figma-plugins',
+    en: { title: 'Eight Figma plugins, each with its own page', body: 'Token Drift, Token Converter, A11y Handoff and Text Stress Test join the Palette Generator, Contrast Checker, Type Scale and Color Blindness Simulator. See what each one does, screen by screen, on the new Plugins page.' },
+    es: { title: 'Ocho plugins de Figma, cada uno con su página', body: 'Token Drift, Token Converter, A11y Handoff y Text Stress Test se suman al Generador de paletas, el Verificador de contraste, la Escala tipográfica y el Simulador de daltonismo. Mira qué hace cada uno, pantalla por pantalla, en la nueva página de Plugins.' },
+  },
+  {
     date: '2026-10-16',
     id: 'kern-me-tab-order',
     en: { title: 'New: two games and two guides', body: 'Kern Me (space letters by eye against the font designer’s own kerning) and Tab Order (number a screen’s focus stops like a keyboard would), with guides on kerning and on keyboard focus order (WCAG 2.4.3).' },

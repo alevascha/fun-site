@@ -17,6 +17,7 @@ import { EASE } from '../lib/motion';
 import { experiments } from '../experiments';
 import { FREE_USES, PRO_CONTACT, PRO_FAQ, PRO_NEXT, PRO_PLANS, PRO_PLUGINS, PRO_STEPS } from '../pro-content';
 import { track } from '../lib/analytics';
+import { PLUGIN_PAGES } from '../plugin-pages';
 
 const accentFor = path => experiments.find(e => e.path === path)?.accent || '#cd57ff';
 
@@ -153,8 +154,11 @@ export default function ProPage() {
                       ))}
                     </div>
                   </details>
+                  <Link to={to(`/plugins/${PLUGIN_PAGES[p.id].slug}`)} className="pro-item-link">
+                    {t('See the plugin', 'Ver el plugin')} <motion.span aria-hidden="true" style={{ display: 'inline-block' }} variants={{ hover: { x: 4 } }}>→</motion.span>
+                  </Link>
                   {p.tool && (
-                    <Link to={to(p.tool)} className="pro-item-link">
+                    <Link to={to(p.tool)} className="pro-item-link pro-item-link--soft">
                       {t('Free web version', 'Versión web gratis')} <motion.span aria-hidden="true" style={{ display: 'inline-block' }} variants={{ hover: { x: 4 } }}>→</motion.span>
                     </Link>
                   )}

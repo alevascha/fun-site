@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import { experiments } from './experiments.js';
 import { ES, PAGE_PATHS } from './seo-es.js';
 import { GUIDES } from './guides.js';
+import { PLUGIN_PAGES } from './plugin-pages.js';
 
 /* Minimal i18n. Spanish routes live under /es with translated slugs and
    render inside LangProvider (components/LangProvider.jsx); components call
@@ -15,6 +16,7 @@ const EN_TO_ES = new Map([
   ...Object.entries(PAGE_PATHS),
   ...experiments.filter(e => ES[e.id]).map(e => [e.path, `/es/${ES[e.id].slug}`]),
   ...GUIDES.map(g => [`/guides/${g.slug}`, `/es/guias/${g.es.slug}`]),
+  ...Object.values(PLUGIN_PAGES).map(p => [`/plugins/${p.slug}`, `/es/plugins/${p.slugEs}`]),
 ]);
 const ES_TO_EN = new Map([...EN_TO_ES].map(([en, es]) => [es, en]));
 

@@ -63,6 +63,7 @@ export default function SiteNav() {
     { to: '/', label: t('Experiments', 'Experimentos'), current: onHome },
     { to: '/games', label: t('Games', 'Juegos'), current: pathname.includes('/games') || pathname.includes('/juegos') },
     { to: '/guides', label: t('Guides', 'Guías'), current: pathname.includes('/guides') || pathname.includes('/guias') },
+    { to: '/plugins', label: 'Plugins', current: pathname.includes('/plugins') },
     { to: '/pro', label: 'Pro', current: /\/pro$/.test(pathname) },
   ];
 
@@ -97,6 +98,9 @@ export default function SiteNav() {
         </Link>
         <Link to={to('/guides')} className="site-nav-link site-nav-link--hide-sm" aria-current={pathname.includes('/guides') || pathname.includes('/guias') ? 'page' : undefined}>
           {t('Guides', 'Guías')}
+        </Link>
+        <Link to={to('/plugins')} className="site-nav-link site-nav-link--hide-sm" aria-current={pathname.includes('/plugins') ? 'page' : undefined}>
+          Plugins
         </Link>
         <Link to={to('/pro')} className="site-nav-link site-nav-link--hide-sm" onClick={() => track('Pro link', { from: 'nav' })}>Pro</Link>
       </div>
