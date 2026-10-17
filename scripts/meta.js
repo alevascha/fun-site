@@ -85,7 +85,7 @@ function simpleMeta(enPath, lang, title, description) {
 
 export const PRO_META = lang => simpleMeta('/pro', lang,
   L(lang, "Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
-  L(lang, `The lab’s tools as 8 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff and text expansion. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 8 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
+  L(lang, `The lab’s tools as 13 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff, text and breakpoint stress tests, mode matrices, component specs, copy lint and icon audits. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 13 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad, pruebas de estrés de texto y de breakpoints, matrices de modos, especificaciones de componentes, revisión de textos y auditoría de íconos. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
 export const GUIDES_META = lang => simpleMeta('/guides', lang,
   L(lang, "Guides: color, accessibility, type & tokens - Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens - Ale's Fun Lab"),
   L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation - each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
@@ -97,7 +97,7 @@ export const CHANGELOG_META = lang => simpleMeta('/changelog', lang,
   L(lang, 'New tools, guides and improvements in Ale’s Fun Lab, newest first.', 'Nuevas herramientas, guías y mejoras en Ale’s Fun Lab, de la más reciente a la más antigua.'));
 export const PLUGINS_META = lang => simpleMeta('/plugins', lang,
   L(lang, "Figma plugins for design systems and accessibility - Ale's Fun Lab", "Plugins de Figma para design systems y accesibilidad - Ale's Fun Lab"),
-  L(lang, `Eight Figma plugins: palettes, contrast, type scales, color blindness, token drift, token export, accessibility handoff and text expansion. ${FREE_USES} free uses each.`, `Ocho plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, deriva y exportación de tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno.`));
+  L(lang, `13 Figma plugins for design systems: palettes, contrast, type, tokens, accessibility, modes, breakpoints, specs, copy and icons. ${FREE_USES} free uses each.`, `13 plugins de Figma para design systems: paletas, contraste, tipografía, tokens, accesibilidad, modos, breakpoints, specs, textos e íconos. ${FREE_USES} usos gratis cada uno.`));
 export const pluginMeta = (p, lang) => ({
   title: L(lang, `${p.en.name}: Figma plugin - Ale's Fun Lab`, `${p.es.name}: plugin de Figma - Ale's Fun Lab`), description: p[lang].pitch, path: pluginPath(p.id, lang), image: `/plugin-assets/${p.id}/og.png`,
   lang, alternates: { en: pluginPath(p.id, 'en'), es: pluginPath(p.id, 'es') },

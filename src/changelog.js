@@ -2,6 +2,12 @@
 export const CHANGELOG = [
   {
     date: '2026-10-17',
+    id: 'five-more-plugins',
+    en: { title: 'Five new Figma plugins', body: 'Mode Matrix (every mode of a screen side by side, checked for contrast), Breakpoint Stress Test (what breaks at each width), Spec Sheet (developer-ready component specs), Copy Lint (your writing rules on every text) and Icon Audit (one consistent icon set). Thirteen plugins in all, each with its own page.' },
+    es: { title: 'Cinco plugins de Figma nuevos', body: 'Mode Matrix (todos los modos de una pantalla lado a lado, revisados en contraste), Breakpoint Stress Test (lo que se rompe en cada ancho), Spec Sheet (especificaciones de componentes listas para desarrollo), Copy Lint (tus reglas de escritura en cada texto) e Icon Audit (un set de íconos consistente). Trece plugins en total, cada uno con su página.' },
+  },
+  {
+    date: '2026-10-17',
     id: 'figma-plugins',
     en: { title: 'Eight Figma plugins, each with its own page', body: 'Token Drift, Token Converter, A11y Handoff and Text Stress Test join the Palette Generator, Contrast Checker, Type Scale and Color Blindness Simulator. See what each one does, screen by screen, on the new Plugins page.' },
     es: { title: 'Ocho plugins de Figma, cada uno con su página', body: 'Token Drift, Token Converter, A11y Handoff y Text Stress Test se suman al Generador de paletas, el Verificador de contraste, la Escala tipográfica y el Simulador de daltonismo. Mira qué hace cada uno, pantalla por pantalla, en la nueva página de Plugins.' },

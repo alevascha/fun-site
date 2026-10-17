@@ -25,7 +25,7 @@ export default function ProPage() {
   const { lang, t, to } = useLang();
   usePageMeta({
     title: t("Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
-    description: t(`The lab’s tools as 8 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff and text expansion. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 8 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`),
+    description: t(`The lab’s tools as 13 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff, text and breakpoint stress tests, mode matrices, component specs, copy lint and icon audits. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 13 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad, pruebas de estrés de texto y de breakpoints, matrices de modos, especificaciones de componentes, revisión de textos y auditoría de íconos. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`),
     path: to('/pro'),
     image: '/og/home.png',
     alternates: { en: '/pro', es: '/es/pro' },

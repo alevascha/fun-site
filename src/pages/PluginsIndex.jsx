@@ -22,7 +22,7 @@ export default function PluginsIndex() {
   const { lang, t, to } = useLang();
   usePageMeta({
     title: t("Figma plugins for design systems and accessibility - Ale's Fun Lab", "Plugins de Figma para design systems y accesibilidad - Ale's Fun Lab"),
-    description: t(`Eight Figma plugins: palettes, contrast, type scales, color blindness, token drift, token export, accessibility handoff and text expansion. ${FREE_USES} free uses each.`, `Ocho plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, deriva y exportación de tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno.`),
+    description: t(`13 Figma plugins for design systems: palettes, contrast, type, tokens, accessibility, modes, breakpoints, specs, copy and icons. ${FREE_USES} free uses each.`, `13 plugins de Figma para design systems: paletas, contraste, tipografía, tokens, accesibilidad, modos, breakpoints, specs, textos e íconos. ${FREE_USES} usos gratis cada uno.`),
     path: to('/plugins'),
     image: '/og/home.png',
     alternates: { en: '/plugins', es: '/es/plugins' },

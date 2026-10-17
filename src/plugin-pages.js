@@ -227,6 +227,91 @@ export const PLUGIN_PAGES = {
       ],
     },
   },
+  'mode-matrix': {
+    slug: 'mode-matrix', slugEs: 'mode-matrix',
+    en: {
+      description: [
+        "Mode Matrix reads the variables a frame really uses, follows aliases to their collections, and lays out one copy per mode: Light and Dark as rows, brands as columns, any other collection fixed to the mode you pick. Every copy is set to its modes with Figma's own mode switching, so it is exactly what a developer would see.",
+        "Each copy is then checked: text that drops below WCAG AA in that mode, with both colors and the ratio, and variables with no value in a mode. Click a cell to select the failing layers, run it again to update the board in place, and copy the result as Markdown for the pull request."
+      ],
+      shots: [["Pick rows and columns", "Any two collections: Light and Dark by brand, density, platform."], ["Every mode, checked", "Text contrast per copy, and values missing in a mode."], ["Click a cell, see why", "Both colors, the ratio, and one click to select the layer."], ["Ready for the pull request", "Copy the whole matrix as Markdown."]],
+    },
+    es: {
+      description: [
+        "Mode Matrix lee las variables que un frame usa de verdad, sigue los alias hasta sus colecciones y arma una copia por modo: Light y Dark como filas, marcas como columnas y cualquier otra colección fija en el modo que elijas. Cada copia queda en sus modos con el cambio de modo propio de Figma, así que es exactamente lo que vería quien desarrolla.",
+        "Después revisa cada copia: el texto que baja de WCAG AA en ese modo, con los dos colores y el ratio, y las variables sin valor en algún modo. Haz clic en una celda para seleccionar las capas que fallan, vuelve a correrlo para actualizar el tablero en su lugar y copia el resultado en Markdown para el pull request."
+      ],
+      shots: [["Elige filas y columnas", "Dos colecciones cualquiera: Light y Dark por marca, densidad o plataforma."], ["Cada modo, revisado", "Contraste de texto en cada copia, y valores que faltan en un modo."], ["Haz clic en una celda y ve por qué", "Los dos colores, el ratio y un clic para seleccionar la capa."], ["Listo para el pull request", "Copia toda la matriz en Markdown."]],
+    },
+  },
+  'breakpoint-stress': {
+    slug: 'breakpoint-stress-test', slugEs: 'prueba-de-estres-de-breakpoints',
+    en: {
+      description: [
+        "Breakpoint Stress Test copies the selected frames at the widths you pick, from a 320 px phone to a 1920 px screen, and places them in a row next to the original. Constraints and auto layout do their work just as they would if you dragged the edge yourself, only for every width at once.",
+        "Then it checks every layer of every copy: content that spills out or gets clipped, fixed-width layers wider than their column, text cut off or truncated, layers that stop sticking to the right edge, lines too long to read on wide screens and tap targets under 44 px on phones. Problems are marked on the copies, listed with Select, and exported as Markdown. One click removes the copies."
+      ],
+      shots: [["Every width at once", "Phones, tablets, laptops, wide screens, or your own."], ["What breaks at each width", "Clipped, too wide, cut off, not pinned, in pixels."], ["Filter, then select", "Jump to any problem layer on the copy."], ["Wide screens too", "Lines too long to read, flagged past 80 characters."]],
+    },
+    es: {
+      description: [
+        "Breakpoint Stress Test copia los frames seleccionados en los anchos que elijas, de un teléfono de 320 px a una pantalla de 1920 px, y los pone en fila junto al original. Las restricciones y el auto layout hacen su trabajo igual que si arrastraras el borde tú, solo que en todos los anchos a la vez.",
+        "Después revisa cada capa de cada copia: contenido que se desborda o se recorta, capas de ancho fijo más anchas que su columna, texto cortado o truncado, capas que dejan de quedar pegadas al borde derecho, líneas demasiado largas para leer en pantallas anchas y áreas táctiles de menos de 44 px en teléfonos. Los problemas se marcan en las copias, se listan con Seleccionar y se exportan en Markdown. Un clic borra las copias."
+      ],
+      shots: [["Todos los anchos a la vez", "Teléfonos, tablets, laptops, pantallas anchas, o los tuyos."], ["Lo que se rompe en cada ancho", "Recortado, demasiado ancho, cortado, sin fijar, en píxeles."], ["Filtra y selecciona", "Salta a cualquier capa con problemas en la copia."], ["También pantallas anchas", "Líneas demasiado largas para leer, marcadas desde 80 caracteres."]],
+    },
+  },
+  'spec-sheet': {
+    slug: 'spec-sheet', slugEs: 'spec-sheet',
+    en: {
+      description: [
+        "Spec Sheet reads a component, a component set or any instance of one and collects what a developer asks for: every property with its type, default and options, every variant with its size, the numbered parts, the auto layout (padding, gap, alignment, sizing, radius, stroke) and every variable and style the component uses, with resolved values.",
+        "It also lists the colors, sizes and spacing that are still hard-coded, so the spec doubles as a token audit. Draw the spec board next to the component with the sections you want, run it again after a change to update the board in place, or copy everything as Markdown or JSON. In Dev Mode it reads and copies without changing the file."
+      ],
+      shots: [["Every property, typed", "Variants, booleans, text and swaps, with defaults and options."], ["Anatomy, numbered", "Each part with its kind, the component it uses and its size."], ["Tokens, and what is not one yet", "Variables and styles with values, plus hard-coded leftovers."], ["Spacing a developer can copy", "Padding, gap, alignment, sizing, radius and stroke."]],
+    },
+    es: {
+      description: [
+        "Spec Sheet lee un componente, un set de componentes o cualquier instancia y junta lo que pide quien desarrolla: cada propiedad con su tipo, valor por defecto y opciones, cada variante con su tamaño, las partes numeradas, el auto layout (padding, gap, alineación, tamaño, radio, borde) y cada variable y estilo que usa el componente, con su valor final.",
+        "También lista los colores, tamaños y espaciados que siguen escritos a mano, así que la especificación sirve además como auditoría de tokens. Dibuja el tablero junto al componente con las secciones que quieras, vuelve a correrlo después de un cambio para actualizarlo en su lugar, o copia todo en Markdown o JSON. En Dev Mode lee y copia sin cambiar el archivo."
+      ],
+      shots: [["Cada propiedad, con su tipo", "Variantes, booleanas, texto e intercambios, con valores por defecto y opciones."], ["La anatomía, numerada", "Cada parte con su tipo, el componente que usa y su tamaño."], ["Tokens, y lo que aún no lo es", "Variables y estilos con sus valores, más lo que sigue escrito a mano."], ["Medidas que se pueden copiar", "Padding, gap, alineación, tamaño, radio y borde."]],
+    },
+  },
+  'copy-lint': {
+    slug: 'copy-lint', slugEs: 'copy-lint',
+    en: {
+      description: [
+        "Copy Lint reads every visible text in the selection, the page or the whole file and checks it against writing rules: long dashes, double spaces, straight or curly quotes, ellipses, repeated words, too many exclamation marks, text typed in capitals, sentence or title case on labels, your terminology (use Sign in, not Log in), words to avoid, lorem ipsum and placeholders, vague link text like click here, button labels that run long and the same label written two ways.",
+        "Most issues fix in one click, or all at once. Fixes are applied edit by edit, so a bold word or a link in the middle of a sentence keeps its style. Ignore a single match or a whole rule on a text, keep names capitalized, and save the rules and glossary in the file so everyone lints the same way. Export the report as Markdown or CSV."
+      ],
+      shots: [["Every text, every rule", "Dashes, case, quotes, glossary and placeholders, in one list."], ["Fix one, or all at once", "See the change before you make it, styles kept."], ["Your rules, in the file", "Terminology, words to avoid, names, and every rule on or off."], ["All clear", "Ship copy that reads like one team wrote it."]],
+    },
+    es: {
+      description: [
+        "Copy Lint lee cada texto visible de la selección, la página o todo el archivo y lo revisa con reglas de escritura: guiones largos, espacios dobles, comillas rectas o curvas, puntos suspensivos, palabras repetidas, exceso de signos de exclamación, texto escrito en mayúsculas, mayúscula inicial o Title Case en etiquetas, tu terminología (Iniciar sesión y no Entrar), palabras a evitar, lorem ipsum y textos de relleno, enlaces vagos como haz clic aquí, botones con etiquetas largas y la misma etiqueta escrita de dos formas.",
+        "La mayoría se corrige en un clic, o todo a la vez. Las correcciones se aplican edición por edición, así que una palabra en negrita o un enlace en medio de una frase conservan su estilo. Ignora una coincidencia o una regla completa en un texto, conserva la mayúscula de los nombres y guarda las reglas y el glosario en el archivo para que todo el equipo revise igual. Exporta el reporte en Markdown o CSV."
+      ],
+      shots: [["Cada texto, cada regla", "Guiones, mayúsculas, comillas, glosario y textos de relleno, en una lista."], ["Corrige uno, o todo a la vez", "Ve el cambio antes de hacerlo, con los estilos intactos."], ["Tus reglas, en el archivo", "Terminología, palabras a evitar, nombres y cada regla activable."], ["Todo en orden", "Textos que suenan a un solo equipo."]],
+    },
+  },
+  'icon-audit': {
+    slug: 'icon-audit', slugEs: 'icon-audit',
+    en: {
+      description: [
+        "Icon Audit finds the icon components in the selection, the page or the whole file and learns what the set has in common: stroked or filled, the stroke weight at 24 px, one color or several, the padding and the naming pattern. Then it flags the icons that break it: sizes off your scale or not square, layers at half pixels, stroke weights or padding that don't match, extra colors, names in another case, hidden layers and the same drawing saved twice.",
+        "On screens it finds icon instances scaled to sizes you don't use and icons pasted as loose vectors instead of instances. It also lists common icons the set is missing (close, search, chevrons, trash and more, synonyms included). Snap to the grid, match the stroke and rename in one click, and export the set as an SVG sprite that takes the text color, plus a JSON manifest."
+      ],
+      shots: [["Your icons, as one set", "What the set has in common, and which icons break it."], ["Every icon that breaks the set", "Size, grid, stroke, color, padding, names, duplicates."], ["On screens, and what's missing", "Scaled instances, loose vectors, and common icons to add."], ["Fix in one click", "Snap to grid, match the stroke, rename to the pattern."]],
+    },
+    es: {
+      description: [
+        "Icon Audit encuentra los componentes de íconos en la selección, la página o todo el archivo y aprende lo que el set tiene en común: con trazo o relleno, el grosor del trazo a 24 px, uno o varios colores, los márgenes y el patrón de nombres. Después marca los íconos que lo rompen: tamaños fuera de tu escala o no cuadrados, capas en medio píxel, grosores o márgenes distintos, colores de más, nombres en otro formato, capas ocultas y el mismo dibujo guardado dos veces.",
+        "En las pantallas encuentra instancias escaladas a tamaños que no usas e íconos pegados como vectores sueltos en vez de instancias. También lista los íconos comunes que le faltan al set (cerrar, buscar, flechas, papelera y más, con sinónimos). Ajusta a la grilla, iguala el trazo y renombra en un clic, y exporta el set como un sprite SVG que toma el color del texto, más un manifiesto JSON."
+      ],
+      shots: [["Tus íconos, como un solo set", "Lo que el set tiene en común, y qué íconos lo rompen."], ["Cada ícono que rompe el set", "Tamaño, grilla, trazo, color, márgenes, nombres, duplicados."], ["En pantallas, y lo que falta", "Instancias escaladas, vectores sueltos e íconos comunes por agregar."], ["Arregla en un clic", "Ajusta a la grilla, iguala el trazo, renombra al patrón."]],
+    },
+  },
 };
 
 export const pluginPath = (id, lang) => {
