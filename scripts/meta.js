@@ -84,7 +84,7 @@ function simpleMeta(enPath, lang, title, description) {
 
 export const PRO_META = lang => simpleMeta('/pro', lang,
   L(lang, "Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
-  L(lang, `The lab’s tools as Figma plugins: palettes to Variables, contrast fixes, type scales and color blindness previews. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como plugins de Figma: paletas a Variables, contraste, escalas tipográficas y simulación de daltonismo. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
+  L(lang, `The lab’s tools as 8 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff and text expansion. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 8 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`));
 export const GUIDES_META = lang => simpleMeta('/guides', lang,
   L(lang, "Guides: color, accessibility, type & tokens - Ale's Fun Lab", "Guías: color, accesibilidad, tipografía y tokens - Ale's Fun Lab"),
   L(lang, 'Short, practical guides on color contrast, fluid typography, design tokens and designing for translation - each with a free tool.', 'Guías breves y prácticas sobre contraste de color, tipografía fluida, design tokens y diseño para la traducción, cada una con una herramienta gratuita.'));
@@ -249,11 +249,15 @@ export function guideBody(g, lang = 'en') {
 }
 
 export function proBody(lang = 'en') {
-  const plugins = PRO_PLUGINS.map(p => `<li><a href="${toolPath(experiments.find(e => e.path === p.tool), lang)}">${esc(p[lang].name)}</a>: ${esc(p[lang].pitch)}</li>`).join('');
+  const plugins = PRO_PLUGINS.map(p => {
+    const name = p.tool ? `<a href="${toolPath(experiments.find(e => e.path === p.tool), lang)}">${esc(p[lang].name)}</a>` : esc(p[lang].name);
+    const feats = p[lang].features.map(([g, list]) => `<li>${esc(g)}: ${esc(list.join('; '))}.</li>`).join('');
+    return `<li>${name}: ${esc(p[lang].pitch)}<ul>${feats}</ul></li>`;
+  }).join('');
   const plans = PRO_PLANS.map(p => `<li><strong>${esc(p[lang].name)}</strong>: ${p.launch ? `${p.launch} ${L(lang, 'launch price', 'precio de lanzamiento')} (${L(lang, 'regular', 'normal')} ${p.price})` : p.price} ${esc(p.note[lang])}. ${esc(p[lang].points.join('. '))}.</li>`).join('');
   const faq = PRO_FAQ.map(f => `<h3>${esc(f[lang][0])}</h3><p>${esc(f[lang][1])}</p>`).join('');
   return shell(lang, page('/pro', other(lang)), `<header class="tool-header">${back(lang)}<h1 class="tool-title">Lab Pro</h1><p class="tool-desc">${esc(PRO_META(lang).description)}</p></header>`
-    + `<h2>${L(lang, 'Launch plugins', 'Plugins de lanzamiento')}</h2><ul>${plugins}</ul>`
+    + `<h2>${L(lang, 'The plugins', 'Los plugins')}</h2><ul>${plugins}</ul>`
     + `<h2>${L(lang, 'Pricing', 'Precios')}</h2><ul>${plans}</ul><p>${L(lang, 'Prices in USD. Taxes are calculated at checkout. Payments are processed by Lemon Squeezy, our merchant of record.', 'Precios en USD. Los impuestos se calculan al pagar. Los pagos los procesa Lemon Squeezy, nuestro merchant of record.')} <a href="${page('/terms', lang)}">${L(lang, 'Terms', 'Términos')}</a> · <a href="${page('/refunds', lang)}">${L(lang, 'Refund Policy', 'Política de reembolso')}</a> · <a href="${page('/privacy', lang)}">${L(lang, 'Privacy', 'Privacidad')}</a></p>`
     + `<h2>${L(lang, 'FAQ', 'Preguntas frecuentes')}</h2>${faq}<p>${L(lang, 'Contact', 'Contacto')}: <a href="mailto:${PRO_CONTACT}">${PRO_CONTACT}</a></p>`);
 }

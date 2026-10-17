@@ -24,7 +24,7 @@ export default function ProPage() {
   const { lang, t, to } = useLang();
   usePageMeta({
     title: t("Lab Pro: Figma plugins for designers - Ale's Fun Lab", "Lab Pro: plugins de Figma para diseñadores - Ale's Fun Lab"),
-    description: t(`The lab’s tools as Figma plugins: palettes to Variables, contrast fixes, type scales and color blindness previews. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como plugins de Figma: paletas a Variables, contraste, escalas tipográficas y simulación de daltonismo. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`),
+    description: t(`The lab’s tools as 8 Figma plugins: palettes, contrast, type scales, color blindness, token drift and export, accessibility handoff and text expansion. ${FREE_USES} free uses each, then $9 per plugin, $29/year or $79 lifetime for all.`, `Las herramientas del lab como 8 plugins de Figma: paletas, contraste, escalas tipográficas, daltonismo, tokens, entrega de accesibilidad y expansión de texto. ${FREE_USES} usos gratis cada uno; luego $9 por plugin, $29 al año o $79 de por vida.`),
     path: to('/pro'),
     image: '/og/home.png',
     alternates: { en: '/pro', es: '/es/pro' },
@@ -130,23 +130,34 @@ export default function ProPage() {
             {PRO_PLUGINS.map((p, i) => (
               <motion.li
                 key={p.en.name}
-                style={{ '--item-accent': accentFor(p.tool) }}
+                style={{ '--item-accent': p.accent || accentFor(p.tool) }}
                 initial={{ opacity: 0, x: -24 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: '-40px' }}
                 transition={{ duration: 0.5, ease: EASE, delay: i * 0.08 }}
               >
-                <motion.div whileHover="hover" whileTap={{ scale: 0.98 }} style={{ height: '100%' }}>
-                  <Link to={to(p.tool)} className="pro-item">
-                    <motion.span className="pro-item-icon" aria-hidden="true" variants={{ hover: { rotate: [0, -12, 12, 0], scale: 1.1 } }}>{p.emoji}</motion.span>
-                    <div className="pro-item-text">
-                      <h3>{p[lang].name}</h3>
-                      <p className="muted">{p[lang].pitch}</p>
+                <motion.div whileHover="hover" className="pro-item">
+                  <motion.span className="pro-item-icon" aria-hidden="true" variants={{ hover: { rotate: [0, -12, 12, 0], scale: 1.1 } }}>{p.emoji}</motion.span>
+                  <div className="pro-item-text">
+                    <h3>{p[lang].name}</h3>
+                    <p className="muted">{p[lang].pitch}</p>
+                  </div>
+                  <details className="pro-item-features" onToggle={e => { if (e.currentTarget.open) track('Pro features', { plugin: p.en.name }); }}>
+                    <summary>{t('Everything it does', 'Todo lo que hace')}</summary>
+                    <div className="pro-item-groups">
+                      {p[lang].features.map(([group, list]) => (
+                        <div key={group}>
+                          <h4>{group}</h4>
+                          <ul>{list.map(x => <li key={x}>{x}</li>)}</ul>
+                        </div>
+                      ))}
                     </div>
-                    <span className="pro-item-link">
+                  </details>
+                  {p.tool && (
+                    <Link to={to(p.tool)} className="pro-item-link">
                       {t('Free web version', 'Versión web gratis')} <motion.span aria-hidden="true" style={{ display: 'inline-block' }} variants={{ hover: { x: 4 } }}>→</motion.span>
-                    </span>
-                  </Link>
+                    </Link>
+                  )}
                 </motion.div>
               </motion.li>
             ))}
